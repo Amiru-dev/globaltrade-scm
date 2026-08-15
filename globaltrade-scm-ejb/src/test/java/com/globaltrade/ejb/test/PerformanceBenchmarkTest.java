@@ -154,8 +154,10 @@ class PerformanceBenchmarkTest {
             for (int i = 0; i < 10000; i++) {
                 com.globaltrade.common.entity.Shipment s = new com.globaltrade.common.entity.Shipment();
                 s.setTrackingNumber("GT-" + i);
-                s.setOrigin("Shanghai");
-                s.setDestination("Rotterdam");
+                s.setOriginCity("Shanghai");
+                s.setOriginCountry("China");
+                s.setDestinationCity("Rotterdam");
+                s.setDestinationCountry("Netherlands");
             }
             long elapsed = System.nanoTime() - start;
             double avgMicros = (elapsed / 1000.0) / 10000;

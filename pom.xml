@@ -7,7 +7,7 @@
 
     <groupId>com.globaltrade</groupId>
     <artifactId>globaltrade-scm</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>pom</packaging>
 
     <name>GlobalTrade Supply Chain Management System</name>

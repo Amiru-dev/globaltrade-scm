@@ -7,7 +7,7 @@ This guide outlines the steps required to build, configure, and deploy the Globa
 Ensure the following software is installed and configured on your host machine:
 - **Java Development Kit (JDK):** Version 17 (LTS)
 - **Apache Maven:** Version 3.9.0 or higher
-- **Application Server:** Payara Server 6.2023.x (Community Edition)
+- **Application Server:** Payara Server 6.2025.11 (Community Edition)
 - **Database:** MySQL 8.0+
 
 ---
@@ -68,7 +68,7 @@ Create a custom JDBC realm for the JAAS authentication module to use:
 ```bash
 <PAYARA_HOME>/bin/asadmin create-auth-realm \
     --classname com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm \
-    --property jaas-context=jdbcRealm:datasource-jndi=jdbc/GlobalTradeDS:user-table=users:user-name-column=username:password-column=password_hash:group-table=user_roles:group-name-column=role_name:digest-algorithm=PBKDF2WithHmacSHA256 \
+    --property jaas-context=jdbcRealm:datasource-jndi=jdbc/GlobalTradeDS:user-table=users:user-name-column=username:password-column=password_hash:group-table=user_roles:group-name-column=role_name:digest-algorithm=SHA-256 \
     GlobalTradeRealm
 ```
 

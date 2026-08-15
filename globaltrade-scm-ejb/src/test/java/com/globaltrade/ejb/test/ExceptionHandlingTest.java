@@ -65,7 +65,7 @@ class ExceptionHandlingTest {
                 "DEC-2024-099",
                 "MISSING_HS_CODE");
 
-            assertEquals("DEC-2024-099", ex.getDeclarationId());
+            assertEquals("DEC-2024-099", ex.getDeclarationNumber());
             assertEquals("MISSING_HS_CODE", ex.getViolationType());
         }
 
@@ -116,7 +116,7 @@ class ExceptionHandlingTest {
         @DisplayName("CarrierSystemException should be a RuntimeException (system exception)")
         void carrierSystemException_IsRuntimeException() {
             CarrierSystemException ex = new CarrierSystemException(
-                "Carrier API completely unavailable");
+                "Carrier API completely unavailable", "CarrierA", 3);
 
             assertInstanceOf(RuntimeException.class, ex);
         }
@@ -127,7 +127,7 @@ class ExceptionHandlingTest {
             // SupplyChainException extends Exception (checked), not RuntimeException
             ShipmentTrackingException ex = new ShipmentTrackingException("test", "TN-001");
             assertInstanceOf(Exception.class, ex);
-            assertFalse(ex instanceof RuntimeException,
+            assertFalse(RuntimeException.class.isAssignableFrom(ex.getClass()),
                 "Application exceptions should be checked exceptions");
         }
     }

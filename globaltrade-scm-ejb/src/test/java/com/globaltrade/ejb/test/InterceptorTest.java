@@ -112,7 +112,7 @@ class InterceptorTest {
 
             auditInterceptor.audit(invocationContext);
 
-            verify(invocationContext).getParameters();
+            verify(invocationContext, times(2)).getParameters();
         }
     }
 

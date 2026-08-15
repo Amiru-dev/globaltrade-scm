@@ -42,9 +42,8 @@ import javax.sql.DataSource;
  *       Security abstracts away.</li>
  * </ul>
  *
- * <p><strong>Password Security:</strong> Uses PBKDF2WithHmacSHA256 with 65,536
- * iterations and a 256-bit derived key. The salt is stored alongside the hashed
- * password in the database.</p>
+ * <p><strong>Password Security:</strong> Uses SHA-256 to hash passwords.
+ * This matches the configured Payara JDBCRealm digest-algorithm.</p>
  *
  * <p><strong>Integration:</strong> Configured in Payara Server via
  * {@code login.conf} or Payara's admin console as a custom login realm.</p>
@@ -53,17 +52,15 @@ public class GlobalTradeLoginModule implements LoginModule {
 
     private static final Logger LOGGER = Logger.getLogger(GlobalTradeLoginModule.class.getName());
 
-    // PBKDF2 parameters
-    private static final String HASH_ALGORITHM = "PBKDF2WithHmacSHA256";
-    private static final int ITERATIONS = 65536;
-    private static final int KEY_LENGTH = 256;
+    // Hash algorithm
+    private static final String HASH_ALGORITHM = "SHA-256";
 
     // JNDI datasource name
     private static final String DATASOURCE_JNDI = "jdbc/GlobalTradeDS";
 
     // SQL queries
     private static final String AUTHENTICATE_SQL =
-        "SELECT password_hash, password_salt FROM users WHERE username = ? AND active = TRUE";
+        "SELECT password_hash FROM users WHERE username = ? AND is_active = TRUE";
     private static final String ROLES_SQL =
         "SELECT role_name FROM user_roles WHERE username = ?";
 
@@ -247,37 +244,30 @@ public class GlobalTradeLoginModule implements LoginModule {
                 }
 
                 String storedHash = rs.getString("password_hash");
-                String storedSalt = rs.getString("password_salt");
 
-                return verifyPassword(password, storedHash, storedSalt);
+                return verifyPassword(password, storedHash);
             }
         }
     }
 
-    /**
-     * Verifies a password against the stored PBKDF2 hash and salt.
-     *
-     * <p><strong>Critical Analysis — Password Hashing:</strong>
-     * PBKDF2 is chosen for its resistance to brute-force attacks through
-     * computationally expensive key derivation. The iteration count (65,536)
-     * balances security with login latency (~100ms on modern hardware).
-     * Alternatives considered: bcrypt (auto-salting, simpler API) and
-     * Argon2 (memory-hard, best protection against GPU attacks). PBKDF2 was
-     * selected for JDK-native support without external dependencies.</p>
-     */
-    private boolean verifyPassword(char[] password, String storedHash, String storedSalt)
+    private boolean verifyPassword(char[] password, String storedHash)
             throws Exception {
 
-        byte[] salt = Base64.getDecoder().decode(storedSalt);
+        java.security.MessageDigest md = java.security.MessageDigest.getInstance(HASH_ALGORITHM);
+        byte[] computedHash = md.digest(new String(password).getBytes(java.nio.charset.StandardCharsets.UTF_8));
 
-        KeySpec spec = new PBEKeySpec(password, salt, ITERATIONS, KEY_LENGTH);
-        SecretKeyFactory factory = SecretKeyFactory.getInstance(HASH_ALGORITHM);
-        byte[] computedHash = factory.generateSecret(spec).getEncoded();
-
-        String computedHashBase64 = Base64.getEncoder().encodeToString(computedHash);
+        // Convert computed hash to hex string (as in init-schema.sql)
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : computedHash) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        
+        String computedHashHex = hexString.toString();
 
         // Constant-time comparison to prevent timing attacks
-        return constantTimeEquals(storedHash, computedHashBase64);
+        return constantTimeEquals(storedHash, computedHashHex);
     }
 
     /**

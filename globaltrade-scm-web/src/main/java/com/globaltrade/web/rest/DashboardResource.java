@@ -46,7 +46,7 @@ public class DashboardResource {
     public Response getDashboardSummary() {
         long inTransit = shipmentService.countByStatus(ShipmentStatus.IN_TRANSIT);
         long delivered = shipmentService.countByStatus(ShipmentStatus.DELIVERED);
-        long pendingCustoms = shipmentService.countByStatus(ShipmentStatus.CUSTOMS_HOLD);
+        long atCustoms = shipmentService.countByStatus(ShipmentStatus.AT_CUSTOMS);
         long delayed = shipmentService.findDelayedShipments().size();
         int lowStockCount = inventoryService.findLowStockItems().size();
         int outOfStockCount = inventoryService.findOutOfStockItems().size();
@@ -56,7 +56,7 @@ public class DashboardResource {
                 .add("shipments", Json.createObjectBuilder()
                         .add("inTransit", inTransit)
                         .add("delivered", delivered)
-                        .add("pendingCustoms", pendingCustoms)
+                        .add("pendingCustoms", atCustoms)
                         .add("delayed", delayed))
                 .add("inventory", Json.createObjectBuilder()
                         .add("lowStockAlerts", lowStockCount)

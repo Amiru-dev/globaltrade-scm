@@ -30,7 +30,7 @@ public class CarrierSystemException extends EJBException {
     }
 
     public CarrierSystemException(String message, String carrierName,
-                                   int retryAttempts, Throwable cause) {
+                                   int retryAttempts, Exception cause) {
         super(message, cause);
         this.carrierName = carrierName;
         this.retryAttempts = retryAttempts;

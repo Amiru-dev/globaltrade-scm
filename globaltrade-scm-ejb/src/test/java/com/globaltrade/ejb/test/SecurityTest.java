@@ -48,8 +48,8 @@ class SecurityTest {
 
     @BeforeEach
     void setUp() {
-        when(sessionContext.getCallerPrincipal()).thenReturn(principal);
-        when(principal.getName()).thenReturn("testuser");
+        lenient().when(sessionContext.getCallerPrincipal()).thenReturn(principal);
+        lenient().when(principal.getName()).thenReturn("testuser");
     }
 
     @Nested

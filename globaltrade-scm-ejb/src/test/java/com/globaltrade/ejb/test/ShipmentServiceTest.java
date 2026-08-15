@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -49,10 +50,12 @@ class ShipmentServiceTest {
         testShipment = new Shipment();
         testShipment.setShipmentId(1L);
         testShipment.setTrackingNumber("GT-2024-001");
-        testShipment.setOrigin("Shanghai");
-        testShipment.setDestination("Rotterdam");
+        testShipment.setOriginCity("Shanghai");
+        testShipment.setOriginCountry("China");
+        testShipment.setDestinationCity("Rotterdam");
+        testShipment.setDestinationCountry("Netherlands");
         testShipment.setStatus(ShipmentStatus.IN_TRANSIT);
-        testShipment.setWeight(5000.0);
+        testShipment.setWeightKg(new BigDecimal("5000.0"));
         testShipment.setCustomsCleared(false);
     }
 

@@ -85,7 +85,7 @@ Global logistics systems handle highly sensitive data, requiring a multi-layered
 ### Custom JAAS Login Module
 The `GlobalTradeLoginModule` implements Java Authentication and Authorization Service (JAAS).
 - **Authentication:** Validates credentials against a MySQL database using a constant-time comparison to mitigate timing attacks.
-- **Password Hashing:** Uses `PBKDF2WithHmacSHA256` with 65,536 iterations and a unique salt per user. This provides robust defense against rainbow table and brute-force attacks compared to legacy MD5 or SHA-256 hashing.
+- **Password Hashing:** Uses `SHA-256` for password hashing to maintain compatibility with the default Payara `JDBCRealm` configuration without requiring external dependencies or complex data structures for salting.
 
 ### Critical Analysis of Security
 - **Declarative vs. Programmatic Limitation:** Declarative security (`@RolesAllowed`) is static and insufficient for multi-tenant or contextual authorization. For example, a `VENDOR_REPRESENTATIVE` must only be allowed to view their *own* shipments. The programmatic `SecurityService` bridges this gap by combining role checks with data-driven logic (verifying the requested vendor ID matches the authenticated principal's associated vendor ID).

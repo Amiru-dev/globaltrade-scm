@@ -1,0 +1,6 @@
+com\globaltrade\web\rest\DashboardResource.class
+com\globaltrade\web\rest\InventoryResource.class
+com\globaltrade\web\rest\ShipmentResource.class
+com\globaltrade\web\filter\CORSFilter.class
+com\globaltrade\web\rest\VendorResource.class
+com\globaltrade\web\rest\RestApplication.class
