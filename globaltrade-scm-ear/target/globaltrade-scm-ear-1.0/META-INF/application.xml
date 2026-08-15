@@ -1,44 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    EAR Application Descriptor for GlobalTrade SCM.
-
-    Critical Analysis — EAR Structure:
-    The EAR bundles multiple modules into a single deployable unit:
-    - EJB JAR: Contains session beans, timer services, interceptors
-    - WAR: Contains REST endpoints and web security configuration
-    - lib/: Contains shared classes (entities, DTOs, exceptions)
-
-    This split directory approach allows:
-    1. Independent module updates (update WAR without redeploying EJB)
-    2. Class loader isolation per module
-    3. Shared library access via the EAR lib/ directory
--->
-<application xmlns="https://jakarta.ee/xml/ns/jakartaee"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
-                                 https://jakarta.ee/xml/ns/jakartaee/application_10.xsd"
-             version="10">
-
-    <display-name>GlobalTrade Supply Chain Management System</display-name>
-    <description>
-        Enterprise Supply Chain Management platform for GlobalTrade Logistics Corporation.
-        Manages shipments, inventory, vendors, customs, and route optimization.
-    </description>
-
-    <!-- EJB Module -->
-    <module>
-        <ejb>globaltrade-scm-ejb.jar</ejb>
-    </module>
-
-    <!-- Web Module -->
-    <module>
-        <web>
-            <web-uri>globaltrade-scm-web.war</web-uri>
-            <context-root>/globaltrade</context-root>
-        </web>
-    </module>
-
-    <!-- Shared Library (entities, DTOs, exceptions) -->
-    <library-directory>lib</library-directory>
-
+<application xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/application_10.xsd" version="10">
+  <description>Enterprise Archive packaging module that bundles the EJB JAR,
+        Web WAR, and shared Common JAR into a deployable EAR file
+        for Payara Server.</description>
+  <display-name>globaltrade-scm-ear</display-name>
+  <module>
+    <ejb>globaltrade-scm-ejb.jar</ejb>
+  </module>
+  <module>
+    <web>
+      <web-uri>globaltrade-scm-web.war</web-uri>
+      <context-root>/globaltrade</context-root>
+    </web>
+  </module>
+  <library-directory>lib</library-directory>
 </application>
