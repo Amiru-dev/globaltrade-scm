@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.globaltrade</groupId>
+        <artifactId>globaltrade-scm</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>globaltrade-scm-web</artifactId>
+    <packaging>war</packaging>
+
+    <name>GlobalTrade SCM - Web Module</name>
+    <description>
+        Web module containing JAX-RS REST endpoints, security constraints,
+        and Payara-specific deployment configuration.
+    </description>
+
+    <dependencies>
+        <!-- Internal: Common module (entities, DTOs, exceptions) -->
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-scm-common</artifactId>
+        </dependency>
+
+        <!-- Internal: EJB module (session beans, services) -->
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-scm-ejb</artifactId>
+            <type>ejb</type>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

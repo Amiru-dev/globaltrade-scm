@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.globaltrade</groupId>
+        <artifactId>globaltrade-scm</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>globaltrade-scm-ear</artifactId>
+    <packaging>ear</packaging>
+
+    <name>GlobalTrade SCM - EAR Package</name>
+    <description>
+        Enterprise Archive packaging module that bundles the EJB JAR,
+        Web WAR, and shared Common JAR into a deployable EAR file
+        for Payara Server.
+    </description>
+
+    <dependencies>
+        <!-- EJB module -->
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-scm-ejb</artifactId>
+            <type>ejb</type>
+        </dependency>
+
+        <!-- Web module -->
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-scm-web</artifactId>
+            <type>war</type>
+        </dependency>
+
+        <!-- Common module (entities, DTOs, exceptions — bundled in EAR lib/) -->
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-scm-common</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <configuration>
+                    <version>10</version>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <generateApplicationXml>true</generateApplicationXml>
+
+                    <modules>
+                        <!-- EJB module -->
+                        <ejbModule>
+                            <groupId>com.globaltrade</groupId>
+                            <artifactId>globaltrade-scm-ejb</artifactId>
+                            <bundleFileName>globaltrade-scm-ejb.jar</bundleFileName>
+                        </ejbModule>
+
+                        <!-- Web module -->
+                        <webModule>
+                            <groupId>com.globaltrade</groupId>
+                            <artifactId>globaltrade-scm-web</artifactId>
+                            <bundleFileName>globaltrade-scm-web.war</bundleFileName>
+                            <contextRoot>/globaltrade</contextRoot>
+                        </webModule>
+
+                        <!-- Common module goes to EAR lib/ for shared access -->
+                        <jarModule>
+                            <groupId>com.globaltrade</groupId>
+                            <artifactId>globaltrade-scm-common</artifactId>
+                            <bundleDir>lib</bundleDir>
+                            <bundleFileName>globaltrade-scm-common.jar</bundleFileName>
+                        </jarModule>
+                    </modules>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

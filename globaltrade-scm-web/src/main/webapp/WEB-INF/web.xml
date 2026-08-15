@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Web Deployment Descriptor for GlobalTrade SCM.
+
+    Critical Analysis — Declarative Security at Web Layer:
+    Security constraints defined here provide the first layer of defence
+    (URL-pattern based). EJB-level @RolesAllowed provides the second layer
+    (method-level). This defence-in-depth approach ensures that even if
+    the REST framework is bypassed, the EJB container enforces authorization.
+-->
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                             https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+
+    <display-name>GlobalTrade Supply Chain Management - Web</display-name>
+
+    <!-- ======================== Security Constraints ======================== -->
+
+    <!-- Admin-only endpoints (system config, audit logs) -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Admin Resources</web-resource-name>
+            <url-pattern>/api/dashboard/summary</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>SYSTEM_ADMIN</role-name>
+            <role-name>LOGISTICS_COORDINATOR</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+
+    <!-- Shipment management — coordinators, warehouse managers, admins -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Shipment Resources</web-resource-name>
+            <url-pattern>/api/shipments/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>LOGISTICS_COORDINATOR</role-name>
+            <role-name>WAREHOUSE_MANAGER</role-name>
+            <role-name>CUSTOMS_AGENT</role-name>
+            <role-name>SYSTEM_ADMIN</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <!-- Inventory management — warehouse managers and coordinators -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Inventory Resources</web-resource-name>
+            <url-pattern>/api/inventory/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>WAREHOUSE_MANAGER</role-name>
+            <role-name>LOGISTICS_COORDINATOR</role-name>
+            <role-name>SYSTEM_ADMIN</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <!-- Vendor management — coordinators, vendor reps (own data), admins -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Vendor Resources</web-resource-name>
+            <url-pattern>/api/vendors/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>LOGISTICS_COORDINATOR</role-name>
+            <role-name>VENDOR_REPRESENTATIVE</role-name>
+            <role-name>SYSTEM_ADMIN</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <!-- Health check — public access (no auth-constraint) -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Health Check</web-resource-name>
+            <url-pattern>/api/dashboard/health</url-pattern>
+        </web-resource-collection>
+        <!-- No auth-constraint = public access -->
+    </security-constraint>
+
+    <!-- ======================== Login Configuration ======================== -->
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>GlobalTradeRealm</realm-name>
+    </login-config>
+
+    <!-- ======================== Security Roles ======================== -->
+    <security-role>
+        <description>Full system access — user management, configuration, emergency overrides</description>
+        <role-name>SYSTEM_ADMIN</role-name>
+    </security-role>
+    <security-role>
+        <description>Shipment management, inventory operations, route optimization</description>
+        <role-name>LOGISTICS_COORDINATOR</role-name>
+    </security-role>
+    <security-role>
+        <description>Inventory management, warehouse operations</description>
+        <role-name>WAREHOUSE_MANAGER</role-name>
+    </security-role>
+    <security-role>
+        <description>Customs declarations, compliance reports</description>
+        <role-name>CUSTOMS_AGENT</role-name>
+    </security-role>
+    <security-role>
+        <description>View own orders, update delivery status</description>
+        <role-name>VENDOR_REPRESENTATIVE</role-name>
+    </security-role>
+
+    <!-- ======================== Session Configuration ======================== -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+            <secure>true</secure>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+</web-app>
