@@ -4,6 +4,7 @@ import com.globaltrade.common.entity.Shipment;
 import com.globaltrade.common.enums.ShipmentStatus;
 import com.globaltrade.common.exception.ShipmentTrackingException;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -120,6 +121,7 @@ public class ShipmentService {
      * SUPPORTS: Read-only query.
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @PermitAll
     public List<Shipment> findActiveShipments() {
         return em.createNamedQuery("Shipment.findActiveShipments", Shipment.class)
                 .getResultList();
@@ -139,6 +141,7 @@ public class ShipmentService {
      * Retrieves all delayed shipments — used by timer services for alerts.
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @PermitAll
     public List<Shipment> findDelayedShipments() {
         return em.createNamedQuery("Shipment.findDelayed", Shipment.class)
                 .getResultList();
@@ -148,6 +151,7 @@ public class ShipmentService {
      * Retrieves shipments pending customs clearance.
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @PermitAll
     public List<Shipment> findPendingCustomsShipments() {
         return em.createNamedQuery("Shipment.findPendingCustoms", Shipment.class)
                 .getResultList();

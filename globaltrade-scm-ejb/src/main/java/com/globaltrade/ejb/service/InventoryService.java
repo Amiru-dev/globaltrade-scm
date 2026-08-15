@@ -4,6 +4,7 @@ import com.globaltrade.common.entity.InventoryItem;
 import com.globaltrade.common.exception.InventoryShortageException;
 import com.globaltrade.common.exception.TransactionRollbackException;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -131,6 +132,7 @@ public class InventoryService {
      * Finds all items below their reorder level — used by InventoryMonitorTimer.
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @PermitAll
     public List<InventoryItem> findLowStockItems() {
         return em.createNamedQuery("InventoryItem.findLowStock", InventoryItem.class)
                 .getResultList();

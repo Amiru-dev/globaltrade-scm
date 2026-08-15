@@ -4,6 +4,7 @@ import com.globaltrade.common.entity.CustomsDeclaration;
 import com.globaltrade.common.enums.ComplianceStatus;
 import com.globaltrade.common.exception.CustomsComplianceException;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -120,6 +121,7 @@ public class CustomsService {
      * Used by CustomsDeadlineTimer for automated alerts.
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @PermitAll
     public List<CustomsDeclaration> findApproachingDeadlines(int daysAhead) {
         LocalDate deadline = LocalDate.now().plusDays(daysAhead);
         return em.createNamedQuery("CustomsDeclaration.findApproachingDeadline",
