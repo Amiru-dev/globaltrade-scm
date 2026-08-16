@@ -81,7 +81,7 @@ public class DashboardResource {
         JsonObject health = Json.createObjectBuilder()
                 .add("status", "UP")
                 .add("application", "GlobalTrade SCM")
-                .add("version", "1.0-SNAPSHOT")
+                .add("version", "1.0")
                 .build();
 
         return Response.ok(health).build();

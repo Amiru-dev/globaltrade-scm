@@ -8,6 +8,7 @@ import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,7 +98,7 @@ public class InventoryResource {
     @PUT
     @Path("/{id}/deduct")
     public Response deductStock(@PathParam("id") Long id,
-                                 @QueryParam("quantity") int quantity) {
+                                @QueryParam("quantity") int quantity) {
         try {
             InventoryItem updated = inventoryService.deductStock(id, quantity);
             return Response.ok(updated).build();
@@ -114,7 +115,7 @@ public class InventoryResource {
     @PUT
     @Path("/{id}/replenish")
     public Response replenishStock(@PathParam("id") Long id,
-                                    @QueryParam("quantity") int quantity) {
+                                   @QueryParam("quantity") int quantity) {
         InventoryItem updated = inventoryService.replenishStock(id, quantity);
         if (updated == null) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -130,8 +131,8 @@ public class InventoryResource {
     @POST
     @Path("/transfer")
     public Response transferInventory(@QueryParam("sourceId") Long sourceId,
-                                       @QueryParam("targetId") Long targetId,
-                                       @QueryParam("quantity") int quantity) {
+                                      @QueryParam("targetId") Long targetId,
+                                      @QueryParam("quantity") int quantity) {
         try {
             inventoryService.transferInventory(sourceId, targetId, quantity);
             return Response.ok("{\"message\": \"Inventory transferred successfully\"}").build();

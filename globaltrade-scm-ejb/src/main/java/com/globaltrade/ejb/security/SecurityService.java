@@ -5,6 +5,7 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.Stateless;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,6 +63,7 @@ public class SecurityService {
      * Vendor representatives can only access data for their own vendor.
      *
      * <p><strong>Critical Analysis:</strong> This cannot be achieved with
+     *
      * @RolesAllowed alone because the access rule depends on the DATA CONTENT
      * (vendor ID), not just the user's role. Programmatic security bridges
      * this gap by combining role checks with business logic.</p>
@@ -73,8 +75,8 @@ public class SecurityService {
         // SYSTEM_ADMIN and LOGISTICS_COORDINATOR have unrestricted access
         if (ctx.isCallerInRole("SYSTEM_ADMIN") || ctx.isCallerInRole("LOGISTICS_COORDINATOR")) {
             LOGGER.log(Level.FINE,
-                "Admin/Coordinator {0} granted access to vendor {1}",
-                new Object[]{caller, requestedVendorCode});
+                    "Admin/Coordinator {0} granted access to vendor {1}",
+                    new Object[]{caller, requestedVendorCode});
             return true;
         }
 
@@ -83,15 +85,15 @@ public class SecurityService {
             boolean allowed = requestedVendorCode.equals(callerVendorCode);
             if (!allowed) {
                 LOGGER.log(Level.WARNING,
-                    "SECURITY: Vendor rep {0} attempted to access vendor {1} " +
-                    "(own vendor: {2}) — DENIED",
-                    new Object[]{caller, requestedVendorCode, callerVendorCode});
+                        "SECURITY: Vendor rep {0} attempted to access vendor {1} " +
+                                "(own vendor: {2}) — DENIED",
+                        new Object[]{caller, requestedVendorCode, callerVendorCode});
             }
             return allowed;
         }
 
         LOGGER.log(Level.WARNING,
-            "SECURITY: Unknown role for user {0} — access DENIED", caller);
+                "SECURITY: Unknown role for user {0} — access DENIED", caller);
         return false;
     }
 
@@ -108,13 +110,13 @@ public class SecurityService {
 
         if (!ctx.isCallerInRole("SYSTEM_ADMIN")) {
             LOGGER.log(Level.SEVERE,
-                "SECURITY VIOLATION: Non-admin {0} attempted emergency access", caller);
+                    "SECURITY VIOLATION: Non-admin {0} attempted emergency access", caller);
             return false;
         }
 
         LOGGER.log(Level.WARNING,
-            "EMERGENCY ACCESS GRANTED: Admin {0} accessing {1}. Reason: {2}",
-            new Object[]{caller, resourceType, reason});
+                "EMERGENCY ACCESS GRANTED: Admin {0} accessing {1}. Reason: {2}",
+                new Object[]{caller, resourceType, reason});
 
         return true;
     }
@@ -130,8 +132,8 @@ public class SecurityService {
                 || ctx.isCallerInRole("SYSTEM_ADMIN");
 
         LOGGER.log(Level.INFO,
-            "Customs operation {0} by {1}: {2}",
-            new Object[]{operationType, caller, authorized ? "AUTHORIZED" : "DENIED"});
+                "Customs operation {0} by {1}: {2}",
+                new Object[]{operationType, caller, authorized ? "AUTHORIZED" : "DENIED"});
 
         return authorized;
     }

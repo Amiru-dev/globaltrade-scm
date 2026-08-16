@@ -2,6 +2,7 @@ package com.globaltrade.ejb.security;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Singleton;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -45,9 +46,9 @@ public class SessionManager implements Serializable {
 
         if (existing != null) {
             LOGGER.log(Level.WARNING,
-                "SESSION SECURITY: User {0} already has an active session ({1}). " +
-                "Invalidating previous session.",
-                new Object[]{username, existing.sessionId});
+                    "SESSION SECURITY: User {0} already has an active session ({1}). " +
+                            "Invalidating previous session.",
+                    new Object[]{username, existing.sessionId});
         }
 
         SessionInfo newSession = new SessionInfo(sessionId, username, LocalDateTime.now());
@@ -80,8 +81,8 @@ public class SessionManager implements Serializable {
         LocalDateTime expiryTime = session.createdAt.plusMinutes(SESSION_TIMEOUT_MINUTES);
         if (LocalDateTime.now().isAfter(expiryTime)) {
             LOGGER.log(Level.WARNING,
-                "SESSION EXPIRED: user={0}, created={1}, timeout={2}min",
-                new Object[]{username, session.createdAt, SESSION_TIMEOUT_MINUTES});
+                    "SESSION EXPIRED: user={0}, created={1}, timeout={2}min",
+                    new Object[]{username, session.createdAt, SESSION_TIMEOUT_MINUTES});
             activeSessions.remove(username);
             return false;
         }

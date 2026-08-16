@@ -60,9 +60,9 @@ public class GlobalTradeLoginModule implements LoginModule {
 
     // SQL queries
     private static final String AUTHENTICATE_SQL =
-        "SELECT password_hash FROM users WHERE username = ? AND is_active = TRUE";
+            "SELECT password_hash FROM users WHERE username = ? AND is_active = TRUE";
     private static final String ROLES_SQL =
-        "SELECT role_name FROM user_roles WHERE username = ?";
+            "SELECT role_name FROM user_roles WHERE username = ?";
 
     // JAAS state
     private Subject subject;
@@ -263,7 +263,7 @@ public class GlobalTradeLoginModule implements LoginModule {
             if (hex.length() == 1) hexString.append('0');
             hexString.append(hex);
         }
-        
+
         String computedHashHex = hexString.toString();
 
         // Constant-time comparison to prevent timing attacks

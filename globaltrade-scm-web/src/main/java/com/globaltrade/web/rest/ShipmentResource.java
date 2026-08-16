@@ -9,6 +9,7 @@ import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -118,7 +119,7 @@ public class ShipmentResource {
     @PUT
     @Path("/{id}/status")
     public Response updateStatus(@PathParam("id") Long id,
-                                  @QueryParam("status") String status) {
+                                 @QueryParam("status") String status) {
         try {
             ShipmentStatus newStatus = ShipmentStatus.valueOf(status.toUpperCase());
             Shipment updated = shipmentService.updateShipmentStatus(id, newStatus);
