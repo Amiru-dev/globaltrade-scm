@@ -3,6 +3,7 @@ package com.globaltrade.ejb.interceptor;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.AroundTimeout;
 import jakarta.interceptor.InvocationContext;
+
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -94,16 +95,16 @@ public class PerformanceMonitor implements Serializable {
             // Log based on threshold
             if (elapsed > SEVERE_THRESHOLD_MS) {
                 LOGGER.log(Level.SEVERE,
-                    "PERFORMANCE CRITICAL [{0}]: {1} took {2}ms (threshold: {3}ms)",
-                    new Object[]{methodType, key, elapsed, SEVERE_THRESHOLD_MS});
+                        "PERFORMANCE CRITICAL [{0}]: {1} took {2}ms (threshold: {3}ms)",
+                        new Object[]{methodType, key, elapsed, SEVERE_THRESHOLD_MS});
             } else if (elapsed > WARN_THRESHOLD_MS) {
                 LOGGER.log(Level.WARNING,
-                    "PERFORMANCE WARNING [{0}]: {1} took {2}ms (threshold: {3}ms)",
-                    new Object[]{methodType, key, elapsed, WARN_THRESHOLD_MS});
+                        "PERFORMANCE WARNING [{0}]: {1} took {2}ms (threshold: {3}ms)",
+                        new Object[]{methodType, key, elapsed, WARN_THRESHOLD_MS});
             } else {
                 LOGGER.log(Level.FINE,
-                    "PERFORMANCE [{0}]: {1} completed in {2}ms",
-                    new Object[]{methodType, key, elapsed});
+                        "PERFORMANCE [{0}]: {1} completed in {2}ms",
+                        new Object[]{methodType, key, elapsed});
             }
         }
     }

@@ -9,6 +9,7 @@ import jakarta.ejb.Schedule;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
 import jakarta.ejb.Timer;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +52,8 @@ public class InventoryMonitorTimer {
      * Inventory checks are idempotent, so missing one during restart is safe.</p>
      */
     @Schedule(hour = "*", minute = "0", second = "0",
-              persistent = false,
-              info = "HourlyInventoryMonitor")
+            persistent = false,
+            info = "HourlyInventoryMonitor")
     public void monitorInventoryLevels(Timer timer) {
         long startTime = System.currentTimeMillis();
         LOGGER.log(Level.INFO, "=== Inventory Monitor Timer Fired ===");

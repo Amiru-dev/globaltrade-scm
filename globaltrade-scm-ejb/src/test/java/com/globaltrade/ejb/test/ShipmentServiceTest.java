@@ -108,8 +108,8 @@ class ShipmentServiceTest {
             when(em.find(Shipment.class, 999L)).thenReturn(null);
 
             ShipmentTrackingException ex = assertThrows(
-                ShipmentTrackingException.class,
-                () -> shipmentService.updateShipmentStatus(999L, ShipmentStatus.DELIVERED)
+                    ShipmentTrackingException.class,
+                    () -> shipmentService.updateShipmentStatus(999L, ShipmentStatus.DELIVERED)
             );
 
             assertTrue(ex.getMessage().contains("not found"));
@@ -166,7 +166,7 @@ class ShipmentServiceTest {
             when(mockQuery.getResultList()).thenReturn(Collections.emptyList());
 
             assertThrows(ShipmentTrackingException.class,
-                () -> shipmentService.findByTrackingNumber("INVALID-TN"));
+                    () -> shipmentService.findByTrackingNumber("INVALID-TN"));
         }
     }
 
@@ -192,8 +192,8 @@ class ShipmentServiceTest {
             when(em.find(Shipment.class, 1L)).thenReturn(testShipment);
 
             ShipmentTrackingException ex = assertThrows(
-                ShipmentTrackingException.class,
-                () -> shipmentService.deleteShipment(1L)
+                    ShipmentTrackingException.class,
+                    () -> shipmentService.deleteShipment(1L)
             );
 
             assertTrue(ex.getMessage().contains("CANCELLED"));

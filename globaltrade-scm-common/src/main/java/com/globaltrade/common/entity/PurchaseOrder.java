@@ -2,6 +2,7 @@ package com.globaltrade.common.entity;
 
 import com.globaltrade.common.enums.OrderStatus;
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,29 +17,29 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "purchase_orders", indexes = {
-    @Index(name = "idx_po_vendor", columnList = "vendor_id"),
-    @Index(name = "idx_po_status", columnList = "status"),
-    @Index(name = "idx_po_order_date", columnList = "order_date")
+        @Index(name = "idx_po_vendor", columnList = "vendor_id"),
+        @Index(name = "idx_po_status", columnList = "status"),
+        @Index(name = "idx_po_order_date", columnList = "order_date")
 })
 @NamedQueries({
-    @NamedQuery(
-        name = "PurchaseOrder.findByVendor",
-        query = "SELECT po FROM PurchaseOrder po WHERE po.vendorId = :vendorId ORDER BY po.orderDate DESC"
-    ),
-    @NamedQuery(
-        name = "PurchaseOrder.findByStatus",
-        query = "SELECT po FROM PurchaseOrder po WHERE po.status = :status"
-    ),
-    @NamedQuery(
-        name = "PurchaseOrder.findOverdue",
-        query = "SELECT po FROM PurchaseOrder po WHERE po.expectedDelivery < :date " +
-                "AND po.status NOT IN (com.globaltrade.common.enums.OrderStatus.RECEIVED, " +
-                "com.globaltrade.common.enums.OrderStatus.CANCELLED)"
-    ),
-    @NamedQuery(
-        name = "PurchaseOrder.findAll",
-        query = "SELECT po FROM PurchaseOrder po ORDER BY po.orderDate DESC"
-    )
+        @NamedQuery(
+                name = "PurchaseOrder.findByVendor",
+                query = "SELECT po FROM PurchaseOrder po WHERE po.vendorId = :vendorId ORDER BY po.orderDate DESC"
+        ),
+        @NamedQuery(
+                name = "PurchaseOrder.findByStatus",
+                query = "SELECT po FROM PurchaseOrder po WHERE po.status = :status"
+        ),
+        @NamedQuery(
+                name = "PurchaseOrder.findOverdue",
+                query = "SELECT po FROM PurchaseOrder po WHERE po.expectedDelivery < :date " +
+                        "AND po.status NOT IN (com.globaltrade.common.enums.OrderStatus.RECEIVED, " +
+                        "com.globaltrade.common.enums.OrderStatus.CANCELLED)"
+        ),
+        @NamedQuery(
+                name = "PurchaseOrder.findAll",
+                query = "SELECT po FROM PurchaseOrder po ORDER BY po.orderDate DESC"
+        )
 })
 public class PurchaseOrder implements Serializable {
 
@@ -132,50 +133,125 @@ public class PurchaseOrder implements Serializable {
 
     // ======================== Getters and Setters ========================
 
-    public Long getOrderId() { return orderId; }
-    public void setOrderId(Long orderId) { this.orderId = orderId; }
+    public Long getOrderId() {
+        return orderId;
+    }
 
-    public String getOrderNumber() { return orderNumber; }
-    public void setOrderNumber(String orderNumber) { this.orderNumber = orderNumber; }
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
 
-    public Long getVendorId() { return vendorId; }
-    public void setVendorId(Long vendorId) { this.vendorId = vendorId; }
+    public String getOrderNumber() {
+        return orderNumber;
+    }
 
-    public String getItemDescription() { return itemDescription; }
-    public void setItemDescription(String itemDescription) { this.itemDescription = itemDescription; }
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
 
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public Long getVendorId() {
+        return vendorId;
+    }
 
-    public BigDecimal getUnitPrice() { return unitPrice; }
-    public void setUnitPrice(BigDecimal unitPrice) { this.unitPrice = unitPrice; }
+    public void setVendorId(Long vendorId) {
+        this.vendorId = vendorId;
+    }
 
-    public BigDecimal getTotalAmount() { return totalAmount; }
-    public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
+    public String getItemDescription() {
+        return itemDescription;
+    }
 
-    public String getCurrency() { return currency; }
-    public void setCurrency(String currency) { this.currency = currency; }
+    public void setItemDescription(String itemDescription) {
+        this.itemDescription = itemDescription;
+    }
 
-    public OrderStatus getStatus() { return status; }
-    public void setStatus(OrderStatus status) { this.status = status; }
+    public int getQuantity() {
+        return quantity;
+    }
 
-    public LocalDate getOrderDate() { return orderDate; }
-    public void setOrderDate(LocalDate orderDate) { this.orderDate = orderDate; }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
-    public LocalDate getExpectedDelivery() { return expectedDelivery; }
-    public void setExpectedDelivery(LocalDate expectedDelivery) { this.expectedDelivery = expectedDelivery; }
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
+    }
 
-    public LocalDate getActualDelivery() { return actualDelivery; }
-    public void setActualDelivery(LocalDate actualDelivery) { this.actualDelivery = actualDelivery; }
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
+    }
 
-    public Long getDestinationWarehouseId() { return destinationWarehouseId; }
-    public void setDestinationWarehouseId(Long destinationWarehouseId) { this.destinationWarehouseId = destinationWarehouseId; }
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
 
-    public String getNotes() { return notes; }
-    public void setNotes(String notes) { this.notes = notes; }
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public LocalDate getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDate orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public LocalDate getExpectedDelivery() {
+        return expectedDelivery;
+    }
+
+    public void setExpectedDelivery(LocalDate expectedDelivery) {
+        this.expectedDelivery = expectedDelivery;
+    }
+
+    public LocalDate getActualDelivery() {
+        return actualDelivery;
+    }
+
+    public void setActualDelivery(LocalDate actualDelivery) {
+        this.actualDelivery = actualDelivery;
+    }
+
+    public Long getDestinationWarehouseId() {
+        return destinationWarehouseId;
+    }
+
+    public void setDestinationWarehouseId(Long destinationWarehouseId) {
+        this.destinationWarehouseId = destinationWarehouseId;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 
     @Override
     public String toString() {

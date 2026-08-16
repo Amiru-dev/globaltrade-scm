@@ -93,7 +93,7 @@ class TransactionTest {
 
             // Request more than available (100 units)
             assertThrows(InventoryShortageException.class,
-                () -> inventoryService.transferInventory(1L, 2L, 150));
+                    () -> inventoryService.transferInventory(1L, 2L, 150));
 
             // Verify neither item was modified (no em.merge called)
             verify(em, never()).merge(any());
@@ -106,7 +106,7 @@ class TransactionTest {
             when(em.find(InventoryItem.class, 999L)).thenReturn(null);
 
             assertThrows(TransactionRollbackException.class,
-                () -> inventoryService.transferInventory(1L, 999L, 10));
+                    () -> inventoryService.transferInventory(1L, 999L, 10));
         }
     }
 
@@ -134,8 +134,8 @@ class TransactionTest {
             when(em.find(InventoryItem.class, 1L)).thenReturn(sourceItem);
 
             InventoryShortageException ex = assertThrows(
-                InventoryShortageException.class,
-                () -> inventoryService.deductStock(1L, 200)
+                    InventoryShortageException.class,
+                    () -> inventoryService.deductStock(1L, 200)
             );
 
             // Critical Analysis: rollback=false on InventoryShortageException
@@ -151,7 +151,7 @@ class TransactionTest {
             when(em.find(InventoryItem.class, 999L)).thenReturn(null);
 
             assertThrows(InventoryShortageException.class,
-                () -> inventoryService.deductStock(999L, 10));
+                    () -> inventoryService.deductStock(999L, 10));
         }
     }
 

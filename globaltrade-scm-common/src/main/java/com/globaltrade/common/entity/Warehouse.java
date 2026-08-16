@@ -1,6 +1,7 @@
 package com.globaltrade.common.entity;
 
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,22 +12,22 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "warehouses", indexes = {
-    @Index(name = "idx_warehouse_region", columnList = "region"),
-    @Index(name = "idx_warehouse_utilization", columnList = "utilization_percent")
+        @Index(name = "idx_warehouse_region", columnList = "region"),
+        @Index(name = "idx_warehouse_utilization", columnList = "utilization_percent")
 })
 @NamedQueries({
-    @NamedQuery(
-        name = "Warehouse.findAll",
-        query = "SELECT w FROM Warehouse w ORDER BY w.region, w.location"
-    ),
-    @NamedQuery(
-        name = "Warehouse.findByRegion",
-        query = "SELECT w FROM Warehouse w WHERE w.region = :region"
-    ),
-    @NamedQuery(
-        name = "Warehouse.findHighUtilization",
-        query = "SELECT w FROM Warehouse w WHERE w.utilizationPercent > :threshold ORDER BY w.utilizationPercent DESC"
-    )
+        @NamedQuery(
+                name = "Warehouse.findAll",
+                query = "SELECT w FROM Warehouse w ORDER BY w.region, w.location"
+        ),
+        @NamedQuery(
+                name = "Warehouse.findByRegion",
+                query = "SELECT w FROM Warehouse w WHERE w.region = :region"
+        ),
+        @NamedQuery(
+                name = "Warehouse.findHighUtilization",
+                query = "SELECT w FROM Warehouse w WHERE w.utilizationPercent > :threshold ORDER BY w.utilizationPercent DESC"
+        )
 })
 public class Warehouse implements Serializable {
 
@@ -107,41 +108,101 @@ public class Warehouse implements Serializable {
 
     // ======================== Getters and Setters ========================
 
-    public Long getWarehouseId() { return warehouseId; }
-    public void setWarehouseId(Long warehouseId) { this.warehouseId = warehouseId; }
+    public Long getWarehouseId() {
+        return warehouseId;
+    }
 
-    public String getWarehouseCode() { return warehouseCode; }
-    public void setWarehouseCode(String warehouseCode) { this.warehouseCode = warehouseCode; }
+    public void setWarehouseId(Long warehouseId) {
+        this.warehouseId = warehouseId;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getWarehouseCode() {
+        return warehouseCode;
+    }
 
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
+    public void setWarehouseCode(String warehouseCode) {
+        this.warehouseCode = warehouseCode;
+    }
 
-    public String getCountry() { return country; }
-    public void setCountry(String country) { this.country = country; }
+    public String getName() {
+        return name;
+    }
 
-    public String getRegion() { return region; }
-    public void setRegion(String region) { this.region = region; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public int getCapacity() { return capacity; }
-    public void setCapacity(int capacity) { this.capacity = capacity; }
+    public String getLocation() {
+        return location;
+    }
 
-    public BigDecimal getUtilizationPercent() { return utilizationPercent; }
-    public void setUtilizationPercent(BigDecimal utilizationPercent) { this.utilizationPercent = utilizationPercent; }
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
-    public String getManagerName() { return managerName; }
-    public void setManagerName(String managerName) { this.managerName = managerName; }
+    public String getCountry() {
+        return country;
+    }
 
-    public String getContactPhone() { return contactPhone; }
-    public void setContactPhone(String contactPhone) { this.contactPhone = contactPhone; }
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
-    public boolean isActive() { return active; }
-    public void setActive(boolean active) { this.active = active; }
+    public String getRegion() {
+        return region;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public BigDecimal getUtilizationPercent() {
+        return utilizationPercent;
+    }
+
+    public void setUtilizationPercent(BigDecimal utilizationPercent) {
+        this.utilizationPercent = utilizationPercent;
+    }
+
+    public String getManagerName() {
+        return managerName;
+    }
+
+    public void setManagerName(String managerName) {
+        this.managerName = managerName;
+    }
+
+    public String getContactPhone() {
+        return contactPhone;
+    }
+
+    public void setContactPhone(String contactPhone) {
+        this.contactPhone = contactPhone;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 
     @Override
     public String toString() {

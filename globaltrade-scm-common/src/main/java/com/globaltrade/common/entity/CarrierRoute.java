@@ -1,6 +1,7 @@
 package com.globaltrade.common.entity;
 
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,28 +13,28 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "carrier_routes", indexes = {
-    @Index(name = "idx_route_carrier", columnList = "carrier"),
-    @Index(name = "idx_route_origin_dest", columnList = "origin, destination")
+        @Index(name = "idx_route_carrier", columnList = "carrier"),
+        @Index(name = "idx_route_origin_dest", columnList = "origin, destination")
 })
 @NamedQueries({
-    @NamedQuery(
-        name = "CarrierRoute.findByCarrier",
-        query = "SELECT cr FROM CarrierRoute cr WHERE cr.carrier = :carrier"
-    ),
-    @NamedQuery(
-        name = "CarrierRoute.findByOriginDestination",
-        query = "SELECT cr FROM CarrierRoute cr WHERE cr.origin = :origin AND cr.destination = :destination " +
-                "ORDER BY cr.costPerKg ASC"
-    ),
-    @NamedQuery(
-        name = "CarrierRoute.findAll",
-        query = "SELECT cr FROM CarrierRoute cr ORDER BY cr.carrier, cr.origin"
-    ),
-    @NamedQuery(
-        name = "CarrierRoute.findMostReliable",
-        query = "SELECT cr FROM CarrierRoute cr WHERE cr.origin = :origin AND cr.destination = :destination " +
-                "ORDER BY cr.reliabilityScore DESC"
-    )
+        @NamedQuery(
+                name = "CarrierRoute.findByCarrier",
+                query = "SELECT cr FROM CarrierRoute cr WHERE cr.carrier = :carrier"
+        ),
+        @NamedQuery(
+                name = "CarrierRoute.findByOriginDestination",
+                query = "SELECT cr FROM CarrierRoute cr WHERE cr.origin = :origin AND cr.destination = :destination " +
+                        "ORDER BY cr.costPerKg ASC"
+        ),
+        @NamedQuery(
+                name = "CarrierRoute.findAll",
+                query = "SELECT cr FROM CarrierRoute cr ORDER BY cr.carrier, cr.origin"
+        ),
+        @NamedQuery(
+                name = "CarrierRoute.findMostReliable",
+                query = "SELECT cr FROM CarrierRoute cr WHERE cr.origin = :origin AND cr.destination = :destination " +
+                        "ORDER BY cr.reliabilityScore DESC"
+        )
 })
 public class CarrierRoute implements Serializable {
 
@@ -110,38 +111,93 @@ public class CarrierRoute implements Serializable {
 
     // ======================== Getters and Setters ========================
 
-    public Long getRouteId() { return routeId; }
-    public void setRouteId(Long routeId) { this.routeId = routeId; }
+    public Long getRouteId() {
+        return routeId;
+    }
 
-    public String getRouteCode() { return routeCode; }
-    public void setRouteCode(String routeCode) { this.routeCode = routeCode; }
+    public void setRouteId(Long routeId) {
+        this.routeId = routeId;
+    }
 
-    public String getCarrier() { return carrier; }
-    public void setCarrier(String carrier) { this.carrier = carrier; }
+    public String getRouteCode() {
+        return routeCode;
+    }
 
-    public String getOrigin() { return origin; }
-    public void setOrigin(String origin) { this.origin = origin; }
+    public void setRouteCode(String routeCode) {
+        this.routeCode = routeCode;
+    }
 
-    public String getDestination() { return destination; }
-    public void setDestination(String destination) { this.destination = destination; }
+    public String getCarrier() {
+        return carrier;
+    }
 
-    public int getTransitDays() { return transitDays; }
-    public void setTransitDays(int transitDays) { this.transitDays = transitDays; }
+    public void setCarrier(String carrier) {
+        this.carrier = carrier;
+    }
 
-    public BigDecimal getCostPerKg() { return costPerKg; }
-    public void setCostPerKg(BigDecimal costPerKg) { this.costPerKg = costPerKg; }
+    public String getOrigin() {
+        return origin;
+    }
 
-    public BigDecimal getMaxWeightKg() { return maxWeightKg; }
-    public void setMaxWeightKg(BigDecimal maxWeightKg) { this.maxWeightKg = maxWeightKg; }
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
 
-    public BigDecimal getReliabilityScore() { return reliabilityScore; }
-    public void setReliabilityScore(BigDecimal reliabilityScore) { this.reliabilityScore = reliabilityScore; }
+    public String getDestination() {
+        return destination;
+    }
 
-    public boolean isActive() { return active; }
-    public void setActive(boolean active) { this.active = active; }
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public int getTransitDays() {
+        return transitDays;
+    }
+
+    public void setTransitDays(int transitDays) {
+        this.transitDays = transitDays;
+    }
+
+    public BigDecimal getCostPerKg() {
+        return costPerKg;
+    }
+
+    public void setCostPerKg(BigDecimal costPerKg) {
+        this.costPerKg = costPerKg;
+    }
+
+    public BigDecimal getMaxWeightKg() {
+        return maxWeightKg;
+    }
+
+    public void setMaxWeightKg(BigDecimal maxWeightKg) {
+        this.maxWeightKg = maxWeightKg;
+    }
+
+    public BigDecimal getReliabilityScore() {
+        return reliabilityScore;
+    }
+
+    public void setReliabilityScore(BigDecimal reliabilityScore) {
+        this.reliabilityScore = reliabilityScore;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 
     @Override
     public String toString() {

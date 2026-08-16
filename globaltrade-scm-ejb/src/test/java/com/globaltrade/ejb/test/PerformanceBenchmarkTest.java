@@ -51,7 +51,7 @@ class PerformanceBenchmarkTest {
             PerformanceMonitor monitor = new PerformanceMonitor();
             when(invocationContext.proceed()).thenReturn("result");
             when(invocationContext.getMethod()).thenReturn(
-                Object.class.getMethod("toString"));
+                    Object.class.getMethod("toString"));
             when(invocationContext.getTarget()).thenReturn(new Object());
 
             long start = System.nanoTime();
@@ -62,7 +62,7 @@ class PerformanceBenchmarkTest {
             double avgMs = (elapsed / 1_000_000.0) / 1000;
 
             assertTrue(avgMs < 50,
-                "Average interceptor overhead should be under 50ms, was: " + avgMs + "ms");
+                    "Average interceptor overhead should be under 50ms, was: " + avgMs + "ms");
         }
 
         @RepeatedTest(5)
@@ -71,7 +71,7 @@ class PerformanceBenchmarkTest {
             PerformanceMonitor monitor = new PerformanceMonitor();
             when(invocationContext.proceed()).thenReturn("result");
             when(invocationContext.getMethod()).thenReturn(
-                Object.class.getMethod("toString"));
+                    Object.class.getMethod("toString"));
             when(invocationContext.getTarget()).thenReturn(new Object());
 
             long start = System.nanoTime();
@@ -79,7 +79,7 @@ class PerformanceBenchmarkTest {
             long elapsed = (System.nanoTime() - start) / 1_000_000;
 
             assertTrue(elapsed < 10,
-                "Single invocation should complete within 10ms, took: " + elapsed + "ms");
+                    "Single invocation should complete within 10ms, took: " + elapsed + "ms");
         }
     }
 
@@ -99,7 +99,7 @@ class PerformanceBenchmarkTest {
             double avgMicros = (elapsed / 1000.0) / 10000;
 
             assertTrue(avgMicros < 1000,
-                "TimerConfig creation should average under 1ms, was: " + avgMicros + "µs");
+                    "TimerConfig creation should average under 1ms, was: " + avgMicros + "µs");
         }
     }
 
@@ -113,14 +113,14 @@ class PerformanceBenchmarkTest {
             long start = System.nanoTime();
             for (int i = 0; i < 1000; i++) {
                 new com.globaltrade.common.exception.ShipmentTrackingException(
-                    "Tracking failed for TN-" + i, "TN-" + i);
+                        "Tracking failed for TN-" + i, "TN-" + i);
             }
             long elapsed = System.nanoTime() - start;
             double avgMs = (elapsed / 1_000_000.0) / 1000;
 
             // Exception creation involves stack trace capture, so ~1ms is expected
             assertTrue(avgMs < 5,
-                "Exception creation should average under 5ms, was: " + avgMs + "ms");
+                    "Exception creation should average under 5ms, was: " + avgMs + "ms");
         }
 
         @Test
@@ -131,15 +131,15 @@ class PerformanceBenchmarkTest {
             long start = System.nanoTime();
             for (int i = 0; i < 1000; i++) {
                 com.globaltrade.common.exception.ShipmentTrackingException ex =
-                    new com.globaltrade.common.exception.ShipmentTrackingException(
-                        "Tracking failed", "TN-" + i);
+                        new com.globaltrade.common.exception.ShipmentTrackingException(
+                                "Tracking failed", "TN-" + i);
                 ex.initCause(cause);
             }
             long elapsed = System.nanoTime() - start;
             double avgMs = (elapsed / 1_000_000.0) / 1000;
 
             assertTrue(avgMs < 10,
-                "Exception with cause should average under 10ms, was: " + avgMs + "ms");
+                    "Exception with cause should average under 10ms, was: " + avgMs + "ms");
         }
     }
 
@@ -163,7 +163,7 @@ class PerformanceBenchmarkTest {
             double avgMicros = (elapsed / 1000.0) / 10000;
 
             assertTrue(avgMicros < 1000,
-                "Entity creation should average under 1ms, was: " + avgMicros + "µs");
+                    "Entity creation should average under 1ms, was: " + avgMicros + "µs");
         }
     }
 }

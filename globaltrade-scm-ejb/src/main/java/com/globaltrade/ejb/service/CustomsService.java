@@ -11,6 +11,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -34,7 +35,7 @@ public class CustomsService {
 
     // Restricted HS codes (simplified for demonstration)
     private static final List<String> RESTRICTED_HS_CODES = List.of(
-        "9301", "9302", "9303", "9304", "2804.70", "2845.10"
+            "9301", "9302", "9303", "9304", "2804.70", "2845.10"
     );
 
     @PersistenceContext(unitName = "GlobalTradePU")
@@ -75,9 +76,9 @@ public class CustomsService {
         for (String restricted : RESTRICTED_HS_CODES) {
             if (hsCode.startsWith(restricted)) {
                 throw new CustomsComplianceException(
-                    "HS Code " + hsCode + " is restricted for trade. " +
-                    "Declaration cannot be processed.",
-                    declarationNumber, "RESTRICTED_GOODS");
+                        "HS Code " + hsCode + " is restricted for trade. " +
+                                "Declaration cannot be processed.",
+                        declarationNumber, "RESTRICTED_GOODS");
             }
         }
     }
@@ -92,8 +93,8 @@ public class CustomsService {
         CustomsDeclaration declaration = em.find(CustomsDeclaration.class, declarationId);
         if (declaration == null) {
             throw new CustomsComplianceException(
-                "Declaration not found: " + declarationId,
-                String.valueOf(declarationId), "NOT_FOUND");
+                    "Declaration not found: " + declarationId,
+                    String.valueOf(declarationId), "NOT_FOUND");
         }
 
         declaration.setStatus(ComplianceStatus.COMPLIANT);
@@ -125,7 +126,7 @@ public class CustomsService {
     public List<CustomsDeclaration> findApproachingDeadlines(int daysAhead) {
         LocalDate deadline = LocalDate.now().plusDays(daysAhead);
         return em.createNamedQuery("CustomsDeclaration.findApproachingDeadline",
-                CustomsDeclaration.class)
+                        CustomsDeclaration.class)
                 .setParameter("deadline", deadline)
                 .getResultList();
     }
@@ -140,7 +141,7 @@ public class CustomsService {
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<CustomsDeclaration> findNonCompliant() {
         return em.createNamedQuery("CustomsDeclaration.findNonCompliant",
-                CustomsDeclaration.class)
+                        CustomsDeclaration.class)
                 .getResultList();
     }
 }

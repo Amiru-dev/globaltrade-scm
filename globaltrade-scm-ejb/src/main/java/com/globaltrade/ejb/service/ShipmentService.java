@@ -12,6 +12,7 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Level;
@@ -60,8 +61,8 @@ public class ShipmentService {
         Shipment shipment = em.find(Shipment.class, shipmentId);
         if (shipment == null) {
             throw new ShipmentTrackingException(
-                "Shipment not found with ID: " + shipmentId,
-                String.valueOf(shipmentId));
+                    "Shipment not found with ID: " + shipmentId,
+                    String.valueOf(shipmentId));
         }
 
         ShipmentStatus oldStatus = shipment.getStatus();
@@ -90,7 +91,7 @@ public class ShipmentService {
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     @RolesAllowed({"LOGISTICS_COORDINATOR", "WAREHOUSE_MANAGER", "CUSTOMS_AGENT",
-                   "VENDOR_REPRESENTATIVE", "SYSTEM_ADMIN"})
+            "VENDOR_REPRESENTATIVE", "SYSTEM_ADMIN"})
     public Shipment findById(Long shipmentId) {
         return em.find(Shipment.class, shipmentId);
     }
@@ -101,17 +102,17 @@ public class ShipmentService {
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     @RolesAllowed({"LOGISTICS_COORDINATOR", "WAREHOUSE_MANAGER", "CUSTOMS_AGENT",
-                   "VENDOR_REPRESENTATIVE", "SYSTEM_ADMIN"})
+            "VENDOR_REPRESENTATIVE", "SYSTEM_ADMIN"})
     public Shipment findByTrackingNumber(String trackingNumber) throws ShipmentTrackingException {
         TypedQuery<Shipment> query = em.createQuery(
-            "SELECT s FROM Shipment s WHERE s.trackingNumber = :tn", Shipment.class);
+                "SELECT s FROM Shipment s WHERE s.trackingNumber = :tn", Shipment.class);
         query.setParameter("tn", trackingNumber);
         List<Shipment> results = query.getResultList();
 
         if (results.isEmpty()) {
             throw new ShipmentTrackingException(
-                "No shipment found with tracking number: " + trackingNumber,
-                trackingNumber);
+                    "No shipment found with tracking number: " + trackingNumber,
+                    trackingNumber);
         }
         return results.get(0);
     }
@@ -167,13 +168,13 @@ public class ShipmentService {
         Shipment shipment = em.find(Shipment.class, shipmentId);
         if (shipment == null) {
             throw new ShipmentTrackingException(
-                "Shipment not found for deletion: " + shipmentId,
-                String.valueOf(shipmentId));
+                    "Shipment not found for deletion: " + shipmentId,
+                    String.valueOf(shipmentId));
         }
         if (shipment.getStatus() != ShipmentStatus.CANCELLED) {
             throw new ShipmentTrackingException(
-                "Only CANCELLED shipments can be deleted. Current status: " + shipment.getStatus(),
-                shipment.getTrackingNumber());
+                    "Only CANCELLED shipments can be deleted. Current status: " + shipment.getStatus(),
+                    shipment.getTrackingNumber());
         }
         em.remove(shipment);
         LOGGER.log(Level.INFO, "Shipment deleted: {0}", shipment.getTrackingNumber());
@@ -185,7 +186,7 @@ public class ShipmentService {
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public long countByStatus(ShipmentStatus status) {
         return em.createQuery(
-                "SELECT COUNT(s) FROM Shipment s WHERE s.status = :status", Long.class)
+                        "SELECT COUNT(s) FROM Shipment s WHERE s.status = :status", Long.class)
                 .setParameter("status", status)
                 .getSingleResult();
     }

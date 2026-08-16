@@ -10,6 +10,7 @@ import jakarta.annotation.Resource;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -113,9 +114,9 @@ public class AuditLogInterceptor implements Serializable {
                 em.persist(auditLog);
 
                 LOGGER.log(Level.FINE,
-                    "AUDIT: [{0}] {1}.{2}() by {3} — {4} ({5}ms)",
-                    new Object[]{action, className, methodName, userId,
-                                 resultStatus, executionTime});
+                        "AUDIT: [{0}] {1}.{2}() by {3} — {4} ({5}ms)",
+                        new Object[]{action, className, methodName, userId,
+                                resultStatus, executionTime});
             } catch (Exception auditError) {
                 // Audit logging failure should NOT affect business operation
                 LOGGER.log(Level.WARNING, "Failed to write audit log", auditError);

@@ -13,6 +13,7 @@ import jakarta.ejb.Timeout;
 import jakarta.ejb.Timer;
 import jakarta.ejb.TimerConfig;
 import jakarta.ejb.TimerService;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -71,9 +72,9 @@ public class ShipmentTrackingTimer {
         config.setPersistent(true); // Survives server restart
 
         timerService.createIntervalTimer(
-            10000,                  // Initial delay: 10 seconds
-            DEFAULT_INTERVAL_MS,    // Interval: 15 minutes
-            config
+                10000,                  // Initial delay: 10 seconds
+                DEFAULT_INTERVAL_MS,    // Interval: 15 minutes
+                config
         );
 
         LOGGER.log(Level.INFO, "Shipment tracking timer created: interval={0}ms, persistent=true",

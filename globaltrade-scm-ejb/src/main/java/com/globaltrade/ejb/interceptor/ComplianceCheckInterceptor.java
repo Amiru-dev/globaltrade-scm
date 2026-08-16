@@ -6,6 +6,7 @@ import com.globaltrade.common.exception.CustomsComplianceException;
 
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.InvocationContext;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,7 +37,7 @@ public class ComplianceCheckInterceptor implements Serializable {
 
     // Simplified embargoed countries list for demonstration
     private static final List<String> EMBARGOED_COUNTRIES = List.of(
-        "North Korea", "Syria"
+            "North Korea", "Syria"
     );
 
     // Maximum declared value requiring additional documentation
@@ -76,33 +77,33 @@ public class ComplianceCheckInterceptor implements Serializable {
         // Check for embargoed origin country
         if (EMBARGOED_COUNTRIES.contains(declaration.getOriginCountry())) {
             throw new CustomsComplianceException(
-                "Trade with embargoed country not permitted: " + declaration.getOriginCountry(),
-                declaration.getDeclarationNumber(), "EMBARGO_VIOLATION");
+                    "Trade with embargoed country not permitted: " + declaration.getOriginCountry(),
+                    declaration.getDeclarationNumber(), "EMBARGO_VIOLATION");
         }
 
         // Check for embargoed destination country
         if (EMBARGOED_COUNTRIES.contains(declaration.getDestinationCountry())) {
             throw new CustomsComplianceException(
-                "Trade with embargoed country not permitted: " + declaration.getDestinationCountry(),
-                declaration.getDeclarationNumber(), "EMBARGO_VIOLATION");
+                    "Trade with embargoed country not permitted: " + declaration.getDestinationCountry(),
+                    declaration.getDeclarationNumber(), "EMBARGO_VIOLATION");
         }
 
         // High-value declaration warning
         if (declaration.getDeclaredValue() != null &&
                 declaration.getDeclaredValue().doubleValue() > HIGH_VALUE_THRESHOLD) {
             LOGGER.log(Level.WARNING,
-                "HIGH VALUE DECLARATION: {0} — Value ${1} exceeds threshold. " +
-                "Additional documentation may be required.",
-                new Object[]{declaration.getDeclarationNumber(),
-                             declaration.getDeclaredValue()});
+                    "HIGH VALUE DECLARATION: {0} — Value ${1} exceeds threshold. " +
+                            "Additional documentation may be required.",
+                    new Object[]{declaration.getDeclarationNumber(),
+                            declaration.getDeclaredValue()});
         }
 
         // Validate HS code format (must be at least 4 digits)
         if (declaration.getHsCode() != null && declaration.getHsCode().length() < 4) {
             throw new CustomsComplianceException(
-                "Invalid HS Code format: " + declaration.getHsCode() +
-                ". HS codes must be at least 4 digits.",
-                declaration.getDeclarationNumber(), "INVALID_HS_CODE");
+                    "Invalid HS Code format: " + declaration.getHsCode() +
+                            ". HS codes must be at least 4 digits.",
+                    declaration.getDeclarationNumber(), "INVALID_HS_CODE");
         }
 
         LOGGER.log(Level.FINE, "Customs compliance validated: {0}",
@@ -118,14 +119,14 @@ public class ComplianceCheckInterceptor implements Serializable {
         // Check for embargoed countries
         if (EMBARGOED_COUNTRIES.contains(shipment.getOriginCountry())) {
             throw new CustomsComplianceException(
-                "Shipment from embargoed country: " + shipment.getOriginCountry(),
-                shipment.getTrackingNumber(), "EMBARGO_VIOLATION");
+                    "Shipment from embargoed country: " + shipment.getOriginCountry(),
+                    shipment.getTrackingNumber(), "EMBARGO_VIOLATION");
         }
 
         if (EMBARGOED_COUNTRIES.contains(shipment.getDestinationCountry())) {
             throw new CustomsComplianceException(
-                "Shipment to embargoed country: " + shipment.getDestinationCountry(),
-                shipment.getTrackingNumber(), "EMBARGO_VIOLATION");
+                    "Shipment to embargoed country: " + shipment.getDestinationCountry(),
+                    shipment.getTrackingNumber(), "EMBARGO_VIOLATION");
         }
 
         LOGGER.log(Level.FINE, "Shipment compliance validated: {0}",

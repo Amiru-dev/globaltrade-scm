@@ -147,7 +147,7 @@ class TimerServiceTest {
         void persistentTimer_ConfigurationIsCorrect() {
             TimerConfig persistentConfig = new TimerConfig("ShipmentTracking", true);
             assertTrue(persistentConfig.isPersistent(),
-                "Shipment tracking timer must be persistent to survive server restarts");
+                    "Shipment tracking timer must be persistent to survive server restarts");
         }
 
         @Test
@@ -155,7 +155,7 @@ class TimerServiceTest {
         void nonPersistentTimer_ConfigurationIsCorrect() {
             TimerConfig transientConfig = new TimerConfig("RouteOptimization", false);
             assertFalse(transientConfig.isPersistent(),
-                "Route optimization timer should not persist — recalculated on boot");
+                    "Route optimization timer should not persist — recalculated on boot");
         }
 
         @Test
@@ -163,7 +163,7 @@ class TimerServiceTest {
         void timerConfig_HasMeaningfulInfo() {
             TimerConfig config = new TimerConfig("ShipmentTrackingTimer", true);
             assertEquals("ShipmentTrackingTimer", config.getInfo(),
-                "Timer info should contain a meaningful identifier for debugging");
+                    "Timer info should contain a meaningful identifier for debugging");
         }
     }
 }

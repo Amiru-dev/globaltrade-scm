@@ -15,6 +15,7 @@ import jakarta.ejb.TransactionManagementType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.UserTransaction;
+
 import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,7 +68,7 @@ public class BeanManagedTxService {
      * compensation logic for partial failures.
      */
     public String processComplexOrderFulfilment(Long orderId, Long inventoryItemId,
-                                                 String trackingNumber, String carrier)
+                                                String trackingNumber, String carrier)
             throws InventoryShortageException {
 
         LOGGER.log(Level.INFO, "BMT: Starting complex order fulfilment for order {0}", orderId);
@@ -98,7 +99,9 @@ public class BeanManagedTxService {
             LOGGER.log(Level.INFO, "BMT: Transaction 1 committed — Shipment created");
 
         } catch (Exception e) {
-            try { utx.rollback(); } catch (Exception re) { /* Log and continue */ }
+            try {
+                utx.rollback();
+            } catch (Exception re) { /* Log and continue */ }
             LOGGER.log(Level.SEVERE, "BMT: Transaction 1 failed — Shipment creation", e);
             return "FAILED: Shipment creation failed — " + e.getMessage();
         }
@@ -118,11 +121,11 @@ public class BeanManagedTxService {
                 utx.rollback();
                 inventoryDeducted = false;
                 result.append("Step 2: Insufficient inventory (need ")
-                      .append(order.getQuantity()).append(", have ")
-                      .append(item.getQuantity()).append(") — partial fulfilment. ");
+                        .append(order.getQuantity()).append(", have ")
+                        .append(item.getQuantity()).append(") — partial fulfilment. ");
 
                 LOGGER.log(Level.WARNING,
-                    "BMT: Inventory shortage — proceeding with partial fulfilment");
+                        "BMT: Inventory shortage — proceeding with partial fulfilment");
             } else {
                 item.setQuantity(item.getQuantity() - order.getQuantity());
                 item.setLastReplenished(LocalDateTime.now());
@@ -130,12 +133,14 @@ public class BeanManagedTxService {
                 utx.commit();
                 inventoryDeducted = true;
                 result.append("Step 2: Inventory deducted (")
-                      .append(order.getQuantity()).append(" units). ");
+                        .append(order.getQuantity()).append(" units). ");
                 LOGGER.log(Level.INFO, "BMT: Transaction 2 committed — Inventory deducted");
             }
 
         } catch (Exception e) {
-            try { utx.rollback(); } catch (Exception re) { /* Log and continue */ }
+            try {
+                utx.rollback();
+            } catch (Exception re) { /* Log and continue */ }
             LOGGER.log(Level.WARNING, "BMT: Transaction 2 failed — Inventory deduction", e);
             result.append("Step 2: Inventory deduction failed. ");
         }
@@ -164,7 +169,9 @@ public class BeanManagedTxService {
             }
 
         } catch (Exception e) {
-            try { utx.rollback(); } catch (Exception re) { /* Log and continue */ }
+            try {
+                utx.rollback();
+            } catch (Exception re) { /* Log and continue */ }
             LOGGER.log(Level.SEVERE, "BMT: Transaction 3 failed — Order status update", e);
             result.append("Step 3: Order status update failed.");
         }

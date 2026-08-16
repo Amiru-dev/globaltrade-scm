@@ -14,6 +14,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.logging.Level;
@@ -64,7 +65,7 @@ public class OrderTransactionService {
         PurchaseOrder order = em.find(PurchaseOrder.class, orderId);
         if (order == null) {
             throw new TransactionRollbackException(
-                "Order not found: " + orderId, "FULFIL-" + orderId);
+                    "Order not found: " + orderId, "FULFIL-" + orderId);
         }
 
         // 2. Create shipment for the order
@@ -77,7 +78,7 @@ public class OrderTransactionService {
         shipment.setCarrier(carrier);
         shipment.setStatus(ShipmentStatus.CREATED);
         shipment.setEstimatedDelivery(
-            LocalDateTime.now().plusDays(14));
+                LocalDateTime.now().plusDays(14));
 
         em.persist(shipment);
 
@@ -86,8 +87,8 @@ public class OrderTransactionService {
         em.merge(order);
 
         LOGGER.log(Level.INFO,
-            "Order {0} fulfilled: Shipment {1} created via {2}",
-            new Object[]{order.getOrderNumber(), trackingNumber, carrier});
+                "Order {0} fulfilled: Shipment {1} created via {2}",
+                new Object[]{order.getOrderNumber(), trackingNumber, carrier});
 
         // All operations succeed atomically — committed by container
         return shipment;
@@ -110,8 +111,8 @@ public class OrderTransactionService {
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public long getOrderCountByStatus(OrderStatus status) {
         return em.createQuery(
-                "SELECT COUNT(po) FROM PurchaseOrder po WHERE po.status = :status",
-                Long.class)
+                        "SELECT COUNT(po) FROM PurchaseOrder po WHERE po.status = :status",
+                        Long.class)
                 .setParameter("status", status)
                 .getSingleResult();
     }
@@ -136,11 +137,11 @@ public class OrderTransactionService {
         long receivedCount = getOrderCountByStatus(OrderStatus.RECEIVED);
 
         return String.format(
-            "Order Summary Report [%s]%n" +
-            "  Draft: %d | Submitted: %d | Processing: %d%n" +
-            "  Shipped: %d | Received: %d",
-            LocalDate.now(), draftCount, submittedCount, processingCount,
-            shippedCount, receivedCount);
+                "Order Summary Report [%s]%n" +
+                        "  Draft: %d | Submitted: %d | Processing: %d%n" +
+                        "  Shipped: %d | Received: %d",
+                LocalDate.now(), draftCount, submittedCount, processingCount,
+                shippedCount, receivedCount);
     }
 
     /**
@@ -156,10 +157,10 @@ public class OrderTransactionService {
 
         if (order == null || item == null) {
             throw new InventoryShortageException(
-                "Order or inventory item not found",
-                item != null ? item.getSku() : "UNKNOWN",
-                order != null ? order.getQuantity() : 0,
-                item != null ? item.getQuantity() : 0);
+                    "Order or inventory item not found",
+                    item != null ? item.getSku() : "UNKNOWN",
+                    order != null ? order.getQuantity() : 0,
+                    item != null ? item.getQuantity() : 0);
         }
 
         // Add received quantity to inventory

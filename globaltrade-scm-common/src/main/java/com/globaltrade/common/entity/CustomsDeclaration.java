@@ -2,6 +2,7 @@ package com.globaltrade.common.entity;
 
 import com.globaltrade.common.enums.ComplianceStatus;
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,30 +17,30 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "customs_declarations", indexes = {
-    @Index(name = "idx_customs_shipment", columnList = "shipment_id"),
-    @Index(name = "idx_customs_status", columnList = "status"),
-    @Index(name = "idx_customs_deadline", columnList = "submission_deadline")
+        @Index(name = "idx_customs_shipment", columnList = "shipment_id"),
+        @Index(name = "idx_customs_status", columnList = "status"),
+        @Index(name = "idx_customs_deadline", columnList = "submission_deadline")
 })
 @NamedQueries({
-    @NamedQuery(
-        name = "CustomsDeclaration.findByShipment",
-        query = "SELECT cd FROM CustomsDeclaration cd WHERE cd.shipmentId = :shipmentId"
-    ),
-    @NamedQuery(
-        name = "CustomsDeclaration.findPending",
-        query = "SELECT cd FROM CustomsDeclaration cd WHERE cd.status = com.globaltrade.common.enums.ComplianceStatus.PENDING " +
-                "ORDER BY cd.submissionDeadline ASC"
-    ),
-    @NamedQuery(
-        name = "CustomsDeclaration.findApproachingDeadline",
-        query = "SELECT cd FROM CustomsDeclaration cd WHERE cd.submissionDeadline <= :deadline " +
-                "AND cd.status IN (com.globaltrade.common.enums.ComplianceStatus.PENDING, " +
-                "com.globaltrade.common.enums.ComplianceStatus.UNDER_REVIEW)"
-    ),
-    @NamedQuery(
-        name = "CustomsDeclaration.findNonCompliant",
-        query = "SELECT cd FROM CustomsDeclaration cd WHERE cd.status = com.globaltrade.common.enums.ComplianceStatus.NON_COMPLIANT"
-    )
+        @NamedQuery(
+                name = "CustomsDeclaration.findByShipment",
+                query = "SELECT cd FROM CustomsDeclaration cd WHERE cd.shipmentId = :shipmentId"
+        ),
+        @NamedQuery(
+                name = "CustomsDeclaration.findPending",
+                query = "SELECT cd FROM CustomsDeclaration cd WHERE cd.status = com.globaltrade.common.enums.ComplianceStatus.PENDING " +
+                        "ORDER BY cd.submissionDeadline ASC"
+        ),
+        @NamedQuery(
+                name = "CustomsDeclaration.findApproachingDeadline",
+                query = "SELECT cd FROM CustomsDeclaration cd WHERE cd.submissionDeadline <= :deadline " +
+                        "AND cd.status IN (com.globaltrade.common.enums.ComplianceStatus.PENDING, " +
+                        "com.globaltrade.common.enums.ComplianceStatus.UNDER_REVIEW)"
+        ),
+        @NamedQuery(
+                name = "CustomsDeclaration.findNonCompliant",
+                query = "SELECT cd FROM CustomsDeclaration cd WHERE cd.status = com.globaltrade.common.enums.ComplianceStatus.NON_COMPLIANT"
+        )
 })
 public class CustomsDeclaration implements Serializable {
 
@@ -122,9 +123,9 @@ public class CustomsDeclaration implements Serializable {
     }
 
     public CustomsDeclaration(String declarationNumber, Long shipmentId, String hsCode,
-                               String goodsDescription, BigDecimal declaredValue,
-                               String originCountry, String destinationCountry,
-                               LocalDate submissionDeadline) {
+                              String goodsDescription, BigDecimal declaredValue,
+                              String originCountry, String destinationCountry,
+                              LocalDate submissionDeadline) {
         this.declarationNumber = declarationNumber;
         this.shipmentId = shipmentId;
         this.hsCode = hsCode;
@@ -138,56 +139,141 @@ public class CustomsDeclaration implements Serializable {
 
     // ======================== Getters and Setters ========================
 
-    public Long getDeclarationId() { return declarationId; }
-    public void setDeclarationId(Long declarationId) { this.declarationId = declarationId; }
+    public Long getDeclarationId() {
+        return declarationId;
+    }
 
-    public String getDeclarationNumber() { return declarationNumber; }
-    public void setDeclarationNumber(String declarationNumber) { this.declarationNumber = declarationNumber; }
+    public void setDeclarationId(Long declarationId) {
+        this.declarationId = declarationId;
+    }
 
-    public Long getShipmentId() { return shipmentId; }
-    public void setShipmentId(Long shipmentId) { this.shipmentId = shipmentId; }
+    public String getDeclarationNumber() {
+        return declarationNumber;
+    }
 
-    public String getHsCode() { return hsCode; }
-    public void setHsCode(String hsCode) { this.hsCode = hsCode; }
+    public void setDeclarationNumber(String declarationNumber) {
+        this.declarationNumber = declarationNumber;
+    }
 
-    public String getGoodsDescription() { return goodsDescription; }
-    public void setGoodsDescription(String goodsDescription) { this.goodsDescription = goodsDescription; }
+    public Long getShipmentId() {
+        return shipmentId;
+    }
 
-    public BigDecimal getDeclaredValue() { return declaredValue; }
-    public void setDeclaredValue(BigDecimal declaredValue) { this.declaredValue = declaredValue; }
+    public void setShipmentId(Long shipmentId) {
+        this.shipmentId = shipmentId;
+    }
 
-    public BigDecimal getTariffRate() { return tariffRate; }
-    public void setTariffRate(BigDecimal tariffRate) { this.tariffRate = tariffRate; }
+    public String getHsCode() {
+        return hsCode;
+    }
 
-    public BigDecimal getDutyAmount() { return dutyAmount; }
-    public void setDutyAmount(BigDecimal dutyAmount) { this.dutyAmount = dutyAmount; }
+    public void setHsCode(String hsCode) {
+        this.hsCode = hsCode;
+    }
 
-    public String getOriginCountry() { return originCountry; }
-    public void setOriginCountry(String originCountry) { this.originCountry = originCountry; }
+    public String getGoodsDescription() {
+        return goodsDescription;
+    }
 
-    public String getDestinationCountry() { return destinationCountry; }
-    public void setDestinationCountry(String destinationCountry) { this.destinationCountry = destinationCountry; }
+    public void setGoodsDescription(String goodsDescription) {
+        this.goodsDescription = goodsDescription;
+    }
 
-    public ComplianceStatus getStatus() { return status; }
-    public void setStatus(ComplianceStatus status) { this.status = status; }
+    public BigDecimal getDeclaredValue() {
+        return declaredValue;
+    }
 
-    public LocalDate getSubmissionDeadline() { return submissionDeadline; }
-    public void setSubmissionDeadline(LocalDate submissionDeadline) { this.submissionDeadline = submissionDeadline; }
+    public void setDeclaredValue(BigDecimal declaredValue) {
+        this.declaredValue = declaredValue;
+    }
 
-    public LocalDate getSubmittedDate() { return submittedDate; }
-    public void setSubmittedDate(LocalDate submittedDate) { this.submittedDate = submittedDate; }
+    public BigDecimal getTariffRate() {
+        return tariffRate;
+    }
 
-    public LocalDate getApprovedDate() { return approvedDate; }
-    public void setApprovedDate(LocalDate approvedDate) { this.approvedDate = approvedDate; }
+    public void setTariffRate(BigDecimal tariffRate) {
+        this.tariffRate = tariffRate;
+    }
 
-    public String getTradeAgreement() { return tradeAgreement; }
-    public void setTradeAgreement(String tradeAgreement) { this.tradeAgreement = tradeAgreement; }
+    public BigDecimal getDutyAmount() {
+        return dutyAmount;
+    }
 
-    public String getRemarks() { return remarks; }
-    public void setRemarks(String remarks) { this.remarks = remarks; }
+    public void setDutyAmount(BigDecimal dutyAmount) {
+        this.dutyAmount = dutyAmount;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public String getOriginCountry() {
+        return originCountry;
+    }
+
+    public void setOriginCountry(String originCountry) {
+        this.originCountry = originCountry;
+    }
+
+    public String getDestinationCountry() {
+        return destinationCountry;
+    }
+
+    public void setDestinationCountry(String destinationCountry) {
+        this.destinationCountry = destinationCountry;
+    }
+
+    public ComplianceStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ComplianceStatus status) {
+        this.status = status;
+    }
+
+    public LocalDate getSubmissionDeadline() {
+        return submissionDeadline;
+    }
+
+    public void setSubmissionDeadline(LocalDate submissionDeadline) {
+        this.submissionDeadline = submissionDeadline;
+    }
+
+    public LocalDate getSubmittedDate() {
+        return submittedDate;
+    }
+
+    public void setSubmittedDate(LocalDate submittedDate) {
+        this.submittedDate = submittedDate;
+    }
+
+    public LocalDate getApprovedDate() {
+        return approvedDate;
+    }
+
+    public void setApprovedDate(LocalDate approvedDate) {
+        this.approvedDate = approvedDate;
+    }
+
+    public String getTradeAgreement() {
+        return tradeAgreement;
+    }
+
+    public void setTradeAgreement(String tradeAgreement) {
+        this.tradeAgreement = tradeAgreement;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 
     @Override
     public String toString() {

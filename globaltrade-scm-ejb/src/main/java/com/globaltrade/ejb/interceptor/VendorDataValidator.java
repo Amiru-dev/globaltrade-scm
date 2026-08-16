@@ -5,6 +5,7 @@ import com.globaltrade.common.exception.VendorValidationException;
 
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.InvocationContext;
+
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,40 +69,40 @@ public class VendorDataValidator implements Serializable {
         // Validate vendor code format
         if (vendor.getVendorCode() == null || vendor.getVendorCode().isBlank()) {
             throw new VendorValidationException(
-                "Vendor code is required",
-                vendor.getVendorCode(), "vendorCode");
+                    "Vendor code is required",
+                    vendor.getVendorCode(), "vendorCode");
         }
         if (!VENDOR_CODE_PATTERN.matcher(vendor.getVendorCode()).matches()) {
             throw new VendorValidationException(
-                "Vendor code must follow format: VND-XXX (e.g., VND-001)",
-                vendor.getVendorCode(), "vendorCode");
+                    "Vendor code must follow format: VND-XXX (e.g., VND-001)",
+                    vendor.getVendorCode(), "vendorCode");
         }
 
         // Validate name
         if (vendor.getName() == null || vendor.getName().isBlank()) {
             throw new VendorValidationException(
-                "Vendor name is required",
-                vendor.getVendorCode(), "name");
+                    "Vendor name is required",
+                    vendor.getVendorCode(), "name");
         }
         if (vendor.getName().length() < 3 || vendor.getName().length() > 200) {
             throw new VendorValidationException(
-                "Vendor name must be between 3 and 200 characters",
-                vendor.getVendorCode(), "name");
+                    "Vendor name must be between 3 and 200 characters",
+                    vendor.getVendorCode(), "name");
         }
 
         // Validate country
         if (vendor.getCountry() == null || vendor.getCountry().isBlank()) {
             throw new VendorValidationException(
-                "Country is required for trade compliance",
-                vendor.getVendorCode(), "country");
+                    "Country is required for trade compliance",
+                    vendor.getVendorCode(), "country");
         }
 
         // Validate email format (if provided)
         if (vendor.getContactEmail() != null && !vendor.getContactEmail().isBlank()) {
             if (!EMAIL_PATTERN.matcher(vendor.getContactEmail()).matches()) {
                 throw new VendorValidationException(
-                    "Invalid email format: " + vendor.getContactEmail(),
-                    vendor.getVendorCode(), "contactEmail");
+                        "Invalid email format: " + vendor.getContactEmail(),
+                        vendor.getVendorCode(), "contactEmail");
             }
         }
 
@@ -109,16 +110,16 @@ public class VendorDataValidator implements Serializable {
         if (vendor.getContactPhone() != null && !vendor.getContactPhone().isBlank()) {
             if (!PHONE_PATTERN.matcher(vendor.getContactPhone()).matches()) {
                 throw new VendorValidationException(
-                    "Invalid phone format: " + vendor.getContactPhone(),
-                    vendor.getVendorCode(), "contactPhone");
+                        "Invalid phone format: " + vendor.getContactPhone(),
+                        vendor.getVendorCode(), "contactPhone");
             }
         }
 
         // Validate category
         if (vendor.getCategory() == null || vendor.getCategory().isBlank()) {
             throw new VendorValidationException(
-                "Vendor category is required",
-                vendor.getVendorCode(), "category");
+                    "Vendor category is required",
+                    vendor.getVendorCode(), "category");
         }
 
         LOGGER.log(Level.FINE, "Vendor data validated: {0} ({1})",

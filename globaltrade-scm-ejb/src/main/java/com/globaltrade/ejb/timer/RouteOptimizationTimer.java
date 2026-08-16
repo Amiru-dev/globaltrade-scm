@@ -10,6 +10,7 @@ import jakarta.ejb.Timeout;
 import jakarta.ejb.Timer;
 import jakarta.ejb.TimerConfig;
 import jakarta.ejb.TimerService;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -93,7 +94,7 @@ public class RouteOptimizationTimer {
                         CarrierRoute optimal = routeService.findOptimalRoute(parts[0], parts[1]);
                         if (optimal != null) {
                             LOGGER.log(Level.INFO, "Optimal route {0}: {1} via {2} " +
-                                    "(${3}/kg, {4} days, reliability={5})",
+                                            "(${3}/kg, {4} days, reliability={5})",
                                     new Object[]{corridor, optimal.getRouteCode(),
                                             optimal.getCarrier(), optimal.getCostPerKg(),
                                             optimal.getTransitDays(),

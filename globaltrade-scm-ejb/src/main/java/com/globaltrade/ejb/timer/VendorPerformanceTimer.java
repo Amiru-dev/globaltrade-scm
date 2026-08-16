@@ -10,6 +10,7 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.Schedule;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Timer;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -44,8 +45,8 @@ public class VendorPerformanceTimer {
      * Calculates performance scores based on order fulfilment metrics.
      */
     @Schedule(hour = "2", minute = "0", second = "0",
-              persistent = false,
-              info = "DailyVendorPerformanceAssessment")
+            persistent = false,
+            info = "DailyVendorPerformanceAssessment")
     public void evaluateVendorPerformance(Timer timer) {
         long startTime = System.currentTimeMillis();
         LOGGER.log(Level.INFO, "=== Vendor Performance Timer Fired ===");
@@ -60,8 +61,8 @@ public class VendorPerformanceTimer {
                 // Flag low-performing vendors
                 if (rating.compareTo(new BigDecimal("3.0")) < 0) {
                     LOGGER.log(Level.WARNING,
-                        "LOW PERFORMANCE VENDOR: {0} ({1}) — Rating: {2}/5.00",
-                        new Object[]{vendor.getName(), vendor.getVendorCode(), rating});
+                            "LOW PERFORMANCE VENDOR: {0} ({1}) — Rating: {2}/5.00",
+                            new Object[]{vendor.getName(), vendor.getVendorCode(), rating});
                 }
             }
 

@@ -35,8 +35,8 @@ class ExceptionHandlingTest {
         @DisplayName("ShipmentTrackingException should carry tracking context")
         void shipmentTrackingException_CarriesTrackingInfo() {
             ShipmentTrackingException ex = new ShipmentTrackingException(
-                "Carrier API timeout for tracking GT-2024-001",
-                "GT-2024-001");
+                    "Carrier API timeout for tracking GT-2024-001",
+                    "GT-2024-001");
 
             assertEquals("Carrier API timeout for tracking GT-2024-001", ex.getMessage());
             assertEquals("GT-2024-001", ex.getTrackingNumber());
@@ -46,14 +46,14 @@ class ExceptionHandlingTest {
         @DisplayName("InventoryShortageException should carry shortage details")
         void inventoryShortageException_CarriesShortageDetails() {
             InventoryShortageException ex = new InventoryShortageException(
-                "Insufficient stock for SKU WH-ELEC-001",
-                "WH-ELEC-001", 100, 30);
+                    "Insufficient stock for SKU WH-ELEC-001",
+                    "WH-ELEC-001", 100, 30);
 
             assertAll(
-                () -> assertEquals("WH-ELEC-001", ex.getSku()),
-                () -> assertEquals(100, ex.getRequestedQuantity()),
-                () -> assertEquals(30, ex.getAvailableQuantity()),
-                () -> assertTrue(ex.getMessage().contains("Insufficient stock"))
+                    () -> assertEquals("WH-ELEC-001", ex.getSku()),
+                    () -> assertEquals(100, ex.getRequestedQuantity()),
+                    () -> assertEquals(30, ex.getAvailableQuantity()),
+                    () -> assertTrue(ex.getMessage().contains("Insufficient stock"))
             );
         }
 
@@ -61,9 +61,9 @@ class ExceptionHandlingTest {
         @DisplayName("CustomsComplianceException should carry compliance details")
         void customsComplianceException_CarriesComplianceInfo() {
             CustomsComplianceException ex = new CustomsComplianceException(
-                "Missing HS code for declaration DEC-2024-099",
-                "DEC-2024-099",
-                "MISSING_HS_CODE");
+                    "Missing HS code for declaration DEC-2024-099",
+                    "DEC-2024-099",
+                    "MISSING_HS_CODE");
 
             assertEquals("DEC-2024-099", ex.getDeclarationNumber());
             assertEquals("MISSING_HS_CODE", ex.getViolationType());
@@ -73,8 +73,8 @@ class ExceptionHandlingTest {
         @DisplayName("VendorValidationException should carry validation context")
         void vendorValidationException_CarriesValidationContext() {
             VendorValidationException ex = new VendorValidationException(
-                "Invalid vendor email format",
-                "VND-001", "contactEmail");
+                    "Invalid vendor email format",
+                    "VND-001", "contactEmail");
 
             assertEquals("VND-001", ex.getVendorCode());
             assertEquals("contactEmail", ex.getFieldName());
@@ -84,8 +84,8 @@ class ExceptionHandlingTest {
         @DisplayName("TransactionRollbackException should carry transaction context")
         void transactionRollbackException_CarriesTxContext() {
             TransactionRollbackException ex = new TransactionRollbackException(
-                "Data integrity violation during inventory transfer",
-                "TRANSFER-001-002");
+                    "Data integrity violation during inventory transfer",
+                    "TRANSFER-001-002");
 
             assertEquals("TRANSFER-001-002", ex.getTransactionId());
         }
@@ -99,16 +99,16 @@ class ExceptionHandlingTest {
         @DisplayName("All application exceptions should extend SupplyChainException")
         void applicationExceptions_ExtendBase() {
             assertAll(
-                () -> assertInstanceOf(SupplyChainException.class,
-                    new ShipmentTrackingException("test", "TN-001")),
-                () -> assertInstanceOf(SupplyChainException.class,
-                    new InventoryShortageException("test", "SKU-001", 10, 5)),
-                () -> assertInstanceOf(SupplyChainException.class,
-                    new CustomsComplianceException("test", "DEC-001", "TYPE")),
-                () -> assertInstanceOf(SupplyChainException.class,
-                    new VendorValidationException("test", "VND-001", "field")),
-                () -> assertInstanceOf(SupplyChainException.class,
-                    new TransactionRollbackException("test", "TX-001"))
+                    () -> assertInstanceOf(SupplyChainException.class,
+                            new ShipmentTrackingException("test", "TN-001")),
+                    () -> assertInstanceOf(SupplyChainException.class,
+                            new InventoryShortageException("test", "SKU-001", 10, 5)),
+                    () -> assertInstanceOf(SupplyChainException.class,
+                            new CustomsComplianceException("test", "DEC-001", "TYPE")),
+                    () -> assertInstanceOf(SupplyChainException.class,
+                            new VendorValidationException("test", "VND-001", "field")),
+                    () -> assertInstanceOf(SupplyChainException.class,
+                            new TransactionRollbackException("test", "TX-001"))
             );
         }
 
@@ -116,7 +116,7 @@ class ExceptionHandlingTest {
         @DisplayName("CarrierSystemException should be a RuntimeException (system exception)")
         void carrierSystemException_IsRuntimeException() {
             CarrierSystemException ex = new CarrierSystemException(
-                "Carrier API completely unavailable", "CarrierA", 3);
+                    "Carrier API completely unavailable", "CarrierA", 3);
 
             assertInstanceOf(RuntimeException.class, ex);
         }
@@ -128,7 +128,7 @@ class ExceptionHandlingTest {
             ShipmentTrackingException ex = new ShipmentTrackingException("test", "TN-001");
             assertInstanceOf(Exception.class, ex);
             assertFalse(RuntimeException.class.isAssignableFrom(ex.getClass()),
-                "Application exceptions should be checked exceptions");
+                    "Application exceptions should be checked exceptions");
         }
     }
 
@@ -141,8 +141,8 @@ class ExceptionHandlingTest {
         void exceptionChaining_PreservesRootCause() {
             Exception rootCause = new java.sql.SQLException("Connection refused");
             ShipmentTrackingException ex = new ShipmentTrackingException(
-                "Failed to query carrier for GT-2024-001",
-                "GT-2024-001");
+                    "Failed to query carrier for GT-2024-001",
+                    "GT-2024-001");
             ex.initCause(rootCause);
 
             assertNotNull(ex.getCause());

@@ -11,6 +11,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Level;
@@ -56,14 +57,14 @@ public class InventoryService {
         InventoryItem item = em.find(InventoryItem.class, itemId);
         if (item == null) {
             throw new InventoryShortageException(
-                "Inventory item not found: " + itemId, "UNKNOWN", quantity, 0);
+                    "Inventory item not found: " + itemId, "UNKNOWN", quantity, 0);
         }
 
         if (item.getQuantity() < quantity) {
             throw new InventoryShortageException(
-                "Insufficient stock for SKU " + item.getSku() +
-                ": requested=" + quantity + ", available=" + item.getQuantity(),
-                item.getSku(), quantity, item.getQuantity());
+                    "Insufficient stock for SKU " + item.getSku() +
+                            ": requested=" + quantity + ", available=" + item.getQuantity(),
+                    item.getSku(), quantity, item.getQuantity());
         }
 
         item.setQuantity(item.getQuantity() - quantity);
@@ -106,14 +107,14 @@ public class InventoryService {
 
         if (source == null || target == null) {
             throw new TransactionRollbackException(
-                "Source or target inventory item not found",
-                "TRANSFER-" + sourceItemId + "-" + targetItemId);
+                    "Source or target inventory item not found",
+                    "TRANSFER-" + sourceItemId + "-" + targetItemId);
         }
 
         if (source.getQuantity() < quantity) {
             throw new InventoryShortageException(
-                "Insufficient stock for transfer",
-                source.getSku(), quantity, source.getQuantity());
+                    "Insufficient stock for transfer",
+                    source.getSku(), quantity, source.getQuantity());
         }
 
         // Atomic debit-credit

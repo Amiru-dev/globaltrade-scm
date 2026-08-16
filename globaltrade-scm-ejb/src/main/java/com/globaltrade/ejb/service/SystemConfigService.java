@@ -14,6 +14,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -92,7 +93,7 @@ public class SystemConfigService {
     private void loadRouteCache() {
         try {
             List<CarrierRoute> allRoutes = em.createNamedQuery(
-                "CarrierRoute.findAll", CarrierRoute.class).getResultList();
+                    "CarrierRoute.findAll", CarrierRoute.class).getResultList();
 
             routeCache.clear();
             for (CarrierRoute route : allRoutes) {

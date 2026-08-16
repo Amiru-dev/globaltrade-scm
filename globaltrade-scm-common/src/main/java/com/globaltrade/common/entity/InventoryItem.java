@@ -1,6 +1,7 @@
 package com.globaltrade.common.entity;
 
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -13,27 +14,27 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "inventory_items", indexes = {
-    @Index(name = "idx_inventory_sku", columnList = "sku"),
-    @Index(name = "idx_inventory_warehouse", columnList = "warehouse_id"),
-    @Index(name = "idx_inventory_low_stock", columnList = "quantity, reorder_level")
+        @Index(name = "idx_inventory_sku", columnList = "sku"),
+        @Index(name = "idx_inventory_warehouse", columnList = "warehouse_id"),
+        @Index(name = "idx_inventory_low_stock", columnList = "quantity, reorder_level")
 })
 @NamedQueries({
-    @NamedQuery(
-        name = "InventoryItem.findBySku",
-        query = "SELECT i FROM InventoryItem i WHERE i.sku = :sku"
-    ),
-    @NamedQuery(
-        name = "InventoryItem.findByWarehouse",
-        query = "SELECT i FROM InventoryItem i WHERE i.warehouseId = :warehouseId"
-    ),
-    @NamedQuery(
-        name = "InventoryItem.findLowStock",
-        query = "SELECT i FROM InventoryItem i WHERE i.quantity <= i.reorderLevel"
-    ),
-    @NamedQuery(
-        name = "InventoryItem.findOutOfStock",
-        query = "SELECT i FROM InventoryItem i WHERE i.quantity = 0"
-    )
+        @NamedQuery(
+                name = "InventoryItem.findBySku",
+                query = "SELECT i FROM InventoryItem i WHERE i.sku = :sku"
+        ),
+        @NamedQuery(
+                name = "InventoryItem.findByWarehouse",
+                query = "SELECT i FROM InventoryItem i WHERE i.warehouseId = :warehouseId"
+        ),
+        @NamedQuery(
+                name = "InventoryItem.findLowStock",
+                query = "SELECT i FROM InventoryItem i WHERE i.quantity <= i.reorderLevel"
+        ),
+        @NamedQuery(
+                name = "InventoryItem.findOutOfStock",
+                query = "SELECT i FROM InventoryItem i WHERE i.quantity = 0"
+        )
 })
 public class InventoryItem implements Serializable {
 
@@ -117,35 +118,85 @@ public class InventoryItem implements Serializable {
 
     // ======================== Getters and Setters ========================
 
-    public Long getItemId() { return itemId; }
-    public void setItemId(Long itemId) { this.itemId = itemId; }
+    public Long getItemId() {
+        return itemId;
+    }
 
-    public String getSku() { return sku; }
-    public void setSku(String sku) { this.sku = sku; }
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
+    }
 
-    public String getProductName() { return productName; }
-    public void setProductName(String productName) { this.productName = productName; }
+    public String getSku() {
+        return sku;
+    }
 
-    public Long getWarehouseId() { return warehouseId; }
-    public void setWarehouseId(Long warehouseId) { this.warehouseId = warehouseId; }
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
 
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public String getProductName() {
+        return productName;
+    }
 
-    public int getReorderLevel() { return reorderLevel; }
-    public void setReorderLevel(int reorderLevel) { this.reorderLevel = reorderLevel; }
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
-    public int getMaxStockLevel() { return maxStockLevel; }
-    public void setMaxStockLevel(int maxStockLevel) { this.maxStockLevel = maxStockLevel; }
+    public Long getWarehouseId() {
+        return warehouseId;
+    }
 
-    public String getUnitOfMeasure() { return unitOfMeasure; }
-    public void setUnitOfMeasure(String unitOfMeasure) { this.unitOfMeasure = unitOfMeasure; }
+    public void setWarehouseId(Long warehouseId) {
+        this.warehouseId = warehouseId;
+    }
 
-    public LocalDateTime getLastReplenished() { return lastReplenished; }
-    public void setLastReplenished(LocalDateTime lastReplenished) { this.lastReplenished = lastReplenished; }
+    public int getQuantity() {
+        return quantity;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public int getReorderLevel() {
+        return reorderLevel;
+    }
+
+    public void setReorderLevel(int reorderLevel) {
+        this.reorderLevel = reorderLevel;
+    }
+
+    public int getMaxStockLevel() {
+        return maxStockLevel;
+    }
+
+    public void setMaxStockLevel(int maxStockLevel) {
+        this.maxStockLevel = maxStockLevel;
+    }
+
+    public String getUnitOfMeasure() {
+        return unitOfMeasure;
+    }
+
+    public void setUnitOfMeasure(String unitOfMeasure) {
+        this.unitOfMeasure = unitOfMeasure;
+    }
+
+    public LocalDateTime getLastReplenished() {
+        return lastReplenished;
+    }
+
+    public void setLastReplenished(LocalDateTime lastReplenished) {
+        this.lastReplenished = lastReplenished;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 
     @Override
     public String toString() {

@@ -2,6 +2,7 @@ package com.globaltrade.common.entity;
 
 import com.globaltrade.common.enums.ShipmentStatus;
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,34 +16,34 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "shipments", indexes = {
-    @Index(name = "idx_shipment_status", columnList = "status"),
-    @Index(name = "idx_shipment_carrier", columnList = "carrier"),
-    @Index(name = "idx_shipment_destination", columnList = "destination_country")
+        @Index(name = "idx_shipment_status", columnList = "status"),
+        @Index(name = "idx_shipment_carrier", columnList = "carrier"),
+        @Index(name = "idx_shipment_destination", columnList = "destination_country")
 })
 @NamedQueries({
-    @NamedQuery(
-        name = "Shipment.findByStatus",
-        query = "SELECT s FROM Shipment s WHERE s.status = :status ORDER BY s.estimatedDelivery"
-    ),
-    @NamedQuery(
-        name = "Shipment.findActiveShipments",
-        query = "SELECT s FROM Shipment s WHERE s.status NOT IN " +
-                "(com.globaltrade.common.enums.ShipmentStatus.DELIVERED, " +
-                "com.globaltrade.common.enums.ShipmentStatus.CANCELLED) " +
-                "ORDER BY s.estimatedDelivery"
-    ),
-    @NamedQuery(
-        name = "Shipment.findDelayed",
-        query = "SELECT s FROM Shipment s WHERE s.status = com.globaltrade.common.enums.ShipmentStatus.DELAYED"
-    ),
-    @NamedQuery(
-        name = "Shipment.findByCarrier",
-        query = "SELECT s FROM Shipment s WHERE s.carrier = :carrier"
-    ),
-    @NamedQuery(
-        name = "Shipment.findPendingCustoms",
-        query = "SELECT s FROM Shipment s WHERE s.status = com.globaltrade.common.enums.ShipmentStatus.AT_CUSTOMS"
-    )
+        @NamedQuery(
+                name = "Shipment.findByStatus",
+                query = "SELECT s FROM Shipment s WHERE s.status = :status ORDER BY s.estimatedDelivery"
+        ),
+        @NamedQuery(
+                name = "Shipment.findActiveShipments",
+                query = "SELECT s FROM Shipment s WHERE s.status NOT IN " +
+                        "(com.globaltrade.common.enums.ShipmentStatus.DELIVERED, " +
+                        "com.globaltrade.common.enums.ShipmentStatus.CANCELLED) " +
+                        "ORDER BY s.estimatedDelivery"
+        ),
+        @NamedQuery(
+                name = "Shipment.findDelayed",
+                query = "SELECT s FROM Shipment s WHERE s.status = com.globaltrade.common.enums.ShipmentStatus.DELAYED"
+        ),
+        @NamedQuery(
+                name = "Shipment.findByCarrier",
+                query = "SELECT s FROM Shipment s WHERE s.carrier = :carrier"
+        ),
+        @NamedQuery(
+                name = "Shipment.findPendingCustoms",
+                query = "SELECT s FROM Shipment s WHERE s.status = com.globaltrade.common.enums.ShipmentStatus.AT_CUSTOMS"
+        )
 })
 public class Shipment implements Serializable {
 

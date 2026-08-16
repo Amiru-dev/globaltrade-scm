@@ -112,7 +112,7 @@ class SecurityTest {
             when(sessionContext.isCallerInRole("SYSTEM_ADMIN")).thenReturn(true);
 
             boolean result = securityService.authorizeEmergencyAccess(
-                "SHIPMENT", "Port closure — Hurricane Alpha");
+                    "SHIPMENT", "Port closure — Hurricane Alpha");
 
             assertTrue(result, "Admin should be granted emergency access");
         }
@@ -123,7 +123,7 @@ class SecurityTest {
             when(sessionContext.isCallerInRole("SYSTEM_ADMIN")).thenReturn(false);
 
             boolean result = securityService.authorizeEmergencyAccess(
-                "SHIPMENT", "Attempted unauthorized access");
+                    "SHIPMENT", "Attempted unauthorized access");
 
             assertFalse(result, "Non-admin should be denied emergency access");
         }

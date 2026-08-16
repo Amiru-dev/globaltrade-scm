@@ -10,6 +10,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -39,14 +40,14 @@ public class VendorManagementService {
     public Vendor registerVendor(Vendor vendor) throws VendorValidationException {
         // Check for duplicate vendor code
         List<Vendor> existing = em.createQuery(
-            "SELECT v FROM Vendor v WHERE v.vendorCode = :code", Vendor.class)
-            .setParameter("code", vendor.getVendorCode())
-            .getResultList();
+                        "SELECT v FROM Vendor v WHERE v.vendorCode = :code", Vendor.class)
+                .setParameter("code", vendor.getVendorCode())
+                .getResultList();
 
         if (!existing.isEmpty()) {
             throw new VendorValidationException(
-                "Vendor code already exists: " + vendor.getVendorCode(),
-                vendor.getVendorCode(), "vendorCode");
+                    "Vendor code already exists: " + vendor.getVendorCode(),
+                    vendor.getVendorCode(), "vendorCode");
         }
 
         em.persist(vendor);
@@ -63,8 +64,8 @@ public class VendorManagementService {
         Vendor existing = em.find(Vendor.class, vendor.getVendorId());
         if (existing == null) {
             throw new VendorValidationException(
-                "Vendor not found: " + vendor.getVendorId(),
-                vendor.getVendorCode(), "vendorId");
+                    "Vendor not found: " + vendor.getVendorId(),
+                    vendor.getVendorCode(), "vendorId");
         }
 
         existing.setName(vendor.getName());
@@ -147,9 +148,9 @@ public class VendorManagementService {
     @RolesAllowed({"VENDOR_REPRESENTATIVE", "LOGISTICS_COORDINATOR", "SYSTEM_ADMIN"})
     public Vendor findByVendorCode(String vendorCode) {
         List<Vendor> results = em.createQuery(
-            "SELECT v FROM Vendor v WHERE v.vendorCode = :code", Vendor.class)
-            .setParameter("code", vendorCode)
-            .getResultList();
+                        "SELECT v FROM Vendor v WHERE v.vendorCode = :code", Vendor.class)
+                .setParameter("code", vendorCode)
+                .getResultList();
         return results.isEmpty() ? null : results.get(0);
     }
 }

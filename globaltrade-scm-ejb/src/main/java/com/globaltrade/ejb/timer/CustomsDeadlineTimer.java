@@ -13,6 +13,7 @@ import jakarta.ejb.Timer;
 import jakarta.ejb.TimerConfig;
 import jakarta.ejb.TimerService;
 import jakarta.ejb.ScheduleExpression;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Level;
@@ -140,6 +141,6 @@ public class CustomsDeadlineTimer {
         // Log detailed alert for compliance tracking
         LOGGER.log(Level.WARNING,
                 "Action Required: Submit customs declaration {0} before deadline " +
-                "to avoid penalties and cargo seizure.", declarationNumber);
+                        "to avoid penalties and cargo seizure.", declarationNumber);
     }
 }

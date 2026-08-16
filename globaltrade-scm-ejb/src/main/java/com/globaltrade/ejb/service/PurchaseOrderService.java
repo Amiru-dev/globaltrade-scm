@@ -11,6 +11,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,8 +42,8 @@ public class PurchaseOrderService {
         PurchaseOrder order = em.find(PurchaseOrder.class, orderId);
         if (order == null) {
             throw new TransactionRollbackException(
-                "Purchase order not found: " + orderId,
-                "PO-UPDATE-" + orderId);
+                    "Purchase order not found: " + orderId,
+                    "PO-UPDATE-" + orderId);
         }
 
         OrderStatus oldStatus = order.getStatus();

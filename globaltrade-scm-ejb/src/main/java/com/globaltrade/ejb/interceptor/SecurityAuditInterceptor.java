@@ -4,6 +4,7 @@ import jakarta.annotation.Resource;
 import jakarta.ejb.SessionContext;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.InvocationContext;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -64,9 +65,9 @@ public class SecurityAuditInterceptor implements Serializable {
         // Check for sensitive operations requiring additional logging
         if (isSensitiveOperation(ctx.getMethod().getName())) {
             LOGGER.log(Level.WARNING,
-                "SENSITIVE OPERATION: User {0} invoking {1} at {2}. " +
-                "Enhanced audit trail recorded.",
-                new Object[]{callerPrincipal, methodName, timestamp});
+                    "SENSITIVE OPERATION: User {0} invoking {1} at {2}. " +
+                            "Enhanced audit trail recorded.",
+                    new Object[]{callerPrincipal, methodName, timestamp});
         }
 
         try {
@@ -79,15 +80,15 @@ public class SecurityAuditInterceptor implements Serializable {
         } catch (SecurityException se) {
             // Log security violations
             LOGGER.log(Level.SEVERE,
-                "SECURITY VIOLATION: Unauthorized access attempt by {0} on {1}. " +
-                "Exception: {2}",
-                new Object[]{callerPrincipal, methodName, se.getMessage()});
+                    "SECURITY VIOLATION: Unauthorized access attempt by {0} on {1}. " +
+                            "Exception: {2}",
+                    new Object[]{callerPrincipal, methodName, se.getMessage()});
             throw se;
 
         } catch (Exception e) {
             LOGGER.log(Level.FINE, "SECURITY AUDIT: {0} by {1} threw {2}",
                     new Object[]{methodName, callerPrincipal,
-                                 e.getClass().getSimpleName()});
+                            e.getClass().getSimpleName()});
             throw e;
         }
     }

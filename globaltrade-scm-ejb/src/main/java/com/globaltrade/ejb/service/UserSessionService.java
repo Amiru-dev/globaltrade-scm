@@ -14,6 +14,7 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ import java.util.logging.Logger;
  */
 @Stateful
 @RolesAllowed({"LOGISTICS_COORDINATOR", "WAREHOUSE_MANAGER", "CUSTOMS_AGENT",
-               "VENDOR_REPRESENTATIVE", "SYSTEM_ADMIN"})
+        "VENDOR_REPRESENTATIVE", "SYSTEM_ADMIN"})
 public class UserSessionService implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -112,8 +113,13 @@ public class UserSessionService implements Serializable {
                 new Object[]{username, role});
     }
 
-    public String getCurrentUser() { return currentUser; }
-    public String getCurrentRole() { return currentRole; }
+    public String getCurrentUser() {
+        return currentUser;
+    }
+
+    public String getCurrentRole() {
+        return currentRole;
+    }
 
     // ======================== Shipment Tracking ========================
 

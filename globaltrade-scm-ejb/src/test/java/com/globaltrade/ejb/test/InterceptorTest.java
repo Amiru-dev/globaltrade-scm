@@ -51,7 +51,7 @@ class InterceptorTest {
             Object expectedResult = "success";
             when(invocationContext.proceed()).thenReturn(expectedResult);
             when(invocationContext.getMethod()).thenReturn(
-                Object.class.getMethod("toString"));
+                    Object.class.getMethod("toString"));
             when(invocationContext.getTarget()).thenReturn(new Object());
 
             Object result = performanceMonitor.monitorPerformance(invocationContext);
@@ -65,11 +65,11 @@ class InterceptorTest {
         void monitor_TargetThrowsException_PropagatesException() throws Exception {
             when(invocationContext.proceed()).thenThrow(new RuntimeException("Service error"));
             when(invocationContext.getMethod()).thenReturn(
-                Object.class.getMethod("toString"));
+                    Object.class.getMethod("toString"));
             when(invocationContext.getTarget()).thenReturn(new Object());
 
             assertThrows(RuntimeException.class,
-                () -> performanceMonitor.monitorPerformance(invocationContext));
+                    () -> performanceMonitor.monitorPerformance(invocationContext));
         }
     }
 
@@ -90,7 +90,7 @@ class InterceptorTest {
             Object expectedResult = "audited-result";
             when(invocationContext.proceed()).thenReturn(expectedResult);
             when(invocationContext.getMethod()).thenReturn(
-                Object.class.getMethod("toString"));
+                    Object.class.getMethod("toString"));
             when(invocationContext.getTarget()).thenReturn(new Object());
             when(invocationContext.getParameters()).thenReturn(new Object[]{});
 
@@ -106,7 +106,7 @@ class InterceptorTest {
             Object[] params = new Object[]{"param1", 42};
             when(invocationContext.proceed()).thenReturn("result");
             when(invocationContext.getMethod()).thenReturn(
-                Object.class.getMethod("toString"));
+                    Object.class.getMethod("toString"));
             when(invocationContext.getTarget()).thenReturn(new Object());
             when(invocationContext.getParameters()).thenReturn(params);
 
@@ -130,7 +130,7 @@ class InterceptorTest {
 
             when(invocationContext.proceed()).thenReturn("result");
             when(invocationContext.getMethod()).thenReturn(
-                Object.class.getMethod("toString"));
+                    Object.class.getMethod("toString"));
             when(invocationContext.getTarget()).thenReturn(new Object());
             when(invocationContext.getParameters()).thenReturn(new Object[]{});
 
@@ -140,7 +140,7 @@ class InterceptorTest {
             reset(invocationContext);
             when(invocationContext.proceed()).thenReturn("result");
             when(invocationContext.getMethod()).thenReturn(
-                Object.class.getMethod("toString"));
+                    Object.class.getMethod("toString"));
             when(invocationContext.getTarget()).thenReturn(new Object());
             when(invocationContext.getParameters()).thenReturn(new Object[]{});
 

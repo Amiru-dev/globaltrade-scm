@@ -8,6 +8,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
@@ -36,7 +37,7 @@ public class RouteOptimizationService {
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public CarrierRoute findCheapestRoute(String origin, String destination) {
         List<CarrierRoute> routes = em.createNamedQuery(
-                "CarrierRoute.findByOriginDestination", CarrierRoute.class)
+                        "CarrierRoute.findByOriginDestination", CarrierRoute.class)
                 .setParameter("origin", origin)
                 .setParameter("destination", destination)
                 .getResultList();
@@ -53,7 +54,7 @@ public class RouteOptimizationService {
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public CarrierRoute findFastestRoute(String origin, String destination) {
         List<CarrierRoute> routes = em.createNamedQuery(
-                "CarrierRoute.findByOriginDestination", CarrierRoute.class)
+                        "CarrierRoute.findByOriginDestination", CarrierRoute.class)
                 .setParameter("origin", origin)
                 .setParameter("destination", destination)
                 .getResultList();
@@ -70,7 +71,7 @@ public class RouteOptimizationService {
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public CarrierRoute findMostReliableRoute(String origin, String destination) {
         List<CarrierRoute> routes = em.createNamedQuery(
-                "CarrierRoute.findMostReliable", CarrierRoute.class)
+                        "CarrierRoute.findMostReliable", CarrierRoute.class)
                 .setParameter("origin", origin)
                 .setParameter("destination", destination)
                 .setMaxResults(1)
@@ -86,7 +87,7 @@ public class RouteOptimizationService {
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public CarrierRoute findOptimalRoute(String origin, String destination) {
         List<CarrierRoute> routes = em.createNamedQuery(
-                "CarrierRoute.findByOriginDestination", CarrierRoute.class)
+                        "CarrierRoute.findByOriginDestination", CarrierRoute.class)
                 .setParameter("origin", origin)
                 .setParameter("destination", destination)
                 .getResultList();

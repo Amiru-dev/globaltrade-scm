@@ -2,6 +2,7 @@ package com.globaltrade.common.entity;
 
 import com.globaltrade.common.enums.ComplianceStatus;
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,31 +17,31 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "vendors", indexes = {
-    @Index(name = "idx_vendor_country", columnList = "country"),
-    @Index(name = "idx_vendor_compliance", columnList = "compliance_status"),
-    @Index(name = "idx_vendor_rating", columnList = "performance_rating")
+        @Index(name = "idx_vendor_country", columnList = "country"),
+        @Index(name = "idx_vendor_compliance", columnList = "compliance_status"),
+        @Index(name = "idx_vendor_rating", columnList = "performance_rating")
 })
 @NamedQueries({
-    @NamedQuery(
-        name = "Vendor.findAll",
-        query = "SELECT v FROM Vendor v ORDER BY v.performanceRating DESC"
-    ),
-    @NamedQuery(
-        name = "Vendor.findByComplianceStatus",
-        query = "SELECT v FROM Vendor v WHERE v.complianceStatus = :status"
-    ),
-    @NamedQuery(
-        name = "Vendor.findExpiredContracts",
-        query = "SELECT v FROM Vendor v WHERE v.contractExpiry < :date"
-    ),
-    @NamedQuery(
-        name = "Vendor.findByCountry",
-        query = "SELECT v FROM Vendor v WHERE v.country = :country"
-    ),
-    @NamedQuery(
-        name = "Vendor.findLowPerformance",
-        query = "SELECT v FROM Vendor v WHERE v.performanceRating < :threshold ORDER BY v.performanceRating"
-    )
+        @NamedQuery(
+                name = "Vendor.findAll",
+                query = "SELECT v FROM Vendor v ORDER BY v.performanceRating DESC"
+        ),
+        @NamedQuery(
+                name = "Vendor.findByComplianceStatus",
+                query = "SELECT v FROM Vendor v WHERE v.complianceStatus = :status"
+        ),
+        @NamedQuery(
+                name = "Vendor.findExpiredContracts",
+                query = "SELECT v FROM Vendor v WHERE v.contractExpiry < :date"
+        ),
+        @NamedQuery(
+                name = "Vendor.findByCountry",
+                query = "SELECT v FROM Vendor v WHERE v.country = :country"
+        ),
+        @NamedQuery(
+                name = "Vendor.findLowPerformance",
+                query = "SELECT v FROM Vendor v WHERE v.performanceRating < :threshold ORDER BY v.performanceRating"
+        )
 })
 public class Vendor implements Serializable {
 
@@ -127,47 +128,117 @@ public class Vendor implements Serializable {
 
     // ======================== Getters and Setters ========================
 
-    public Long getVendorId() { return vendorId; }
-    public void setVendorId(Long vendorId) { this.vendorId = vendorId; }
+    public Long getVendorId() {
+        return vendorId;
+    }
 
-    public String getVendorCode() { return vendorCode; }
-    public void setVendorCode(String vendorCode) { this.vendorCode = vendorCode; }
+    public void setVendorId(Long vendorId) {
+        this.vendorId = vendorId;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getVendorCode() {
+        return vendorCode;
+    }
 
-    public String getCountry() { return country; }
-    public void setCountry(String country) { this.country = country; }
+    public void setVendorCode(String vendorCode) {
+        this.vendorCode = vendorCode;
+    }
 
-    public String getCity() { return city; }
-    public void setCity(String city) { this.city = city; }
+    public String getName() {
+        return name;
+    }
 
-    public String getContactEmail() { return contactEmail; }
-    public void setContactEmail(String contactEmail) { this.contactEmail = contactEmail; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getContactPhone() { return contactPhone; }
-    public void setContactPhone(String contactPhone) { this.contactPhone = contactPhone; }
+    public String getCountry() {
+        return country;
+    }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
-    public BigDecimal getPerformanceRating() { return performanceRating; }
-    public void setPerformanceRating(BigDecimal performanceRating) { this.performanceRating = performanceRating; }
+    public String getCity() {
+        return city;
+    }
 
-    public ComplianceStatus getComplianceStatus() { return complianceStatus; }
-    public void setComplianceStatus(ComplianceStatus complianceStatus) { this.complianceStatus = complianceStatus; }
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-    public LocalDate getContractExpiry() { return contractExpiry; }
-    public void setContractExpiry(LocalDate contractExpiry) { this.contractExpiry = contractExpiry; }
+    public String getContactEmail() {
+        return contactEmail;
+    }
 
-    public BigDecimal getAnnualVolume() { return annualVolume; }
-    public void setAnnualVolume(BigDecimal annualVolume) { this.annualVolume = annualVolume; }
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
 
-    public String getPaymentTerms() { return paymentTerms; }
-    public void setPaymentTerms(String paymentTerms) { this.paymentTerms = paymentTerms; }
+    public String getContactPhone() {
+        return contactPhone;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setContactPhone(String contactPhone) {
+        this.contactPhone = contactPhone;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public BigDecimal getPerformanceRating() {
+        return performanceRating;
+    }
+
+    public void setPerformanceRating(BigDecimal performanceRating) {
+        this.performanceRating = performanceRating;
+    }
+
+    public ComplianceStatus getComplianceStatus() {
+        return complianceStatus;
+    }
+
+    public void setComplianceStatus(ComplianceStatus complianceStatus) {
+        this.complianceStatus = complianceStatus;
+    }
+
+    public LocalDate getContractExpiry() {
+        return contractExpiry;
+    }
+
+    public void setContractExpiry(LocalDate contractExpiry) {
+        this.contractExpiry = contractExpiry;
+    }
+
+    public BigDecimal getAnnualVolume() {
+        return annualVolume;
+    }
+
+    public void setAnnualVolume(BigDecimal annualVolume) {
+        this.annualVolume = annualVolume;
+    }
+
+    public String getPaymentTerms() {
+        return paymentTerms;
+    }
+
+    public void setPaymentTerms(String paymentTerms) {
+        this.paymentTerms = paymentTerms;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 
     @Override
     public String toString() {
