@@ -76,3 +76,13 @@ Based on the implementation and testing analysis, the following recommendations 
 The GlobalTrade SCM prototype successfully demonstrates the integration of core Jakarta EE 10 technologies. The EJB component model provides a highly structured, declarative approach to managing complex enterprise concerns such as transactions, security, and concurrency. The rigorous application of separation of concerns—evident in the interceptor chain and the split-directory EAR deployment—results in a robust foundation capable of scaling to meet the demands of global logistics operations. 
 
 By addressing the identified testing limitations and implementing the enterprise recommendations, this prototype can transition into a highly resilient production system.
+
+---
+
+## References
+
+*   Deinum, M., Rubio, D. and Long, J. (2018) *Spring 5 Recipes: A Problem-Solution Approach*. 4th edn. Berkeley, CA: Apress.
+*   Fowler, M. (2002) *Patterns of Enterprise Application Architecture*. Boston: Addison-Wesley.
+*   Jakarta EE Specification Process (2022) *Jakarta Enterprise Beans 4.0 Specification*. Eclipse Foundation. Available at: https://jakarta.ee/specifications/enterprise-beans/4.0/ (Accessed: 15 August 2026).
+*   Oracle (2021) *Java Authentication and Authorization Service (JAAS) Reference Guide*. Available at: https://docs.oracle.com/javase/8/docs/technotes/guides/security/jaas/JAASRefGuide.html (Accessed: 15 August 2026).
+*   Payara Services Ltd (2023) *Payara Server Documentation: Security Realms and JACC*. Available at: https://docs.payara.fish/ (Accessed: 15 August 2026).

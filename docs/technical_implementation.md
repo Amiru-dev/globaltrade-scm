@@ -124,8 +124,9 @@ The application is packaged as an Enterprise Archive (EAR) utilizing a split-dir
 ---
 
 ## References
-1. Jakarta EE Specification Process (2022). *Jakarta Enterprise Beans 4.0 Specification*. Eclipse Foundation.
-2. Oracle (2021). *Java Authentication and Authorization Service (JAAS) Reference Guide*.
-3. Payara Services Ltd (2023). *Payara Server Documentation: Security Realms and JACC*.
-4. Fowler, M. (2002). *Patterns of Enterprise Application Architecture*. Addison-Wesley Professional.
-5. Evans, E. (2003). *Domain-Driven Design: Tackling Complexity in the Heart of Software*. Addison-Wesley Professional.
+
+*   Deinum, M., Rubio, D. and Long, J. (2018) *Spring 5 Recipes: A Problem-Solution Approach*. 4th edn. Berkeley, CA: Apress.
+*   Fowler, M. (2002) *Patterns of Enterprise Application Architecture*. Boston: Addison-Wesley.
+*   Jakarta EE Specification Process (2022) *Jakarta Enterprise Beans 4.0 Specification*. Eclipse Foundation. Available at: https://jakarta.ee/specifications/enterprise-beans/4.0/ (Accessed: 15 August 2026).
+*   Oracle (2021) *Java Authentication and Authorization Service (JAAS) Reference Guide*. Available at: https://docs.oracle.com/javase/8/docs/technotes/guides/security/jaas/JAASRefGuide.html (Accessed: 15 August 2026).
+*   Payara Services Ltd (2023) *Payara Server Documentation: Security Realms and JACC*. Available at: https://docs.payara.fish/ (Accessed: 15 August 2026).
