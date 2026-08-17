@@ -60,7 +60,7 @@ public class GlobalTradeLoginModule implements LoginModule {
 
     // SQL queries
     private static final String AUTHENTICATE_SQL =
-            "SELECT password_hash, password_salt FROM users WHERE username = ? AND is_active = TRUE";
+            "SELECT password_hash FROM users WHERE username = ? AND is_active = TRUE";
     private static final String ROLES_SQL =
             "SELECT role_name FROM user_roles WHERE username = ?";
 
@@ -244,25 +244,30 @@ public class GlobalTradeLoginModule implements LoginModule {
                 }
 
                 String storedHash = rs.getString("password_hash");
-                String storedSalt = rs.getString("password_salt");
 
-                return verifyPassword(password, storedHash, storedSalt);
+                return verifyPassword(password, storedHash);
             }
         }
     }
 
-    private boolean verifyPassword(char[] password, String storedHash, String storedSalt)
+    private boolean verifyPassword(char[] password, String storedHash)
             throws Exception {
 
-        byte[] salt = Base64.getDecoder().decode(storedSalt);
-        PBEKeySpec spec = new PBEKeySpec(password, salt, 65536, 256);
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-        byte[] computedHash = factory.generateSecret(spec).getEncoded();
-        
-        String computedHashBase64 = Base64.getEncoder().encodeToString(computedHash);
+        java.security.MessageDigest md = java.security.MessageDigest.getInstance(HASH_ALGORITHM);
+        byte[] computedHash = md.digest(new String(password).getBytes(java.nio.charset.StandardCharsets.UTF_8));
+
+        // Convert computed hash to hex string (as in init-schema.sql)
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : computedHash) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+
+        String computedHashHex = hexString.toString();
 
         // Constant-time comparison to prevent timing attacks
-        return constantTimeEquals(storedHash, computedHashBase64);
+        return constantTimeEquals(storedHash, computedHashHex);
     }
 
     /**
