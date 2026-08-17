@@ -190,6 +190,7 @@ CREATE TABLE users (
     user_id             BIGINT AUTO_INCREMENT PRIMARY KEY,
     username            VARCHAR(100)    NOT NULL UNIQUE,
     password_hash       VARCHAR(256)    NOT NULL,
+    password_salt       VARCHAR(100)    NOT NULL,
     email               VARCHAR(150),
     full_name           VARCHAR(200),
     is_active           BOOLEAN         NOT NULL DEFAULT TRUE,
@@ -265,14 +266,14 @@ INSERT INTO carrier_routes (route_code, carrier, origin, destination, transit_da
 ('RT-006', 'DHL Express', 'Shanghai', 'New York', 3, 12.50, 5000.00, 0.98),
 ('RT-007', 'Maersk Line', 'Hamburg', 'New York', 12, 2.20, 45000.00, 0.95);
 
--- Users (passwords hashed with SHA-256 for demonstration — production would use PBKDF2)
+-- Users (passwords hashed with PBKDF2 for demonstration)
 -- Password for all users: "GlobalTrade2026!"
-INSERT INTO users (username, password_hash, email, full_name, is_active) VALUES
-('admin', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'admin@globaltrade.com', 'System Administrator', TRUE),
-('logistics_coord', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'logistics@globaltrade.com', 'Maria Rodriguez', TRUE),
-('warehouse_mgr', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'warehouse@globaltrade.com', 'James Chen', TRUE),
-('customs_agent', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'customs@globaltrade.com', 'Emma Thompson', TRUE),
-('vendor_rep', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'vendor@shenzhenelec.cn', 'Li Wei', TRUE);
+INSERT INTO users (username, password_hash, password_salt, email, full_name, is_active) VALUES
+('admin', 'vAkXtCkfpkR/yh52CkYmao3ORqQZjP398CbiQKSfloM=', 'VdQSDBgrO0ji6n9TCTIpig==', 'admin@globaltrade.com', 'System Administrator', TRUE),
+('logistics_coord', 'vAkXtCkfpkR/yh52CkYmao3ORqQZjP398CbiQKSfloM=', 'VdQSDBgrO0ji6n9TCTIpig==', 'logistics@globaltrade.com', 'Maria Rodriguez', TRUE),
+('warehouse_mgr', 'vAkXtCkfpkR/yh52CkYmao3ORqQZjP398CbiQKSfloM=', 'VdQSDBgrO0ji6n9TCTIpig==', 'warehouse@globaltrade.com', 'James Chen', TRUE),
+('customs_agent', 'vAkXtCkfpkR/yh52CkYmao3ORqQZjP398CbiQKSfloM=', 'VdQSDBgrO0ji6n9TCTIpig==', 'customs@globaltrade.com', 'Emma Thompson', TRUE),
+('vendor_rep', 'vAkXtCkfpkR/yh52CkYmao3ORqQZjP398CbiQKSfloM=', 'VdQSDBgrO0ji6n9TCTIpig==', 'vendor@shenzhenelec.cn', 'Li Wei', TRUE);
 
 -- User Roles
 INSERT INTO user_roles (username, role_name) VALUES

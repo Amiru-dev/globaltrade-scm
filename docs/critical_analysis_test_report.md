@@ -58,6 +58,8 @@ A critical review of the implemented security architecture reveals several stren
 2. **Denial of Service (DoS) via Timers:** A malicious user could rapidly trigger the `RouteOptimizationTimer` by flooding the system with minor cost-change events, exhausting the EJB thread pool.
     - *Mitigation:* The implemented "debouncing" logic in the timer (canceling pending timers before recreating) mitigates this. However, a strict rate-limiter should be implemented at the API gateway level.
 3. **Session Fixation:** While basic session timeouts are configured in `web.xml`, the application must ensure that the session ID is aggressively rotated upon privilege escalation or login.
+4. **Weak Password Hashing (Self-Identified & Remediated):** Initially, the `GlobalTradeLoginModule` was implemented using a single iteration of raw SHA-256 for password hashing. While computationally fast, this approach is highly vulnerable to dictionary and rainbow-table attacks, as identical passwords yield identical hashes. 
+    - *Mitigation:* This vulnerability was proactively identified and remediated. The authentication module was upgraded to use **PBKDF2WithHmacSHA256** (Password-Based Key Derivation Function 2) with 65,536 iterations and a unique 128-bit cryptographic salt per user. The database schema (`init-schema.sql`) was subsequently updated to persist this `password_salt` alongside the hash. This exponentially increases the computational cost of brute-force attacks and prevents pre-computation (rainbow table) exploits, aligning with modern OWASP cryptographic storage guidelines.
 
 ---
 
