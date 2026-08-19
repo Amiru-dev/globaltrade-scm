@@ -1,15 +1,13 @@
 package com.globaltrade.ejb.interceptor;
 
 import com.globaltrade.common.entity.AuditLog;
+import com.globaltrade.ejb.service.AuditService;
 
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.InvocationContext;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.annotation.Resource;
+import jakarta.ejb.EJB;
 import jakarta.ejb.SessionContext;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.ejb.TransactionAttributeType;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -26,9 +24,9 @@ import java.util.logging.Logger;
  *
  * <p><strong>Critical Analysis — Audit Interceptor Design:</strong></p>
  * <ul>
- *   <li><strong>REQUIRES_NEW transaction:</strong> Audit logs must persist even
- *       if the business method's transaction rolls back. Using REQUIRES_NEW
- *       ensures the audit record is committed independently.</li>
+ *   <li><strong>Separate EJB for persistence:</strong> Audit logging is delegated
+ *       to AuditService EJB which uses REQUIRES_NEW transaction. This ensures
+ *       audit logs persist even if the business method's transaction rolls back.</li>
  *   <li><strong>Performance consideration:</strong> Each intercepted call incurs
  *       a database write for audit logging. In high-throughput scenarios,
  *       asynchronous audit logging or batch writes could improve performance.</li>
@@ -42,8 +40,8 @@ public class AuditLogInterceptor implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = Logger.getLogger(AuditLogInterceptor.class.getName());
 
-    @PersistenceContext(unitName = "GlobalTradePU")
-    private EntityManager em;
+    @EJB
+    private AuditService auditService;
 
     @Resource
     private SessionContext sessionContext;
@@ -111,7 +109,7 @@ public class AuditLogInterceptor implements Serializable {
                 auditLog.setResultStatus(resultStatus);
                 auditLog.setExecutionTimeMs(executionTime);
 
-                em.persist(auditLog);
+                auditService.persistAuditLog(auditLog);
 
                 LOGGER.log(Level.FINE,
                         "AUDIT: [{0}] {1}.{2}() by {3} — {4} ({5}ms)",

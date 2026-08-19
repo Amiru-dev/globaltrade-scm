@@ -19,11 +19,11 @@
                                  https://jakarta.ee/xml/ns/jakartaee/application_10.xsd"
              version="10">
 
-    <display-name>GlobalTrade Supply Chain Management System</display-name>
     <description>
         Enterprise Supply Chain Management platform for GlobalTrade Logistics Corporation.
         Manages shipments, inventory, vendors, customs, and route optimization.
     </description>
+    <display-name>GlobalTrade Supply Chain Management System</display-name>
 
     <!-- EJB Module -->
     <module>

@@ -20,6 +20,7 @@ com\globaltrade\ejb\security\GlobalTradeLoginModule$SimplePrincipal.class
 com\globaltrade\ejb\transaction\BeanManagedTxService.class
 com\globaltrade\ejb\security\SessionManager$SessionInfo.class
 com\globaltrade\ejb\timer\VendorPerformanceTimer.class
+com\globaltrade\ejb\service\AuditService.class
 com\globaltrade\ejb\security\SessionManager.class
 com\globaltrade\ejb\timer\RouteOptimizationTimer.class
 com\globaltrade\ejb\security\SecurityService.class
