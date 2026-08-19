@@ -97,6 +97,9 @@ public class InventoryService {
      * <p><strong>Critical Analysis:</strong> This is a classic example of why
      * ACID transactions are essential. Without atomicity, a failure between
      * the debit and credit operations would result in "lost" inventory.</p>
+     *
+     * <p><strong>Transaction Timeout Analysis:</strong> Standard REQUIRED transaction for
+     * inventory transfers. Timeout can be configured via ejb-jar.xml if needed.</p>
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void transferInventory(Long sourceItemId, Long targetItemId, int quantity)

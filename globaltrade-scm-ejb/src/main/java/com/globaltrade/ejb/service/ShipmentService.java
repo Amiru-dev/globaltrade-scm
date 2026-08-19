@@ -42,6 +42,9 @@ public class ShipmentService {
     /**
      * Creates a new shipment record.
      * REQUIRED: Must execute within a transaction (creates or joins existing).
+     *
+     * <p><strong>Transaction Timeout Analysis:</strong> Standard REQUIRED transaction for shipment
+     * creation. Timeout can be configured via ejb-jar.xml if needed.</p>
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Shipment createShipment(Shipment shipment) {

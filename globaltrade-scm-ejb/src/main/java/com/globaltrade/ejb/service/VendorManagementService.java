@@ -35,6 +35,9 @@ public class VendorManagementService {
 
     /**
      * Registers a new vendor in the system.
+     *
+     * <p><strong>Transaction Timeout Analysis:</strong> Standard REQUIRED transaction for
+     * vendor registration. Timeout can be configured via ejb-jar.xml if needed.</p>
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Vendor registerVendor(Vendor vendor) throws VendorValidationException {
