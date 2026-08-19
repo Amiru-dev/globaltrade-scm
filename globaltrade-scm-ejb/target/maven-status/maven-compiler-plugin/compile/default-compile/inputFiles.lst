@@ -1,5 +1,6 @@
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\interceptor\AuditLogInterceptor.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\interceptor\ComplianceCheckInterceptor.java
+C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\interceptor\CustomsRegulationsInterceptor.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\interceptor\PerformanceMonitor.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\interceptor\SecurityAuditInterceptor.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\interceptor\VendorDataValidator.java
@@ -17,6 +18,7 @@ C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\gl
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\service\InventoryService.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\service\IsolationLevelDemoService.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\service\LifecycleCallbackDemoService.java
+C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\service\LogisticsRecoveryService.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\service\OrderProcessingService.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\service\PurchaseOrderService.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\service\ResourcePoolingAnalysisService.java

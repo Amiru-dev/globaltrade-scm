@@ -15,7 +15,13 @@ public enum ShipmentStatus {
     DELIVERED("Successfully delivered"),
     DELAYED("Shipment delayed due to disruption"),
     RETURNED("Returned to origin"),
-    CANCELLED("Shipment cancelled");
+    CANCELLED("Shipment cancelled"),
+    REROUTED("Rerouted to alternative carrier"),
+    MANUAL_PROCESSING("Processing via manual intervention"),
+    ON_HOLD("Temporarily on hold"),
+    CUSTOMS_REVIEW("Under customs review"),
+    DOCUMENTATION_PENDING("Pending documentation completion"),
+    REJECTED("Rejected by customs or regulatory body");
 
     private final String description;
 

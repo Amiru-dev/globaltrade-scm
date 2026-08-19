@@ -162,6 +162,42 @@ public class ShipmentService {
     }
 
     /**
+     * Supply chain-specific: Find high-value shipments for route optimization.
+     */
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @PermitAll
+    public List<Shipment> findHighValueShipments(double threshold) {
+        return em.createQuery(
+                "SELECT s FROM Shipment s WHERE s.declaredValue >= :threshold", Shipment.class)
+                .setParameter("threshold", threshold)
+                .getResultList();
+    }
+
+    /**
+     * Supply chain-specific: Find shipments by carrier for recovery operations.
+     */
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @PermitAll
+    public List<Shipment> findByCarrier(String carrier) {
+        return em.createQuery(
+                "SELECT s FROM Shipment s WHERE s.carrier = :carrier", Shipment.class)
+                .setParameter("carrier", carrier)
+                .getResultList();
+    }
+
+    /**
+     * Supply chain-specific: Find shipments by route for weather recovery operations.
+     */
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @PermitAll
+    public List<Shipment> findByRoute(String route) {
+        return em.createQuery(
+                "SELECT s FROM Shipment s WHERE s.originCity = :route OR s.destinationCity = :route", Shipment.class)
+                .setParameter("route", route)
+                .getResultList();
+    }
+
+    /**
      * Deletes a shipment — only allowed for CANCELLED shipments.
      * REQUIRED: Deletion must be transactional.
      */

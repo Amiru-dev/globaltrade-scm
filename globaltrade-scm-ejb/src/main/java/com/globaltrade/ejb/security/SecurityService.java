@@ -150,4 +150,156 @@ public class SecurityService {
         }
         return false;
     }
+
+    /**
+     * Supply chain-specific: Warehouse access control for inventory operations.
+     * Warehouse managers can only access their assigned warehouses.
+     */
+    @RolesAllowed({"WAREHOUSE_MANAGER", "LOGISTICS_COORDINATOR", "SYSTEM_ADMIN"})
+    public boolean canAccessWarehouse(String requestedWarehouseId, String assignedWarehouseId) {
+        String caller = getCurrentUser();
+
+        // SYSTEM_ADMIN and LOGISTICS_COORDINATOR have unrestricted warehouse access
+        if (ctx.isCallerInRole("SYSTEM_ADMIN") || ctx.isCallerInRole("LOGISTICS_COORDINATOR")) {
+            LOGGER.log(Level.INFO, "WAREHOUSE ACCESS: Admin/Coordinator {0} granted access to warehouse {1}",
+                    new Object[]{caller, requestedWarehouseId});
+            return true;
+        }
+
+        // WAREHOUSE_MANAGER can only access their assigned warehouse
+        if (ctx.isCallerInRole("WAREHOUSE_MANAGER")) {
+            boolean allowed = requestedWarehouseId.equals(assignedWarehouseId);
+            if (!allowed) {
+                LOGGER.log(Level.WARNING,
+                        "WAREHOUSE ACCESS DENIED: Manager {0} attempted to access warehouse {1} (assigned: {2})",
+                        new Object[]{caller, requestedWarehouseId, assignedWarehouseId});
+            } else {
+                LOGGER.log(Level.INFO, "WAREHOUSE ACCESS GRANTED: Manager {0} accessing assigned warehouse {1}",
+                        new Object[]{caller, requestedWarehouseId});
+            }
+            return allowed;
+        }
+
+        LOGGER.log(Level.WARNING, "WAREHOUSE ACCESS DENIED: Unknown role for user {0}", caller);
+        return false;
+    }
+
+    /**
+     * Supply chain-specific: Entity-level authorization for supply chain data.
+     * Used to control access to shipments, inventory, vendors, and customs data.
+     */
+    @PermitAll
+    public boolean canAccessEntity(String entityType, String userRole) {
+        String caller = getCurrentUser();
+        
+        // Define entity access matrix for supply chain roles
+        switch (entityType) {
+            case "SHIPMENT":
+                return canAccessShipmentData();
+            case "INVENTORY":
+                return canAccessInventoryData();
+            case "VENDOR":
+                return canAccessVendorData();
+            case "CUSTOMS":
+                return canAccessCustomsData();
+            default:
+                LOGGER.log(Level.WARNING, "ENTITY ACCESS: Unknown entity type {0} for user {1}",
+                        new Object[]{entityType, caller});
+                return false;
+        }
+    }
+
+    /**
+     * Supply chain-specific: Shipment data access control.
+     */
+    private boolean canAccessShipmentData() {
+        return ctx.isCallerInRole("LOGISTICS_COORDINATOR") ||
+               ctx.isCallerInRole("WAREHOUSE_MANAGER") ||
+               ctx.isCallerInRole("CUSTOMS_AGENT") ||
+               ctx.isCallerInRole("SYSTEM_ADMIN");
+    }
+
+    /**
+     * Supply chain-specific: Inventory data access control.
+     */
+    private boolean canAccessInventoryData() {
+        return ctx.isCallerInRole("WAREHOUSE_MANAGER") ||
+               ctx.isCallerInRole("LOGISTICS_COORDINATOR") ||
+               ctx.isCallerInRole("SYSTEM_ADMIN");
+    }
+
+    /**
+     * Supply chain-specific: Vendor data access control.
+     */
+    private boolean canAccessVendorData() {
+        return ctx.isCallerInRole("LOGISTICS_COORDINATOR") ||
+               ctx.isCallerInRole("VENDOR_REPRESENTATIVE") ||
+               ctx.isCallerInRole("SYSTEM_ADMIN");
+    }
+
+    /**
+     * Supply chain-specific: Customs data access control.
+     */
+    private boolean canAccessCustomsData() {
+        return ctx.isCallerInRole("CUSTOMS_AGENT") ||
+               ctx.isCallerInRole("LOGISTICS_COORDINATOR") ||
+               ctx.isCallerInRole("SYSTEM_ADMIN");
+    }
+
+    /**
+     * Supply chain-specific: Multi-factor authorization for high-value operations.
+     * Requires both role-based and contextual authorization.
+     */
+    @RolesAllowed({"LOGISTICS_COORDINATOR", "SYSTEM_ADMIN"})
+    public boolean authorizeHighValueOperation(String operationType, double declaredValue) {
+        String caller = getCurrentUser();
+        
+        // Basic role check
+        if (!ctx.isCallerInRole("LOGISTICS_COORDINATOR") && !ctx.isCallerInRole("SYSTEM_ADMIN")) {
+            LOGGER.log(Level.WARNING, "HIGH-VALUE OPERATION DENIED: Insufficient role for user {0}", caller);
+            return false;
+        }
+
+        // High-value threshold check (operations over $100,000 require admin approval)
+        if (declaredValue > 100000 && !ctx.isCallerInRole("SYSTEM_ADMIN")) {
+            LOGGER.log(Level.WARNING, "HIGH-VALUE OPERATION DENIED: Value ${0} requires admin approval for user {1}",
+                    new Object[]{declaredValue, caller});
+            return false;
+        }
+
+        LOGGER.log(Level.INFO, "HIGH-VALUE OPERATION AUTHORIZED: {0} by {1} for value ${2}",
+                new Object[]{operationType, caller, declaredValue});
+        return true;
+    }
+
+    /**
+     * Supply chain-specific: Time-based access control for maintenance windows.
+     * Restricts certain operations to approved maintenance windows.
+     */
+    @RolesAllowed({"SYSTEM_ADMIN"})
+    public boolean authorizeMaintenanceWindow(String operationType, java.time.LocalDateTime scheduledTime) {
+        String caller = getCurrentUser();
+        
+        if (!ctx.isCallerInRole("SYSTEM_ADMIN")) {
+            LOGGER.log(Level.WARNING, "MAINTENANCE ACCESS DENIED: Non-admin {0} attempted maintenance operation", caller);
+            return false;
+        }
+
+        // Check if operation is within approved maintenance window (2 AM - 4 AM)
+        java.time.LocalTime operationTime = scheduledTime.toLocalTime();
+        java.time.LocalTime windowStart = java.time.LocalTime.of(2, 0);
+        java.time.LocalTime windowEnd = java.time.LocalTime.of(4, 0);
+        
+        boolean inWindow = !operationTime.isBefore(windowStart) && !operationTime.isAfter(windowEnd);
+        
+        if (inWindow) {
+            LOGGER.log(Level.INFO, "MAINTENANCE ACCESS GRANTED: Operation {0} by {1} within approved window",
+                    new Object[]{operationType, caller});
+            return true;
+        } else {
+            LOGGER.log(Level.WARNING, "MAINTENANCE ACCESS DENIED: Operation {0} by {1} outside approved window",
+                    new Object[]{operationType, caller});
+            return false;
+        }
+    }
 }

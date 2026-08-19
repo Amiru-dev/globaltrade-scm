@@ -62,7 +62,7 @@ public class InventoryMonitorTimer {
             // Clear previous alerts
             recentAlerts.clear();
 
-            // Check for low-stock items
+            // Check for low-stock items with supply chain-specific vendor analysis
             List<InventoryItem> lowStockItems = inventoryService.findLowStockItems();
             for (InventoryItem item : lowStockItems) {
                 InventoryAlertDTO alert = new InventoryAlertDTO();
@@ -80,6 +80,8 @@ public class InventoryMonitorTimer {
                     alert.setSuggestedAction("Immediate reorder required — production may halt");
                     LOGGER.log(Level.SEVERE, "CRITICAL: OUT OF STOCK — SKU={0}, Warehouse={1}",
                             new Object[]{item.getSku(), item.getWarehouseId()});
+                    // Supply chain-specific: Alert for vendor performance evaluation
+                    logVendorPerformanceImpact(item.getSku(), "STOCKOUT_RISK");
                 } else {
                     alert.setAlertType("LOW_STOCK");
                     alert.setSeverity("WARNING");
@@ -87,9 +89,18 @@ public class InventoryMonitorTimer {
                     LOGGER.log(Level.WARNING, "LOW STOCK — SKU={0}, qty={1}/{2}, Warehouse={3}",
                             new Object[]{item.getSku(), item.getQuantity(),
                                     item.getReorderLevel(), item.getWarehouseId()});
+                    // Supply chain-specific: Track for vendor performance analysis
+                    logVendorPerformanceImpact(item.getSku(), "LOW_STOCK");
                 }
 
                 recentAlerts.add(alert);
+            }
+
+            // Supply chain-specific: Check for excess inventory for space optimization
+            List<InventoryItem> excessInventory = inventoryService.findExcessInventory();
+            for (InventoryItem item : excessInventory) {
+                LOGGER.log(Level.INFO, "INVENTORY OPTIMIZATION: Excess stock detected — SKU={0}, qty={1}, consider reducing order quantities",
+                        new Object[]{item.getSku(), item.getQuantity()});
             }
 
             // Summary logging
@@ -99,8 +110,8 @@ public class InventoryMonitorTimer {
                     .filter(a -> "LOW_STOCK".equals(a.getAlertType())).count();
 
             LOGGER.log(Level.INFO,
-                    "Inventory check complete: {0} alerts (Critical: {1}, Warning: {2})",
-                    new Object[]{recentAlerts.size(), outOfStock, lowStock});
+                    "Inventory check complete: {0} alerts (Critical: {1}, Warning: {2}), Excess: {3}",
+                    new Object[]{recentAlerts.size(), outOfStock, lowStock, excessInventory.size()});
 
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error in inventory monitoring timer", e);
@@ -115,5 +126,13 @@ public class InventoryMonitorTimer {
      */
     public List<InventoryAlertDTO> getRecentAlerts() {
         return new ArrayList<>(recentAlerts);
+    }
+
+    /**
+     * Supply chain-specific: Log vendor performance impact for evaluation.
+     */
+    private void logVendorPerformanceImpact(String sku, String impactType) {
+        LOGGER.log(Level.INFO, "VENDOR PERFORMANCE IMPACT: SKU={0} — Type: {1}, Tracking for supply chain analysis",
+                new Object[]{sku, impactType});
     }
 }

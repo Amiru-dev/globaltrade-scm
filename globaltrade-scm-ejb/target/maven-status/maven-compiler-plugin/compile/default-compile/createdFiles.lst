@@ -1,4 +1,5 @@
 com\globaltrade\ejb\service\CarrierQuote.class
+com\globaltrade\ejb\interceptor\CustomsRegulationsInterceptor.class
 com\globaltrade\ejb\service\ClusteringAnalysisService.class
 com\globaltrade\ejb\interceptor\ComplianceCheckInterceptor.class
 com\globaltrade\ejb\interceptor\VendorDataValidator.class
@@ -7,6 +8,7 @@ com\globaltrade\ejb\service\PurchaseOrderService.class
 com\globaltrade\ejb\transaction\OrderTransactionService.class
 com\globaltrade\ejb\service\UserSessionService.class
 com\globaltrade\ejb\service\DistributedTransactionService.class
+com\globaltrade\ejb\service\LogisticsRecoveryService.class
 com\globaltrade\ejb\service\InventoryService.class
 com\globaltrade\ejb\interceptor\SecurityAuditInterceptor.class
 com\globaltrade\ejb\service\StatefulLifecycleDemo.class

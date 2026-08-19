@@ -1,4 +1,5 @@
 com\globaltrade\common\enums\ComplianceStatus.class
+com\globaltrade\common\exception\CarrierOutageException.class
 com\globaltrade\common\dto\VendorPerformanceDTO.class
 com\globaltrade\common\entity\PurchaseOrder.class
 com\globaltrade\common\entity\Vendor.class
@@ -15,7 +16,9 @@ com\globaltrade\common\entity\CustomsDeclaration.class
 com\globaltrade\common\entity\Warehouse.class
 com\globaltrade\common\entity\InventoryItem.class
 com\globaltrade\common\enums\ShipmentStatus.class
+com\globaltrade\common\exception\WeatherDisruptionException.class
 com\globaltrade\common\dto\ShipmentDTO.class
 com\globaltrade\common\entity\Shipment.class
 com\globaltrade\common\exception\ShipmentTrackingException.class
+com\globaltrade\common\exception\CustomsFailureException.class
 com\globaltrade\common\exception\CustomsComplianceException.class

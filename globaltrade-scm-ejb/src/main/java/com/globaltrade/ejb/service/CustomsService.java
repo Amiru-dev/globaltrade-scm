@@ -3,12 +3,14 @@ package com.globaltrade.ejb.service;
 import com.globaltrade.common.entity.CustomsDeclaration;
 import com.globaltrade.common.enums.ComplianceStatus;
 import com.globaltrade.common.exception.CustomsComplianceException;
+import com.globaltrade.ejb.interceptor.CustomsRegulationsInterceptor;
 
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -26,9 +28,14 @@ import java.util.logging.Logger;
  * operations must commit or fail independently of the calling transaction.
  * If a shipment update fails after customs approval, the customs approval
  * must NOT be rolled back (it's already filed with the customs authority).</p>
+ *
+ * <p><strong>Customs Regulations Interceptor:</strong>
+ * Applies supply chain-specific customs validation for international trade compliance,
+ * including HS code validation, trade agreement verification, and sanctions screening.</p>
  */
 @Stateless
 @RolesAllowed({"CUSTOMS_AGENT", "LOGISTICS_COORDINATOR", "SYSTEM_ADMIN"})
+@Interceptors(CustomsRegulationsInterceptor.class)
 public class CustomsService {
 
     private static final Logger LOGGER = Logger.getLogger(CustomsService.class.getName());

@@ -152,6 +152,17 @@ public class InventoryService {
     }
 
     /**
+     * Supply chain-specific: Finds items with excess inventory for space optimization.
+     */
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @PermitAll
+    public List<InventoryItem> findExcessInventory() {
+        return em.createQuery(
+                "SELECT i FROM InventoryItem i WHERE i.quantity > i.maxStockLevel * 0.8", InventoryItem.class)
+                .getResultList();
+    }
+
+    /**
      * Finds all items in a specific warehouse.
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)

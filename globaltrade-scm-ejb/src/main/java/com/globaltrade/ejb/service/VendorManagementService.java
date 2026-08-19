@@ -4,6 +4,7 @@ import com.globaltrade.common.entity.Vendor;
 import com.globaltrade.common.enums.ComplianceStatus;
 import com.globaltrade.common.exception.VendorValidationException;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -128,6 +129,24 @@ public class VendorManagementService {
         return em.createNamedQuery("Vendor.findByComplianceStatus", Vendor.class)
                 .setParameter("status", status)
                 .getResultList();
+    }
+
+    /**
+     * Supply chain-specific: Find backup carrier for recovery operations.
+     */
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @PermitAll
+    public Vendor findBackupCarrier(String primaryCarrier) {
+        return em.createQuery(
+                "SELECT v FROM Vendor v WHERE v.vendorCode <> :primaryCarrier " +
+                "AND v.complianceStatus = com.globaltrade.common.enums.ComplianceStatus.COMPLIANT " +
+                "AND v.performanceRating >= 3.0", Vendor.class)
+                .setParameter("primaryCarrier", primaryCarrier)
+                .setMaxResults(1)
+                .getResultList()
+                .stream()
+                .findFirst()
+                .orElse(null);
     }
 
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)

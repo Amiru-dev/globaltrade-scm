@@ -16,6 +16,7 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Declarative Timer for daily vendor performance assessment.
@@ -58,15 +59,24 @@ public class VendorPerformanceTimer {
                 BigDecimal rating = calculatePerformanceRating(vendor);
                 vendorService.updatePerformanceRating(vendor.getVendorId(), rating);
 
-                // Flag low-performing vendors
+                // Supply chain-specific: Flag low-performing vendors for supply chain optimization
                 if (rating.compareTo(new BigDecimal("3.0")) < 0) {
                     LOGGER.log(Level.WARNING,
-                            "LOW PERFORMANCE VENDOR: {0} ({1}) — Rating: {2}/5.00",
+                            "SUPPLY CHAIN RISK: Low-performance vendor {0} ({1}) — Rating: {2}/5.00 — Consider alternative suppliers",
+                            new Object[]{vendor.getName(), vendor.getVendorCode(), rating});
+                    // Supply chain-specific: Track for contract renewal decisions
+                    logContractRenewalConsideration(vendor, rating);
+                } else {
+                    // Supply chain-specific: High-performing vendors for strategic partnerships
+                    LOGGER.log(Level.INFO, "SUPPLY CHAIN OPTIMIZATION: High-performance vendor {0} ({1}) — Rating: {2}/5.00 — Consider partnership expansion",
                             new Object[]{vendor.getName(), vendor.getVendorCode(), rating});
                 }
             }
 
-            LOGGER.log(Level.INFO, "Vendor performance evaluation complete: {0} vendors assessed",
+            // Supply chain-specific: Regional vendor performance analysis for global logistics
+            analyzeRegionalVendorPerformance(allVendors);
+
+            LOGGER.log(Level.INFO, "Vendor performance evaluation complete: {0} vendors assessed for supply chain optimization",
                     allVendors.size());
 
         } catch (Exception e) {
@@ -126,5 +136,31 @@ public class VendorPerformanceTimer {
                 + complianceBonus * 0.25) * 5.0;
 
         return BigDecimal.valueOf(weightedScore).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    /**
+     * Supply chain-specific: Log contract renewal consideration for vendor management.
+     */
+    private void logContractRenewalConsideration(Vendor vendor, BigDecimal rating) {
+        LOGGER.log(Level.INFO, "CONTRACT RENEWAL CONSIDERATION: Vendor {0} — Rating: {1} — Review contract terms for performance improvement",
+                new Object[]{vendor.getName(), rating});
+    }
+
+    /**
+     * Supply chain-specific: Analyze regional vendor performance for global logistics optimization.
+     */
+    private void analyzeRegionalVendorPerformance(List<Vendor> vendors) {
+        // Group vendors by country and analyze regional performance patterns
+        vendors.stream()
+            .collect(java.util.stream.Collectors.groupingBy(Vendor::getCountry))
+            .forEach((country, countryVendors) -> {
+                double avgRating = countryVendors.stream()
+                        .map(v -> v.getPerformanceRating() != null ? v.getPerformanceRating().doubleValue() : 3.0)
+                        .mapToDouble(Double::doubleValue)
+                        .average()
+                        .orElse(3.0);
+                LOGGER.log(Level.INFO, "REGIONAL VENDOR PERFORMANCE: {0} — Average rating: {1}/5.00 — {2} vendors",
+                        new Object[]{country, avgRating, countryVendors.size()});
+            });
     }
 }

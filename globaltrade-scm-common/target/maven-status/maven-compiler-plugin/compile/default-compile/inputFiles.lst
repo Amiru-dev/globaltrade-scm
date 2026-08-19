@@ -12,10 +12,13 @@ C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-common\src\main\java\com
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\enums\ComplianceStatus.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\enums\OrderStatus.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\enums\ShipmentStatus.java
+C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\exception\CarrierOutageException.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\exception\CarrierSystemException.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\exception\CustomsComplianceException.java
+C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\exception\CustomsFailureException.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\exception\InventoryShortageException.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\exception\ShipmentTrackingException.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\exception\SupplyChainException.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\exception\TransactionRollbackException.java
 C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\exception\VendorValidationException.java
+C:\Users\ASUS\Documents\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\exception\WeatherDisruptionException.java
