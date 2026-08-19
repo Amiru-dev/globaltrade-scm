@@ -268,11 +268,11 @@ INSERT INTO carrier_routes (route_code, carrier, origin, destination, transit_da
 -- Users (passwords hashed with SHA-256 for demonstration — production would use PBKDF2)
 -- Password for all users: "GlobalTrade2026!"
 INSERT INTO users (username, password_hash, email, full_name, is_active) VALUES
-('admin', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'admin@globaltrade.com', 'System Administrator', TRUE),
-('logistics_coord', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'logistics@globaltrade.com', 'Maria Rodriguez', TRUE),
-('warehouse_mgr', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'warehouse@globaltrade.com', 'James Chen', TRUE),
-('customs_agent', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'customs@globaltrade.com', 'Emma Thompson', TRUE),
-('vendor_rep', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'vendor@shenzhenelec.cn', 'Li Wei', TRUE);
+('admin', '8b6d0e435da149353e377b11d067877a3a59202936816143988e7b8e8dda507c', 'admin@globaltrade.com', 'System Administrator', TRUE),
+('logistics_coord', '8b6d0e435da149353e377b11d067877a3a59202936816143988e7b8e8dda507c', 'logistics@globaltrade.com', 'Maria Rodriguez', TRUE),
+('warehouse_mgr', '8b6d0e435da149353e377b11d067877a3a59202936816143988e7b8e8dda507c', 'warehouse@globaltrade.com', 'James Chen', TRUE),
+('customs_agent', '8b6d0e435da149353e377b11d067877a3a59202936816143988e7b8e8dda507c', 'customs@globaltrade.com', 'Emma Thompson', TRUE),
+('vendor_rep', '8b6d0e435da149353e377b11d067877a3a59202936816143988e7b8e8dda507c', 'vendor@shenzhenelec.cn', 'Li Wei', TRUE);
 
 -- User Roles
 INSERT INTO user_roles (username, role_name) VALUES
