@@ -44,7 +44,7 @@ public class EJBIntegrationTest {
      * <ul>
      *   <li>Payara Server 6.2025.11 with Arquillian container adapter</li>
      *   <li>Java 17 runtime environment</li>
-     *   *   <li>MySQL database connection for integration tests</li>
+     *   <li>MySQL database connection for integration tests</li>
      * </ul>
      */
     @Test
@@ -79,7 +79,7 @@ public class EJBIntegrationTest {
      * <ul>
      *   <li>PerformanceMonitor: Tracks execution time for all business methods</li>
      *   <li>AuditLogInterceptor: Ensures customs compliance logging</li>
-     *   *   <li>SecurityAuditInterceptor: Validates access control for sensitive operations</li>
+     *   <li>SecurityAuditInterceptor: Validates access control for sensitive operations</li>
      *   <li>ComplianceCheckInterceptor: Enforces regulatory compliance</li>
      *   <li>VendorDataValidator: Validates vendor data integrity</li>
      * </ul>
