@@ -16,6 +16,11 @@
 
     <display-name>GlobalTrade Supply Chain Management - Web</display-name>
 
+    <!-- ======================== Welcome Files ======================== -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
     <!-- ======================== Security Constraints ======================== -->
 
     <!-- Admin-only endpoints (system config, audit logs) -->
