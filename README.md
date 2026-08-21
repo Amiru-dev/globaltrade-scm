@@ -127,7 +127,7 @@ GlobalTrade Logistics Corporation manages supply chains for multinational corpor
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/your-org/globaltrade-scm.git
+git clone https://github.com/Amiru-dev/globaltrade-scm.git
 cd globaltrade-scm
 ```
 
