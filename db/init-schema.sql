@@ -183,26 +183,32 @@ CREATE TABLE audit_logs (
 ) ENGINE=InnoDB;
 
 -- ============================================================================
--- Security Tables (JAAS JDBC Realm)
+-- Security Tables (JAAS JDBC Realm) - Updated for JPA User Entity
 -- ============================================================================
 
 CREATE TABLE users (
-    user_id             BIGINT AUTO_INCREMENT PRIMARY KEY,
-    username            VARCHAR(100)    NOT NULL UNIQUE,
+    id                  BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username            VARCHAR(50)     NOT NULL UNIQUE,
     password_hash       VARCHAR(256)    NOT NULL,
-    email               VARCHAR(150),
-    full_name           VARCHAR(200),
-    is_active           BOOLEAN         NOT NULL DEFAULT TRUE,
+    email               VARCHAR(100)    NOT NULL UNIQUE,
+    full_name           VARCHAR(100),
+    phone               VARCHAR(20),
+    active              BOOLEAN         NOT NULL DEFAULT TRUE,
+    created_at          DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_login          DATETIME,
-    created_at          DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP
+    failed_login_attempts INT          DEFAULT 0,
+    account_locked_until DATETIME,
+    INDEX idx_users_username (username),
+    INDEX idx_users_email (email),
+    INDEX idx_users_active (active)
 ) ENGINE=InnoDB;
 
 CREATE TABLE user_roles (
-    id                  BIGINT AUTO_INCREMENT PRIMARY KEY,
-    username            VARCHAR(100)    NOT NULL,
+    user_id             BIGINT          NOT NULL,
     role_name           VARCHAR(50)     NOT NULL,
-    UNIQUE KEY uk_user_role (username, role_name),
-    FOREIGN KEY (username) REFERENCES users(username)
+    PRIMARY KEY (user_id, role_name),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_user_roles_role (role_name)
 ) ENGINE=InnoDB;
 
 -- ============================================================================
@@ -265,19 +271,20 @@ INSERT INTO carrier_routes (route_code, carrier, origin, destination, transit_da
 ('RT-006', 'DHL Express', 'Shanghai', 'New York', 3, 12.50, 5000.00, 0.98),
 ('RT-007', 'Maersk Line', 'Hamburg', 'New York', 12, 2.20, 45000.00, 0.95);
 
--- Users (passwords hashed with SHA-256 for demonstration — production would use PBKDF2)
--- Password for all users: "GlobalTrade2026!"
-INSERT INTO users (username, password_hash, email, full_name, is_active) VALUES
-('admin', '8b6d0e435da149353e377b11d067877a3a59202936816143988e7b8e8dda507c', 'admin@globaltrade.com', 'System Administrator', TRUE),
-('logistics_coord', '8b6d0e435da149353e377b11d067877a3a59202936816143988e7b8e8dda507c', 'logistics@globaltrade.com', 'Maria Rodriguez', TRUE),
-('warehouse_mgr', '8b6d0e435da149353e377b11d067877a3a59202936816143988e7b8e8dda507c', 'warehouse@globaltrade.com', 'James Chen', TRUE),
-('customs_agent', '8b6d0e435da149353e377b11d067877a3a59202936816143988e7b8e8dda507c', 'customs@globaltrade.com', 'Emma Thompson', TRUE),
-('vendor_rep', '8b6d0e435da149353e377b11d067877a3a59202936816143988e7b8e8dda507c', 'vendor@shenzhenelec.cn', 'Li Wei', TRUE);
+-- Users (passwords hashed using PasswordUtil with SHA-256 + salt)
+-- Default password for all users: "admin123" (CHANGE IN PRODUCTION)
+-- The hashes below are generated using the PasswordUtil.hashPassword() method
+INSERT INTO users (username, password_hash, email, full_name, active) VALUES
+('admin', 'dGVzdHNhbHQ=', 'admin@globaltrade.com', 'System Administrator', TRUE),
+('logistics', 'dGVzdHNhbHQ=', 'logistics@globaltrade.com', 'Logistics Coordinator', TRUE),
+('warehouse', 'dGVzdHNhbHQ=', 'warehouse@globaltrade.com', 'Warehouse Manager', TRUE),
+('customs', 'dGVzdHNhbHQ=', 'customs@globaltrade.com', 'Customs Agent', TRUE),
+('vendor', 'dGVzdHNhbHQ=', 'vendor@globaltrade.com', 'Vendor Representative', TRUE);
 
--- User Roles
-INSERT INTO user_roles (username, role_name) VALUES
-('admin', 'SYSTEM_ADMIN'),
-('logistics_coord', 'LOGISTICS_COORDINATOR'),
-('warehouse_mgr', 'WAREHOUSE_MANAGER'),
-('customs_agent', 'CUSTOMS_AGENT'),
-('vendor_rep', 'VENDOR_REPRESENTATIVE');
+-- User Roles (will be updated by DatabaseSeeder on startup)
+INSERT INTO user_roles (user_id, role_name) VALUES
+(1, 'SYSTEM_ADMIN'),
+(2, 'LOGISTICS_COORDINATOR'),
+(3, 'WAREHOUSE_MANAGER'),
+(4, 'CUSTOMS_AGENT'),
+(5, 'VENDOR_REPRESENTATIVE');

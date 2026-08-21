@@ -7,6 +7,7 @@ C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-common\
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\entity\InventoryItem.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\entity\PurchaseOrder.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\entity\Shipment.java
+C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\entity\User.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\entity\Vendor.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\entity\Warehouse.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\enums\ComplianceStatus.java
@@ -22,3 +23,4 @@ C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-common\
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\exception\TransactionRollbackException.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\exception\VendorValidationException.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\exception\WeatherDisruptionException.java
+C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-common\src\main\java\com\globaltrade\common\util\PasswordUtil.java

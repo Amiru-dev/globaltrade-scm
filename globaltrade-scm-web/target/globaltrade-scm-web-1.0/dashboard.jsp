@@ -246,9 +246,9 @@
         </div>
         <div class="user-info">
             <div>
-                <span style="font-weight: 600;">👤 <%= request.getAttribute("username") %></span>
+                <span style="font-weight: 600;">👤 <%= request.getAttribute("fullName") != null ? request.getAttribute("fullName") : request.getAttribute("username") %></span>
                 <span style="opacity: 0.8;">|</span>
-                <span><%= request.getAttribute("roleDescription") %></span>
+                <span><%= request.getAttribute("userRole") %></span>
             </div>
             <div class="access-level">
                 Access Level: <%= ((Map<String, Object>) request.getAttribute("dashboardData")).get("accessLevel") %>

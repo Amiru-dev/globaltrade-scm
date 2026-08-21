@@ -146,6 +146,7 @@ public class InventoryService {
      * Finds all out-of-stock items.
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @PermitAll
     public List<InventoryItem> findOutOfStockItems() {
         return em.createNamedQuery("InventoryItem.findOutOfStock", InventoryItem.class)
                 .getResultList();
@@ -166,6 +167,7 @@ public class InventoryService {
      * Finds all items in a specific warehouse.
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @PermitAll
     public List<InventoryItem> findByWarehouse(Long warehouseId) {
         return em.createNamedQuery("InventoryItem.findByWarehouse", InventoryItem.class)
                 .setParameter("warehouseId", warehouseId)
@@ -176,6 +178,7 @@ public class InventoryService {
      * Retrieves a single inventory item by ID.
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @PermitAll
     public InventoryItem findById(Long itemId) {
         return em.find(InventoryItem.class, itemId);
     }

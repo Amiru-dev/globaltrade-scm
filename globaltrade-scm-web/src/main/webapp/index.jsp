@@ -74,16 +74,6 @@
             border-color: #667eea;
         }
         
-        .role-description {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            color: #666;
-            margin-top: 8px;
-            border-left: 3px solid #667eea;
-        }
-        
         .btn {
             width: 100%;
             padding: 14px;
@@ -161,25 +151,15 @@
             </div>
             
             <div class="form-group">
-                <label for="role">Select Your Role</label>
-                <select id="role" name="role" required onchange="updateRoleDescription()">
-                    <option value="">-- Select Role --</option>
-                    <option value="LOGISTICS_COORDINATOR">Logistics Coordinator</option>
-                    <option value="WAREHOUSE_MANAGER">Warehouse Manager</option>
-                    <option value="CUSTOMS_AGENT">Customs Agent</option>
-                    <option value="VENDOR_REPRESENTATIVE">Vendor Representative</option>
-                    <option value="SYSTEM_ADMIN">System Administrator</option>
-                </select>
-                <div id="roleDescription" class="role-description" style="display: none;">
-                    Select a role to see permissions
-                </div>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
             </div>
             
             <button type="submit" class="btn">Login to Dashboard</button>
         </form>
         
         <div class="info">
-            <strong>Demonstration Mode:</strong> This login simulates role-based access control for EJB security demonstration. Different roles will see different dashboard features and permissions.
+            <strong>System Login:</strong> Enter your username and password to access the GlobalTrade SCM system. Your role and permissions will be automatically assigned based on your user account.
         </div>
         
         <div class="role-icons">
@@ -189,28 +169,5 @@
             <div class="role-icon">🔐</div>
         </div>
     </div>
-    
-    <script>
-        const roleDescriptions = {
-            'LOGISTICS_COORDINATOR': 'Shipment management, inventory operations, route optimization',
-            'WAREHOUSE_MANAGER': 'Inventory management, warehouse operations',
-            'CUSTOMS_AGENT': 'Customs declarations, compliance reports',
-            'VENDOR_REPRESENTATIVE': 'View own orders, update delivery status',
-            'SYSTEM_ADMIN': 'Full system access, user management, emergency overrides'
-        };
-        
-        function updateRoleDescription() {
-            const roleSelect = document.getElementById('role');
-            const descriptionDiv = document.getElementById('roleDescription');
-            const selectedRole = roleSelect.value;
-            
-            if (selectedRole && roleDescriptions[selectedRole]) {
-                descriptionDiv.style.display = 'block';
-                descriptionDiv.textContent = roleDescriptions[selectedRole];
-            } else {
-                descriptionDiv.style.display = 'none';
-            }
-        }
-    </script>
 </body>
 </html>

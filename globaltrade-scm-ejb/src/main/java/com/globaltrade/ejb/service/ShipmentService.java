@@ -31,7 +31,6 @@ import java.util.logging.Logger;
  * with varying attributes per method based on operation semantics.</p>
  */
 @Stateless
-@RolesAllowed({"LOGISTICS_COORDINATOR", "WAREHOUSE_MANAGER", "SYSTEM_ADMIN"})
 public class ShipmentService {
 
     private static final Logger LOGGER = Logger.getLogger(ShipmentService.class.getName());
@@ -47,6 +46,7 @@ public class ShipmentService {
      * creation. Timeout can be configured via ejb-jar.xml if needed.</p>
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @RolesAllowed({"LOGISTICS_COORDINATOR", "SYSTEM_ADMIN"})
     public Shipment createShipment(Shipment shipment) {
         LOGGER.log(Level.INFO, "Creating shipment: {0}", shipment.getTrackingNumber());
         em.persist(shipment);
@@ -58,6 +58,7 @@ public class ShipmentService {
      * REQUIRED: Status transitions must be atomic with audit logging.
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @RolesAllowed({"LOGISTICS_COORDINATOR", "WAREHOUSE_MANAGER", "SYSTEM_ADMIN"})
     public Shipment updateShipmentStatus(Long shipmentId, ShipmentStatus newStatus)
             throws ShipmentTrackingException {
 
@@ -124,8 +125,8 @@ public class ShipmentService {
      * Retrieves all active (non-delivered, non-cancelled) shipments.
      * SUPPORTS: Read-only query.
      */
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<Shipment> findActiveShipments() {
         return em.createNamedQuery("Shipment.findActiveShipments", Shipment.class)
                 .getResultList();
@@ -135,6 +136,7 @@ public class ShipmentService {
      * Retrieves all shipments with a specific status.
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @RolesAllowed({"LOGISTICS_COORDINATOR", "WAREHOUSE_MANAGER", "CUSTOMS_AGENT", "SYSTEM_ADMIN"})
     public List<Shipment> findByStatus(ShipmentStatus status) {
         return em.createNamedQuery("Shipment.findByStatus", Shipment.class)
                 .setParameter("status", status)
@@ -144,8 +146,8 @@ public class ShipmentService {
     /**
      * Retrieves all delayed shipments — used by timer services for alerts.
      */
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<Shipment> findDelayedShipments() {
         return em.createNamedQuery("Shipment.findDelayed", Shipment.class)
                 .getResultList();
@@ -154,8 +156,8 @@ public class ShipmentService {
     /**
      * Retrieves shipments pending customs clearance.
      */
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<Shipment> findPendingCustomsShipments() {
         return em.createNamedQuery("Shipment.findPendingCustoms", Shipment.class)
                 .getResultList();
@@ -164,8 +166,8 @@ public class ShipmentService {
     /**
      * Supply chain-specific: Find high-value shipments for route optimization.
      */
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<Shipment> findHighValueShipments(double threshold) {
         return em.createQuery(
                 "SELECT s FROM Shipment s WHERE s.declaredValue >= :threshold", Shipment.class)

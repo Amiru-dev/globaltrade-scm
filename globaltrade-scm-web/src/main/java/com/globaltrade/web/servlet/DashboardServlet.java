@@ -62,40 +62,43 @@ public class DashboardServlet extends HttpServlet {
         
         String userRole = (String) session.getAttribute("userRole");
         String username = (String) session.getAttribute("username");
-        
-        LOGGER.log(Level.INFO, "Dashboard accessed by user: {0} with role: {1}", 
-                new Object[]{username, userRole});
+        String fullName = (String) session.getAttribute("fullName");
+
+        LOGGER.log(Level.INFO, "Dashboard accessed by user: {0} ({1}) with role: {2}",
+                new Object[]{username, fullName, userRole});
         
         try {
             // Fetch timer-generated data
-            Map<String, Object> dashboardData = fetchDashboardData(userRole);
-            
+            Map<String, Object> dashboardData = fetchDashboardData(session);
+
             // Set data for JSP
             request.setAttribute("dashboardData", dashboardData);
             request.setAttribute("username", username);
             request.setAttribute("userRole", userRole);
+            request.setAttribute("fullName", fullName);
             request.setAttribute("roleDescription", session.getAttribute("roleDescription"));
             request.setAttribute("currentTime", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-            
+
             // Forward to dashboard JSP
             request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
             
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error loading dashboard data", e);
-            
+
             // Create fallback data to prevent null pointer
             Map<String, Object> fallbackData = new HashMap<>();
             fallbackData.put("accessLevel", "Demo Mode - EJB Access Restricted");
             fallbackData.put("showFullDetails", false);
             fallbackData.put("timerServicesActive", false);
             fallbackData.put("error", "EJB Security: " + e.getMessage());
-            
+
             request.setAttribute("dashboardData", fallbackData);
             request.setAttribute("username", username);
             request.setAttribute("userRole", userRole);
+            request.setAttribute("fullName", fullName);
             request.setAttribute("roleDescription", session.getAttribute("roleDescription"));
             request.setAttribute("currentTime", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-            
+
             request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
         }
     }
@@ -104,7 +107,7 @@ public class DashboardServlet extends HttpServlet {
      * Fetches dashboard data from timer services and EJB components.
      * Role-based access control determines what data is returned.
      */
-    private Map<String, Object> fetchDashboardData(String userRole) {
+    private Map<String, Object> fetchDashboardData(HttpSession session) {
         Map<String, Object> data = new HashMap<>();
         
         // Timer service status
@@ -151,13 +154,19 @@ public class DashboardServlet extends HttpServlet {
         data.put("timerInfo", timerInfo);
         
         // Role-based access control for sensitive data
-        if ("SYSTEM_ADMIN".equals(userRole) || "LOGISTICS_COORDINATOR".equals(userRole)) {
+        String userRoles = (String) session.getAttribute("userRoles");
+        boolean hasAdminAccess = userRoles != null && userRoles.contains("SYSTEM_ADMIN");
+        boolean hasCoordinatorAccess = userRoles != null && userRoles.contains("LOGISTICS_COORDINATOR");
+        boolean hasWarehouseAccess = userRoles != null && userRoles.contains("WAREHOUSE_MANAGER");
+        boolean hasCustomsAccess = userRoles != null && userRoles.contains("CUSTOMS_AGENT");
+
+        if (hasAdminAccess || hasCoordinatorAccess) {
             data.put("showFullDetails", true);
             data.put("accessLevel", "Full");
-        } else if ("WAREHOUSE_MANAGER".equals(userRole)) {
+        } else if (hasWarehouseAccess) {
             data.put("showFullDetails", false);
             data.put("accessLevel", "Warehouse Operations");
-        } else if ("CUSTOMS_AGENT".equals(userRole)) {
+        } else if (hasCustomsAccess) {
             data.put("showFullDetails", false);
             data.put("accessLevel", "Customs Operations");
         } else {

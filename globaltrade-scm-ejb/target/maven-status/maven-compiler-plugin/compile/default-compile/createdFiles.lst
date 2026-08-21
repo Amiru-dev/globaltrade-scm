@@ -15,9 +15,11 @@ com\globaltrade\ejb\service\StatefulLifecycleDemo.class
 com\globaltrade\ejb\service\CarrierIntegrationServiceLocal.class
 com\globaltrade\ejb\timer\InventoryMonitorTimer.class
 com\globaltrade\ejb\service\VendorManagementService.class
+com\globaltrade\ejb\util\DatabaseSeeder.class
 com\globaltrade\ejb\service\StatelessLifecycleDemo.class
 com\globaltrade\ejb\timer\CustomsDeadlineTimer.class
 com\globaltrade\ejb\service\CarrierIntegrationServiceRemote.class
+com\globaltrade\ejb\service\UserService.class
 com\globaltrade\ejb\service\LifecycleManagementService.class
 com\globaltrade\ejb\service\SystemConfigService.class
 com\globaltrade\ejb\service\OrderProcessingService.class

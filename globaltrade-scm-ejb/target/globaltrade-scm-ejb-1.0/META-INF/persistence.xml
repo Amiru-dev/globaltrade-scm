@@ -25,6 +25,7 @@
         <class>com.globaltrade.common.entity.Warehouse</class>
         <class>com.globaltrade.common.entity.CarrierRoute</class>
         <class>com.globaltrade.common.entity.AuditLog</class>
+        <class>com.globaltrade.common.entity.User</class>
 
         <!-- Exclude unlisted classes to avoid unexpected entity discovery -->
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
