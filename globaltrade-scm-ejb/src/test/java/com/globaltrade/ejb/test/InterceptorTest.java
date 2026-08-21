@@ -2,8 +2,11 @@ package com.globaltrade.ejb.test;
 
 import com.globaltrade.ejb.interceptor.AuditLogInterceptor;
 import com.globaltrade.ejb.interceptor.PerformanceMonitor;
+import com.globaltrade.ejb.service.AuditService;
 
+import jakarta.ejb.SessionContext;
 import jakarta.interceptor.InvocationContext;
+import java.security.Principal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -13,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
@@ -33,6 +37,12 @@ class InterceptorTest {
 
     @Mock
     private InvocationContext invocationContext;
+
+    @Mock
+    private AuditService auditService;
+
+    @Mock
+    private SessionContext sessionContext;
 
     @Nested
     @DisplayName("PerformanceMonitor Interceptor Tests")
@@ -82,6 +92,16 @@ class InterceptorTest {
         @BeforeEach
         void setUp() {
             auditInterceptor = new AuditLogInterceptor();
+            auditInterceptor.setAuditService(auditService);
+            auditInterceptor.setSessionContext(sessionContext);
+
+            // Mock the audit service to do nothing when persistAuditLog is called
+            doNothing().when(auditService).persistAuditLog(any());
+
+            // Mock the session context to return a principal
+            Principal mockPrincipal = mock(Principal.class);
+            when(mockPrincipal.getName()).thenReturn("test-user");
+            when(sessionContext.getCallerPrincipal()).thenReturn(mockPrincipal);
         }
 
         @Test
@@ -120,6 +140,17 @@ class InterceptorTest {
     @DisplayName("Interceptor Chain Behaviour Tests")
     class InterceptorChainTests {
 
+        @BeforeEach
+        void setUp() {
+            // Mock the audit service to do nothing when persistAuditLog is called
+            doNothing().when(auditService).persistAuditLog(any());
+
+            // Mock the session context to return a principal
+            Principal mockPrincipal = mock(Principal.class);
+            when(mockPrincipal.getName()).thenReturn("test-user");
+            when(sessionContext.getCallerPrincipal()).thenReturn(mockPrincipal);
+        }
+
         @Test
         @DisplayName("All interceptors must call proceed() to continue the chain")
         void interceptorChain_AllCallProceed() throws Exception {
@@ -127,6 +158,8 @@ class InterceptorTest {
             // every interceptor MUST call ctx.proceed() unless short-circuiting
             PerformanceMonitor pm = new PerformanceMonitor();
             AuditLogInterceptor al = new AuditLogInterceptor();
+            al.setAuditService(auditService);
+            al.setSessionContext(sessionContext);
 
             when(invocationContext.proceed()).thenReturn("result");
             when(invocationContext.getMethod()).thenReturn(

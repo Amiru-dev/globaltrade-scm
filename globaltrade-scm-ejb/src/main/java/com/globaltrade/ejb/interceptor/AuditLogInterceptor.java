@@ -47,6 +47,22 @@ public class AuditLogInterceptor implements Serializable {
     private SessionContext sessionContext;
 
     /**
+     * Public setter for testing purposes.
+     * Allows unit tests to inject a mock AuditService.
+     */
+    public void setAuditService(AuditService auditService) {
+        this.auditService = auditService;
+    }
+
+    /**
+     * Public setter for testing purposes.
+     * Allows unit tests to inject a mock SessionContext.
+     */
+    public void setSessionContext(SessionContext sessionContext) {
+        this.sessionContext = sessionContext;
+    }
+
+    /**
      * Intercepts all business method invocations to create audit records.
      *
      * <p>The interceptor captures:
