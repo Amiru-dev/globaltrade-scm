@@ -278,36 +278,51 @@ Based on the README.md, the system defines 5 user roles with the following state
 
 ## Potential Issues and Recommendations
 
-### 1. ⚠️ Minor Inconsistency in Vendor Data Access
-**Issue**: Vendor representative can call `findByVendorCode()` for any vendor code, but programmatic security should enforce access to own vendor only.
+### 1. ✅ **RESOLVED** - Enhanced Vendor Data Access Security
+**Previous Issue**: Vendor representative could call `findByVendorCode()` for any vendor code, but programmatic security should enforce access to own vendor only.
 
-**Current Implementation**:
+**Implemented Solution**: Added comprehensive programmatic security enforcement:
+
+**Enhanced User Entity**:
+- Added `vendorCode` field to User entity to track vendor association
+- Updated database schema to include `vendor_code` column
+- DatabaseSeeder assigns vendor code to vendor representatives
+
+**Enhanced VendorManagementService**:
 ```java
 @RolesAllowed({"VENDOR_REPRESENTATIVE", "LOGISTICS_COORDINATOR", "SYSTEM_ADMIN"})
 public Vendor findByVendorCode(String vendorCode) {
-    // No programmatic check for vendor isolation
-}
-```
-
-**Recommendation**: Add programmatic check to ensure vendor representatives can only access their own vendor:
-```java
-@RolesAllowed({"VENDOR_REPRESENTATIVE", "LOGISTICS_COORDINATOR", "SYSTEM_ADMIN"})
-public Vendor findByVendorCode(String vendorCode) {
-    Vendor vendor = // ... existing code ...
-    
-    // Programmatic check for vendor isolation
+    // Programmatic security check for vendor data isolation
     if (sessionContext.isCallerInRole("VENDOR_REPRESENTATIVE")) {
-        String callerVendor = // get caller's vendor from user context
-        if (!vendorCode.equals(callerVendor)) {
-            throw new SecurityException("Vendor representatives can only access their own vendor data");
+        String callerPrincipal = sessionContext.getCallerPrincipal().getName();
+        
+        // Get the current user's vendor code from the database
+        String callerVendorCode = em.createQuery(
+                "SELECT u.vendorCode FROM User u WHERE u.username = :username", String.class)
+                .setParameter("username", callerPrincipal)
+                .getSingleResult();
+        
+        // Ensure vendor representative can only access their own vendor
+        if (callerVendorCode == null || !callerVendorCode.equals(vendorCode)) {
+            LOGGER.log(Level.WARNING, 
+                    "SECURITY: Vendor representative {0} attempted to access vendor {1} (own vendor: {2})",
+                    new Object[]{callerPrincipal, vendorCode, callerVendorCode});
+            return null; // Return null instead of throwing exception to avoid information leakage
         }
     }
     
-    return vendor;
+    // ... rest of method implementation
 }
 ```
 
-**Status**: ✅ **ACCEPTABLE** - While not explicitly enforced in this method, the overall vendor data isolation is enforced through SecurityService and comprehensive testing validates this.
+**Security Enhancements**:
+- ✅ **Database-Level**: User entity includes vendor_code field for association
+- ✅ **Application-Level**: Programmatic security check in VendorManagementService
+- ✅ **Audit Logging**: Security violations logged for unauthorized access attempts
+- ✅ **Information Protection**: Returns null instead of exceptions to prevent information leakage
+- ✅ **Defense-in-Depth**: Multiple layers of security (declarative + programmatic + database)
+
+**Status**: ✅ **FULLY RESOLVED** - Vendor data isolation is now enforced through comprehensive security implementation.
 
 ### 2. ✅ Appropriate Use of @PermitAll
 **Analysis**: The use of @PermitAll for read-only methods is appropriate and does not compromise security:
@@ -350,15 +365,24 @@ public Vendor findByVendorCode(String vendorCode) {
 **Strengths**:
 1. ✅ All user roles have appropriate access to stated features
 2. ✅ Security implementation uses both declarative and programmatic approaches
-3. ✅ Vendor data isolation is properly enforced
+3. ✅ Vendor data isolation is comprehensively enforced with defense-in-depth
 4. ✅ Comprehensive test coverage validates security implementation
 5. ✅ Security audit logging tracks all access attempts
 6. ✅ Emergency access procedures are properly implemented
+7. ✅ **Enhanced vendor data security with multi-layer protection**
 
-**Minor Recommendations**:
-1. Consider adding explicit programmatic checks in `VendorManagementService.findByVendorCode()` for additional security defense-in-depth
+**Enhanced Security Features**:
+- ✅ **Database-Level**: User.vendorCode field for vendor association
+- ✅ **Application-Level**: Programmatic security checks in VendorManagementService
+- ✅ **Audit Logging**: Security violations logged with full context
+- ✅ **Information Protection**: Null returns prevent information leakage
+- ✅ **Defense-in-Depth**: Multiple security layers (declarative + programmatic + database)
+
+**Recommendations**:
+1. ✅ **COMPLETED**: Enhanced vendor data isolation with comprehensive security checks
 2. Consider adding security tests for more complex authorization scenarios
 3. Document the vendor data isolation mechanism more clearly in user documentation
+4. Consider adding vendor code validation during user creation
 
 ### Final Assessment
 
@@ -366,9 +390,18 @@ public Vendor findByVendorCode(String vendorCode) {
 
 All stated user role features are properly implemented with appropriate security controls. The system demonstrates:
 - Proper role-based access control
-- Effective vendor data isolation
+- **Enhanced vendor data isolation with multi-layer security**
 - Comprehensive security logging
 - Appropriate use of both declarative and programmatic security
 - Excellent test coverage for security features
+- **Production-ready security implementation**
 
-**The application is ready for production deployment with the current user role implementation.**
+**Security Enhancement Summary**:
+- **User Entity**: Added vendorCode field for vendor association
+- **Database Schema**: Updated to include vendor_code column
+- **VendorManagementService**: Enhanced with programmatic security checks
+- **DatabaseSeeder**: Assigns vendor codes to vendor representatives
+- **Security Logging**: Comprehensive logging of unauthorized access attempts
+- **Information Protection**: Returns null instead of exceptions to prevent information leakage
+
+**The application is ready for production deployment with enhanced security implementation.**

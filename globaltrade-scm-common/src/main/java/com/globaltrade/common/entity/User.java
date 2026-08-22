@@ -50,6 +50,9 @@ public class User implements Serializable {
     @Column(name = "phone", length = 20)
     private String phone;
 
+    @Column(name = "vendor_code", length = 50)
+    private String vendorCode;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role_name", length = 50)
@@ -129,6 +132,14 @@ public class User implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getVendorCode() {
+        return vendorCode;
+    }
+
+    public void setVendorCode(String vendorCode) {
+        this.vendorCode = vendorCode;
     }
 
     public Set<String> getRoles() {
@@ -226,6 +237,7 @@ public class User implements Serializable {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", fullName='" + fullName + '\'' +
+                ", vendorCode='" + vendorCode + '\'' +
                 ", roles=" + roles +
                 ", active=" + active +
                 ", createdAt=" + createdAt +

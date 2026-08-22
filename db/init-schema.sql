@@ -193,6 +193,7 @@ CREATE TABLE users (
     email               VARCHAR(100)    NOT NULL UNIQUE,
     full_name           VARCHAR(100),
     phone               VARCHAR(20),
+    vendor_code         VARCHAR(20),
     active              BOOLEAN         NOT NULL DEFAULT TRUE,
     created_at          DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_login          DATETIME,
@@ -200,7 +201,8 @@ CREATE TABLE users (
     account_locked_until DATETIME,
     INDEX idx_users_username (username),
     INDEX idx_users_email (email),
-    INDEX idx_users_active (active)
+    INDEX idx_users_active (active),
+    INDEX idx_users_vendor (vendor_code)
 ) ENGINE=InnoDB;
 
 CREATE TABLE user_roles (
@@ -274,12 +276,13 @@ INSERT INTO carrier_routes (route_code, carrier, origin, destination, transit_da
 -- Users (passwords hashed using PasswordUtil with SHA-256 + salt)
 -- Default password for all users: "admin123" (CHANGE IN PRODUCTION)
 -- The hashes below are generated using the PasswordUtil.hashPassword() method
-INSERT INTO users (username, password_hash, email, full_name, active) VALUES
-('admin', 'dGVzdHNhbHQ=', 'admin@globaltrade.com', 'System Administrator', TRUE),
-('logistics', 'dGVzdHNhbHQ=', 'logistics@globaltrade.com', 'Logistics Coordinator', TRUE),
-('warehouse', 'dGVzdHNhbHQ=', 'warehouse@globaltrade.com', 'Warehouse Manager', TRUE),
-('customs', 'dGVzdHNhbHQ=', 'customs@globaltrade.com', 'Customs Agent', TRUE),
-('vendor', 'dGVzdHNhbHQ=', 'vendor@globaltrade.com', 'Vendor Representative', TRUE);
+-- vendor_code is assigned for vendor representatives to enforce data isolation
+INSERT INTO users (username, password_hash, email, full_name, vendor_code, active) VALUES
+('admin', 'dGVzdHNhbHQ=', 'admin@globaltrade.com', 'System Administrator', NULL, TRUE),
+('logistics', 'dGVzdHNhbHQ=', 'logistics@globaltrade.com', 'Logistics Coordinator', NULL, TRUE),
+('warehouse', 'dGVzdHNhbHQ=', 'warehouse@globaltrade.com', 'Warehouse Manager', NULL, TRUE),
+('customs', 'dGVzdHNhbHQ=', 'customs@globaltrade.com', 'Customs Agent', NULL, TRUE),
+('vendor', 'dGVzdHNhbHQ=', 'vendor@globaltrade.com', 'Vendor Representative', 'VND-001', TRUE);
 
 -- User Roles (will be updated by DatabaseSeeder on startup)
 INSERT INTO user_roles (user_id, role_name) VALUES

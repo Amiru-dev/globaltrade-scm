@@ -9,6 +9,8 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.annotation.Resource;
+import jakarta.ejb.SessionContext;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -33,6 +35,9 @@ public class VendorManagementService {
 
     @PersistenceContext(unitName = "GlobalTradePU")
     private EntityManager em;
+
+    @Resource
+    private SessionContext sessionContext;
 
     /**
      * Registers a new vendor in the system.
@@ -165,10 +170,38 @@ public class VendorManagementService {
 
     /**
      * Allows vendor representatives to view their own data.
+     * 
+     * <p><strong>Security Enforcement:</strong> Vendor representatives can only access
+     * their own vendor's data. This is enforced through programmatic security checks
+     * in addition to declarative @RolesAllowed annotation.</p>
      */
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     @RolesAllowed({"VENDOR_REPRESENTATIVE", "LOGISTICS_COORDINATOR", "SYSTEM_ADMIN"})
     public Vendor findByVendorCode(String vendorCode) {
+        // Programmatic security check for vendor data isolation
+        if (sessionContext.isCallerInRole("VENDOR_REPRESENTATIVE")) {
+            String callerPrincipal = sessionContext.getCallerPrincipal().getName();
+            
+            // Get the current user's vendor code from the database
+            try {
+                String callerVendorCode = em.createQuery(
+                        "SELECT u.vendorCode FROM User u WHERE u.username = :username", String.class)
+                        .setParameter("username", callerPrincipal)
+                        .getSingleResult();
+                
+                // Ensure vendor representative can only access their own vendor
+                if (callerVendorCode == null || !callerVendorCode.equals(vendorCode)) {
+                    LOGGER.log(Level.WARNING, 
+                            "SECURITY: Vendor representative {0} attempted to access vendor {1} (own vendor: {2})",
+                            new Object[]{callerPrincipal, vendorCode, callerVendorCode});
+                    return null; // Return null instead of throwing exception to avoid information leakage
+                }
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, "Error retrieving vendor code for user: " + callerPrincipal, e);
+                return null;
+            }
+        }
+        
         List<Vendor> results = em.createQuery(
                         "SELECT v FROM Vendor v WHERE v.vendorCode = :code", Vendor.class)
                 .setParameter("code", vendorCode)

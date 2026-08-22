@@ -55,7 +55,8 @@ public class DatabaseSeeder {
                 "admin123", // Default password - CHANGE IN PRODUCTION
                 "admin@globaltrade.com",
                 "System Administrator",
-                Set.of("SYSTEM_ADMIN")
+                Set.of("SYSTEM_ADMIN"),
+                null // No vendor code for admin
         );
 
         // Create logistics coordinator
@@ -64,7 +65,8 @@ public class DatabaseSeeder {
                 "logistics123", // Default password - CHANGE IN PRODUCTION
                 "logistics@globaltrade.com",
                 "Logistics Coordinator",
-                Set.of("LOGISTICS_COORDINATOR")
+                Set.of("LOGISTICS_COORDINATOR"),
+                null // No vendor code for logistics coordinator
         );
 
         // Create warehouse manager
@@ -73,7 +75,8 @@ public class DatabaseSeeder {
                 "warehouse123", // Default password - CHANGE IN PRODUCTION
                 "warehouse@globaltrade.com",
                 "Warehouse Manager",
-                Set.of("WAREHOUSE_MANAGER")
+                Set.of("WAREHOUSE_MANAGER"),
+                null // No vendor code for warehouse manager
         );
 
         // Create customs agent
@@ -82,7 +85,8 @@ public class DatabaseSeeder {
                 "customs123", // Default password - CHANGE IN PRODUCTION
                 "customs@globaltrade.com",
                 "Customs Agent",
-                Set.of("CUSTOMS_AGENT")
+                Set.of("CUSTOMS_AGENT"),
+                null // No vendor code for customs agent
         );
 
         // Create vendor representative
@@ -91,12 +95,13 @@ public class DatabaseSeeder {
                 "vendor123", // Default password - CHANGE IN PRODUCTION
                 "vendor@globaltrade.com",
                 "Vendor Representative",
-                Set.of("VENDOR_REPRESENTATIVE")
+                Set.of("VENDOR_REPRESENTATIVE"),
+                "VND-001" // Vendor code for vendor representative (assigns to Shenzhen Electronics Co.)
         );
     }
 
     private void createUserIfNotExists(String username, String password, String email,
-                                       String fullName, Set<String> roles) {
+                                       String fullName, Set<String> roles, String vendorCode) {
         try {
             // Check if user already exists
             User existingUser = userService.findByUsername(username);
@@ -108,6 +113,7 @@ public class DatabaseSeeder {
                 existingUser.setEmail(email);
                 existingUser.setFullName(fullName);
                 existingUser.setRoles(new HashSet<>(roles));
+                existingUser.setVendorCode(vendorCode); // Set vendor code
                 userService.updateUser(existingUser);
                 LOGGER.log(Level.INFO, "Updated user: {0} with new password hash", username);
                 return;
@@ -116,6 +122,7 @@ public class DatabaseSeeder {
             // Create new user with plain password (UserManager will hash it)
             User user = new User(username, password, email, fullName);
             user.setRoles(new HashSet<>(roles));
+            user.setVendorCode(vendorCode); // Set vendor code
 
             User createdUser = userService.createUser(user);
             LOGGER.log(Level.INFO, "Created user: {0} with roles: {1}",
