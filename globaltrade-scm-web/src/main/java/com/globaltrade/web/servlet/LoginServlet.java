@@ -33,10 +33,10 @@ public class LoginServlet extends HttpServlet {
     // Role descriptions for display purposes
     private static final String ROLE_DESCRIPTIONS =
             "LOGISTICS_COORDINATOR: Shipment management, inventory operations, route optimization\n" +
-            "WAREHOUSE_MANAGER: Inventory management, warehouse operations\n" +
-            "CUSTOMS_AGENT: Customs declarations, compliance reports\n" +
-            "VENDOR_REPRESENTATIVE: View own orders, update delivery status\n" +
-            "SYSTEM_ADMIN: Full system access, user management, emergency overrides";
+                    "WAREHOUSE_MANAGER: Inventory management, warehouse operations\n" +
+                    "CUSTOMS_AGENT: Customs declarations, compliance reports\n" +
+                    "VENDOR_REPRESENTATIVE: View own orders, update delivery status\n" +
+                    "SYSTEM_ADMIN: Full system access, user management, emergency overrides";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -76,7 +76,7 @@ public class LoginServlet extends HttpServlet {
 
         // Validate input
         if (username == null || username.trim().isEmpty() ||
-            password == null || password.trim().isEmpty()) {
+                password == null || password.trim().isEmpty()) {
             request.setAttribute("error", "Username and password are required");
             request.getRequestDispatcher("/index.jsp").forward(request, response);
             return;

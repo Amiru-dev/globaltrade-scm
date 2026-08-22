@@ -1,5 +1,7 @@
 package com.globaltrade.web.rest;
 
+import com.globaltrade.common.dto.DTOConverter;
+import com.globaltrade.common.dto.VendorDTO;
 import com.globaltrade.common.entity.Vendor;
 import com.globaltrade.common.enums.ComplianceStatus;
 import com.globaltrade.common.exception.VendorValidationException;
@@ -12,14 +14,18 @@ import jakarta.ws.rs.core.Response;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * RESTful resource for vendor management operations.
  *
- * <p>Exposes vendor CRUD, performance rating queries, and compliance
- * status management via REST endpoints.</p>
+ * <p><strong>EJB Best Practice - REST Layer Design:</strong></p>
+ * <ul>
+ *   <li><strong>Thin Controllers:</strong> REST resources are thin wrappers around EJB services</li>
+ *   <li><strong>DTO Pattern:</strong> Uses DTOs instead of exposing JPA entities directly</li>
+ *   <li><strong>Exception Mapping:</strong> Relies on exception mappers for error handling</li>
+ *   <li><strong>Security:</strong> EJB layer enforces security via @RolesAllowed</li>
+ * </ul>
  */
 @Path("/vendors")
 @Produces(MediaType.APPLICATION_JSON)
@@ -36,8 +42,9 @@ public class VendorResource {
      */
     @GET
     public Response getAllVendors() {
-        List<Vendor> vendors = vendorService.findAllVendors();
-        return Response.ok(vendors).build();
+        List<Vendor> entities = vendorService.findAllVendors();
+        List<VendorDTO> dtos = DTOConverter.toVendorDTOList(entities);
+        return Response.ok(dtos).build();
     }
 
     /**
@@ -46,13 +53,12 @@ public class VendorResource {
     @GET
     @Path("/{id}")
     public Response getVendorById(@PathParam("id") Long id) {
-        Vendor vendor = vendorService.findById(id);
-        if (vendor == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\": \"Vendor not found with ID: " + id + "\"}")
-                    .build();
+        Vendor entity = vendorService.findById(id);
+        if (entity == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok(vendor).build();
+        VendorDTO dto = DTOConverter.toVendorDTO(entity);
+        return Response.ok(dto).build();
     }
 
     /**
@@ -61,35 +67,25 @@ public class VendorResource {
     @GET
     @Path("/code/{vendorCode}")
     public Response getVendorByCode(@PathParam("vendorCode") String vendorCode) {
-        Vendor vendor = vendorService.findByVendorCode(vendorCode);
-        if (vendor == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\": \"Vendor not found with code: " + vendorCode + "\"}")
-                    .build();
+        Vendor entity = vendorService.findByVendorCode(vendorCode);
+        if (entity == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok(vendor).build();
+        VendorDTO dto = DTOConverter.toVendorDTO(entity);
+        return Response.ok(dto).build();
     }
 
     /**
      * Registers a new vendor.
      */
     @POST
-    public Response registerVendor(Vendor vendor) {
-        try {
-            Vendor created = vendorService.registerVendor(vendor);
-            return Response.status(Response.Status.CREATED)
-                    .entity(created)
-                    .build();
-        } catch (VendorValidationException e) {
-            return Response.status(Response.Status.CONFLICT)
-                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
-                    .build();
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error registering vendor", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\": \"Failed to register vendor: " + e.getMessage() + "\"}")
-                    .build();
-        }
+    public Response registerVendor(VendorDTO vendorDTO) throws VendorValidationException {
+        Vendor entity = DTOConverter.toVendorEntity(vendorDTO);
+        Vendor created = vendorService.registerVendor(entity);
+        VendorDTO createdDTO = DTOConverter.toVendorDTO(created);
+        return Response.status(Response.Status.CREATED)
+                .entity(createdDTO)
+                .build();
     }
 
     /**
@@ -97,16 +93,12 @@ public class VendorResource {
      */
     @PUT
     @Path("/{id}")
-    public Response updateVendor(@PathParam("id") Long id, Vendor vendor) {
-        try {
-            vendor.setVendorId(id);
-            Vendor updated = vendorService.updateVendor(vendor);
-            return Response.ok(updated).build();
-        } catch (VendorValidationException e) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
-                    .build();
-        }
+    public Response updateVendor(@PathParam("id") Long id, VendorDTO vendorDTO) throws VendorValidationException {
+        vendorDTO.setVendorId(id);
+        Vendor entity = DTOConverter.toVendorEntity(vendorDTO);
+        Vendor updated = vendorService.updateVendor(entity);
+        VendorDTO updatedDTO = DTOConverter.toVendorDTO(updated);
+        return Response.ok(updatedDTO).build();
     }
 
     /**
@@ -115,15 +107,10 @@ public class VendorResource {
     @GET
     @Path("/compliance/{status}")
     public Response getVendorsByCompliance(@PathParam("status") String status) {
-        try {
-            ComplianceStatus complianceStatus = ComplianceStatus.valueOf(status.toUpperCase());
-            List<Vendor> vendors = vendorService.findByComplianceStatus(complianceStatus);
-            return Response.ok(vendors).build();
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"Invalid compliance status: " + status + "\"}")
-                    .build();
-        }
+        ComplianceStatus complianceStatus = ComplianceStatus.valueOf(status.toUpperCase());
+        List<Vendor> entities = vendorService.findByComplianceStatus(complianceStatus);
+        List<VendorDTO> dtos = DTOConverter.toVendorDTOList(entities);
+        return Response.ok(dtos).build();
     }
 
     /**
@@ -133,8 +120,9 @@ public class VendorResource {
     @Path("/low-performance")
     public Response getLowPerformanceVendors(
             @QueryParam("threshold") @DefaultValue("3.0") BigDecimal threshold) {
-        List<Vendor> vendors = vendorService.findLowPerformanceVendors(threshold);
-        return Response.ok(vendors).build();
+        List<Vendor> entities = vendorService.findLowPerformanceVendors(threshold);
+        List<VendorDTO> dtos = DTOConverter.toVendorDTOList(entities);
+        return Response.ok(dtos).build();
     }
 
     /**
@@ -143,7 +131,8 @@ public class VendorResource {
     @GET
     @Path("/expired-contracts")
     public Response getExpiredContracts() {
-        List<Vendor> vendors = vendorService.findExpiredContracts();
-        return Response.ok(vendors).build();
+        List<Vendor> entities = vendorService.findExpiredContracts();
+        List<VendorDTO> dtos = DTOConverter.toVendorDTOList(entities);
+        return Response.ok(dtos).build();
     }
 }

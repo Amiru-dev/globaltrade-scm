@@ -45,6 +45,7 @@ import java.util.logging.Logger;
  * Stateless bean demonstrating basic lifecycle callbacks.
  */
 @Stateless
+@SuppressWarnings("WeakerAccess")
 class StatelessLifecycleDemo {
 
     private static final Logger LOGGER = Logger.getLogger(StatelessLifecycleDemo.class.getName());
@@ -69,7 +70,7 @@ class StatelessLifecycleDemo {
     public void initialize() {
         instanceId = ++instanceCount;
         LOGGER.info("LIFECYCLE: Stateless bean #" + instanceId + " initialized. Total instances: " + instanceCount);
-        
+
         // Resource initialization
         LOGGER.fine("LIFECYCLE: EntityManager injected: " + (em != null));
     }
@@ -102,11 +103,12 @@ class StatelessLifecycleDemo {
  * Stateful bean demonstrating extended lifecycle callbacks including passivation/activation.
  */
 @Stateful
+@SuppressWarnings("WeakerAccess")
 class StatefulLifecycleDemo implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = Logger.getLogger(StatefulLifecycleDemo.class.getName());
-    
+
     private String sessionId;
     private List<String> operationsLog;
     private long creationTime;
@@ -122,7 +124,7 @@ class StatefulLifecycleDemo implements Serializable {
         sessionId = "SESSION-" + System.currentTimeMillis();
         operationsLog = new ArrayList<>();
         creationTime = System.currentTimeMillis();
-        
+
         LOGGER.info("LIFECYCLE: Stateful bean created for session " + sessionId);
     }
 
@@ -140,7 +142,7 @@ class StatefulLifecycleDemo implements Serializable {
     @PrePassivate
     public void beforePassivation() {
         LOGGER.info("LIFECYCLE: Stateful bean " + sessionId + " being passivated. Operations: " + operationsLog.size());
-        
+
         // Clean up non-serializable resources if any
         // EntityManager is automatically handled by container
     }
@@ -159,7 +161,7 @@ class StatefulLifecycleDemo implements Serializable {
     @PostActivate
     public void afterActivation() {
         LOGGER.info("LIFECYCLE: Stateful bean " + sessionId + " activated. Operations: " + operationsLog.size());
-        
+
         // Re-acquire any non-serializable resources if needed
         // EntityManager is automatically re-injected by container
     }
@@ -203,6 +205,7 @@ class StatefulLifecycleDemo implements Serializable {
  * Service demonstrating comprehensive lifecycle management patterns.
  */
 @Stateless
+@SuppressWarnings("WeakerAccess")
 class LifecycleManagementService {
 
     private static final Logger LOGGER = Logger.getLogger(LifecycleManagementService.class.getName());

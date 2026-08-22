@@ -27,5 +27,7 @@ public class TransactionRollbackException extends SupplyChainException {
         this.transactionId = transactionId;
     }
 
-    public String getTransactionId() { return transactionId; }
+    public String getTransactionId() {
+        return transactionId;
+    }
 }

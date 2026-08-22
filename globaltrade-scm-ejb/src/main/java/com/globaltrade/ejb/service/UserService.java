@@ -41,7 +41,7 @@ public class UserService {
     /**
      * Authenticates a user with username and password.
      *
-     * @param username the username to authenticate
+     * @param username      the username to authenticate
      * @param plainPassword the plain text password to verify
      * @return authenticated User object, or null if authentication fails
      */
@@ -128,7 +128,7 @@ public class UserService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User updateUser(User user) {
         LOGGER.log(Level.INFO, "Updating user: {0}", user.getUsername());
-        
+
         // Hash the password if it's being updated
         String currentPassword = user.getPasswordHash();
         if (currentPassword != null && !currentPassword.isEmpty()) {
@@ -141,14 +141,14 @@ public class UserService {
                 LOGGER.log(Level.INFO, "Password hashed for user: {0}", user.getUsername());
             }
         }
-        
+
         return em.merge(user);
     }
 
     /**
      * Changes a user's password.
      *
-     * @param username the username of the user
+     * @param username    the username of the user
      * @param oldPassword the current password (for verification)
      * @param newPassword the new password to set
      * @return true if password changed successfully, false otherwise
@@ -318,7 +318,7 @@ public class UserService {
      * Adds a role to a user.
      *
      * @param username the username of the user
-     * @param role the role to add
+     * @param role     the role to add
      * @return true if role added successfully, false otherwise
      */
     @RolesAllowed({"SYSTEM_ADMIN"})
@@ -343,7 +343,7 @@ public class UserService {
      * Removes a role from a user.
      *
      * @param username the username of the user
-     * @param role the role to remove
+     * @param role     the role to remove
      * @return true if role removed successfully, false otherwise
      */
     @RolesAllowed({"SYSTEM_ADMIN"})

@@ -65,7 +65,7 @@ public class PerformanceResource {
 
         try {
             Map<String, Object> metrics = new HashMap<>();
-            
+
             // Convert AtomicLong maps to regular Long maps for JSON serialization
             Map<String, Long> invocationCounts = new HashMap<>();
             PerformanceMonitor.getAllInvocationCounts().forEach((key, value) -> {
@@ -110,7 +110,7 @@ public class PerformanceResource {
 
         try {
             Map<String, Object> methodMetrics = new HashMap<>();
-            
+
             methodMetrics.put("methodKey", methodKey);
             methodMetrics.put("invocationCount", PerformanceMonitor.getInvocationCount(methodKey));
             methodMetrics.put("averageExecutionTime", PerformanceMonitor.getAverageExecutionTime(methodKey));
@@ -155,7 +155,7 @@ public class PerformanceResource {
 
         try {
             PerformanceMonitor.resetMetrics();
-            
+
             Map<String, String> response = new HashMap<>();
             response.put("status", "success");
             response.put("message", "All performance metrics have been reset");
@@ -175,7 +175,7 @@ public class PerformanceResource {
      * Returns performance summary report.
      *
      * <p><strong>Summary Includes:</strong></p>
- * <ul>
+     * <ul>
      *   <li>Total method invocations</li>
      *   <li>Average execution time across all methods</li>
      *   <li>Performance threshold violations</li>
@@ -190,7 +190,7 @@ public class PerformanceResource {
 
         try {
             Map<String, Object> summary = new HashMap<>();
-            
+
             Map<String, Long> invocationCounts = new HashMap<>();
             PerformanceMonitor.getAllInvocationCounts().forEach((key, value) -> {
                 invocationCounts.put(key, value.get());
@@ -243,7 +243,7 @@ public class PerformanceResource {
      * Returns real-time performance status for dashboard display.
      *
      * <p><strong>Status Indicators:</strong></p>
- * <ul>
+     * <ul>
      *   <li>Overall system health (GREEN/YELLOW/RED)</li>
      *   *   <li>Active method count</li>
      *   <li>Recent performance trends</li>
@@ -258,7 +258,7 @@ public class PerformanceResource {
 
         try {
             Map<String, Object> status = new HashMap<>();
-            
+
             Map<String, Long> invocationCounts = new HashMap<>();
             PerformanceMonitor.getAllInvocationCounts().forEach((key, value) -> {
                 invocationCounts.put(key, value.get());

@@ -40,8 +40,19 @@ public class CustomsFailureException extends SupplyChainException {
         this.failureTimestamp = failureTimestamp;
     }
 
-    public String getCustomsAuthority() { return customsAuthority; }
-    public String getFailureReason() { return failureReason; }
-    public String getShipmentTrackingNumber() { return shipmentTrackingNumber; }
-    public java.time.LocalDateTime getFailureTimestamp() { return failureTimestamp; }
+    public String getCustomsAuthority() {
+        return customsAuthority;
+    }
+
+    public String getFailureReason() {
+        return failureReason;
+    }
+
+    public String getShipmentTrackingNumber() {
+        return shipmentTrackingNumber;
+    }
+
+    public java.time.LocalDateTime getFailureTimestamp() {
+        return failureTimestamp;
+    }
 }

@@ -105,7 +105,7 @@ public class DistributedTransactionService {
      * Demonstrates Saga pattern as alternative to distributed transactions.
      *
      * <p><strong>Saga Pattern Analysis:</strong></p>
- * <ul>
+     * <ul>
      *   <li><strong>Concept:</strong> Break long transaction into sequence of local
      *       transactions, each with compensating actions for rollback.</li>
      *   <li><strong>Advantages:</strong> Better performance, higher availability,

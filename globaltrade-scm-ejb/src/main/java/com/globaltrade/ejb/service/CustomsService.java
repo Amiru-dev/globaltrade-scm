@@ -3,14 +3,13 @@ package com.globaltrade.ejb.service;
 import com.globaltrade.common.entity.CustomsDeclaration;
 import com.globaltrade.common.enums.ComplianceStatus;
 import com.globaltrade.common.exception.CustomsComplianceException;
-import com.globaltrade.ejb.interceptor.CustomsRegulationsInterceptor;
+import com.globaltrade.ejb.interceptor.CustomsComplianceBinding;
 
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
-import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -35,7 +34,7 @@ import java.util.logging.Logger;
  */
 @Stateless
 @RolesAllowed({"CUSTOMS_AGENT", "LOGISTICS_COORDINATOR", "SYSTEM_ADMIN"})
-@Interceptors(CustomsRegulationsInterceptor.class)
+@CustomsComplianceBinding
 public class CustomsService {
 
     private static final Logger LOGGER = Logger.getLogger(CustomsService.class.getName());

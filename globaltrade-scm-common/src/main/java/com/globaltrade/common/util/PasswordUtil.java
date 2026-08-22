@@ -63,7 +63,7 @@ public class PasswordUtil {
      * Verifies a plain password against a stored hash.
      *
      * @param plainPassword the plain text password to verify
-     * @param storedHash the stored Base64 encoded salt+hash
+     * @param storedHash    the stored Base64 encoded salt+hash
      * @return true if password matches, false otherwise
      */
     public static boolean verifyPassword(String plainPassword, String storedHash) {

@@ -1,7 +1,10 @@
 package com.globaltrade.web.rest;
 
+import com.globaltrade.common.dto.DTOConverter;
+import com.globaltrade.common.dto.InventoryItemDTO;
 import com.globaltrade.common.entity.InventoryItem;
 import com.globaltrade.common.exception.InventoryShortageException;
+import com.globaltrade.common.exception.TransactionRollbackException;
 import com.globaltrade.ejb.service.InventoryService;
 
 import jakarta.ejb.EJB;
@@ -10,14 +13,18 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * RESTful resource for inventory management operations.
  *
- * <p>Exposes inventory queries, stock adjustments, and warehouse transfer
- * operations via a clean REST API.</p>
+ * <p><strong>EJB Best Practice - REST Layer Design:</strong></p>
+ * <ul>
+ *   <li><strong>Thin Controllers:</strong> REST resources are thin wrappers around EJB services</li>
+ *   <li><strong>DTO Pattern:</strong> Uses DTOs instead of exposing JPA entities directly</li>
+ *   <li><strong>Exception Mapping:</strong> Relies on exception mappers for error handling</li>
+ *   <li><strong>Security:</strong> EJB layer enforces security via @RolesAllowed</li>
+ * </ul>
  */
 @Path("/inventory")
 @Produces(MediaType.APPLICATION_JSON)
@@ -35,13 +42,12 @@ public class InventoryResource {
     @GET
     @Path("/{id}")
     public Response getInventoryById(@PathParam("id") Long id) {
-        InventoryItem item = inventoryService.findById(id);
-        if (item == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\": \"Inventory item not found with ID: " + id + "\"}")
-                    .build();
+        InventoryItem entity = inventoryService.findById(id);
+        if (entity == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok(item).build();
+        InventoryItemDTO dto = DTOConverter.toInventoryItemDTO(entity);
+        return Response.ok(dto).build();
     }
 
     /**
@@ -50,8 +56,9 @@ public class InventoryResource {
     @GET
     @Path("/low-stock")
     public Response getLowStockItems() {
-        List<InventoryItem> lowStock = inventoryService.findLowStockItems();
-        return Response.ok(lowStock).build();
+        List<InventoryItem> entities = inventoryService.findLowStockItems();
+        List<InventoryItemDTO> dtos = DTOConverter.toInventoryItemDTOList(entities);
+        return Response.ok(dtos).build();
     }
 
     /**
@@ -60,8 +67,9 @@ public class InventoryResource {
     @GET
     @Path("/out-of-stock")
     public Response getOutOfStockItems() {
-        List<InventoryItem> outOfStock = inventoryService.findOutOfStockItems();
-        return Response.ok(outOfStock).build();
+        List<InventoryItem> entities = inventoryService.findOutOfStockItems();
+        List<InventoryItemDTO> dtos = DTOConverter.toInventoryItemDTOList(entities);
+        return Response.ok(dtos).build();
     }
 
     /**
@@ -70,26 +78,22 @@ public class InventoryResource {
     @GET
     @Path("/warehouse/{warehouseId}")
     public Response getInventoryByWarehouse(@PathParam("warehouseId") Long warehouseId) {
-        List<InventoryItem> items = inventoryService.findByWarehouse(warehouseId);
-        return Response.ok(items).build();
+        List<InventoryItem> entities = inventoryService.findByWarehouse(warehouseId);
+        List<InventoryItemDTO> dtos = DTOConverter.toInventoryItemDTOList(entities);
+        return Response.ok(dtos).build();
     }
 
     /**
      * Adds a new inventory item to a warehouse.
      */
     @POST
-    public Response addInventoryItem(InventoryItem item) {
-        try {
-            InventoryItem created = inventoryService.addInventoryItem(item);
-            return Response.status(Response.Status.CREATED)
-                    .entity(created)
-                    .build();
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error creating inventory item", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\": \"Failed to create inventory item: " + e.getMessage() + "\"}")
-                    .build();
-        }
+    public Response addInventoryItem(InventoryItemDTO itemDTO) {
+        InventoryItem entity = DTOConverter.toInventoryItemEntity(itemDTO);
+        InventoryItem created = inventoryService.addInventoryItem(entity);
+        InventoryItemDTO createdDTO = DTOConverter.toInventoryItemDTO(created);
+        return Response.status(Response.Status.CREATED)
+                .entity(createdDTO)
+                .build();
     }
 
     /**
@@ -98,15 +102,10 @@ public class InventoryResource {
     @PUT
     @Path("/{id}/deduct")
     public Response deductStock(@PathParam("id") Long id,
-                                @QueryParam("quantity") int quantity) {
-        try {
-            InventoryItem updated = inventoryService.deductStock(id, quantity);
-            return Response.ok(updated).build();
-        } catch (InventoryShortageException e) {
-            return Response.status(Response.Status.CONFLICT)
-                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
-                    .build();
-        }
+                                @QueryParam("quantity") int quantity) throws InventoryShortageException {
+        InventoryItem updated = inventoryService.deductStock(id, quantity);
+        InventoryItemDTO updatedDTO = DTOConverter.toInventoryItemDTO(updated);
+        return Response.ok(updatedDTO).build();
     }
 
     /**
@@ -118,11 +117,10 @@ public class InventoryResource {
                                    @QueryParam("quantity") int quantity) {
         InventoryItem updated = inventoryService.replenishStock(id, quantity);
         if (updated == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\": \"Inventory item not found: " + id + "\"}")
-                    .build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok(updated).build();
+        InventoryItemDTO updatedDTO = DTOConverter.toInventoryItemDTO(updated);
+        return Response.ok(updatedDTO).build();
     }
 
     /**
@@ -132,18 +130,8 @@ public class InventoryResource {
     @Path("/transfer")
     public Response transferInventory(@QueryParam("sourceId") Long sourceId,
                                       @QueryParam("targetId") Long targetId,
-                                      @QueryParam("quantity") int quantity) {
-        try {
-            inventoryService.transferInventory(sourceId, targetId, quantity);
-            return Response.ok("{\"message\": \"Inventory transferred successfully\"}").build();
-        } catch (InventoryShortageException e) {
-            return Response.status(Response.Status.CONFLICT)
-                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
-                    .build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\": \"Transfer failed: " + e.getMessage() + "\"}")
-                    .build();
-        }
+                                      @QueryParam("quantity") int quantity) throws InventoryShortageException, TransactionRollbackException {
+        inventoryService.transferInventory(sourceId, targetId, quantity);
+        return Response.ok("{\"message\": \"Inventory transferred successfully\"}").build();
     }
 }

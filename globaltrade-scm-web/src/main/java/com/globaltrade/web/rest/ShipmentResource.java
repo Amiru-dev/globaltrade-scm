@@ -1,5 +1,7 @@
 package com.globaltrade.web.rest;
 
+import com.globaltrade.common.dto.DTOConverter;
+import com.globaltrade.common.dto.ShipmentDTO;
 import com.globaltrade.common.entity.Shipment;
 import com.globaltrade.common.enums.ShipmentStatus;
 import com.globaltrade.common.exception.ShipmentTrackingException;
@@ -17,15 +19,12 @@ import java.util.logging.Logger;
 /**
  * RESTful resource for shipment management operations.
  *
- * <p><strong>Critical Analysis — REST Layer Design:</strong></p>
+ * <p><strong>EJB Best Practice - REST Layer Design:</strong></p>
  * <ul>
- *   <li>REST resources are thin wrappers around EJB services — business logic
- *       resides entirely in the EJB layer, not in the REST controller.</li>
- *   <li>Exception mapping converts EJB application exceptions to appropriate
- *       HTTP status codes (404, 400, 500).</li>
- *   <li>Security is enforced at the EJB layer via {@code @RolesAllowed}
- *       and at the web layer via {@code web.xml} security constraints —
- *       providing defence-in-depth.</li>
+ *   <li><strong>Thin Controllers:</strong> REST resources are thin wrappers around EJB services</li>
+ *   <li><strong>DTO Pattern:</strong> Uses DTOs instead of exposing JPA entities directly</li>
+ *   <li><strong>Exception Mapping:</strong> Relies on exception mappers for error handling</li>
+ *   <li><strong>Security:</strong> EJB layer enforces security via @RolesAllowed</li>
  * </ul>
  */
 @Path("/shipments")
@@ -43,8 +42,9 @@ public class ShipmentResource {
      */
     @GET
     public Response getActiveShipments() {
-        List<Shipment> shipments = shipmentService.findActiveShipments();
-        return Response.ok(shipments).build();
+        List<Shipment> entities = shipmentService.findActiveShipments();
+        List<ShipmentDTO> dtos = DTOConverter.toShipmentDTOList(entities);
+        return Response.ok(dtos).build();
     }
 
     /**
@@ -53,13 +53,12 @@ public class ShipmentResource {
     @GET
     @Path("/{id}")
     public Response getShipmentById(@PathParam("id") Long id) {
-        Shipment shipment = shipmentService.findById(id);
-        if (shipment == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\": \"Shipment not found with ID: " + id + "\"}")
-                    .build();
+        Shipment entity = shipmentService.findById(id);
+        if (entity == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok(shipment).build();
+        ShipmentDTO dto = DTOConverter.toShipmentDTO(entity);
+        return Response.ok(dto).build();
     }
 
     /**
@@ -67,15 +66,10 @@ public class ShipmentResource {
      */
     @GET
     @Path("/track/{trackingNumber}")
-    public Response trackShipment(@PathParam("trackingNumber") String trackingNumber) {
-        try {
-            Shipment shipment = shipmentService.findByTrackingNumber(trackingNumber);
-            return Response.ok(shipment).build();
-        } catch (ShipmentTrackingException e) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
-                    .build();
-        }
+    public Response trackShipment(@PathParam("trackingNumber") String trackingNumber) throws ShipmentTrackingException {
+        Shipment entity = shipmentService.findByTrackingNumber(trackingNumber);
+        ShipmentDTO dto = DTOConverter.toShipmentDTO(entity);
+        return Response.ok(dto).build();
     }
 
     /**
@@ -84,33 +78,23 @@ public class ShipmentResource {
     @GET
     @Path("/status/{status}")
     public Response getShipmentsByStatus(@PathParam("status") String status) {
-        try {
-            ShipmentStatus shipmentStatus = ShipmentStatus.valueOf(status.toUpperCase());
-            List<Shipment> shipments = shipmentService.findByStatus(shipmentStatus);
-            return Response.ok(shipments).build();
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"Invalid shipment status: " + status + "\"}")
-                    .build();
-        }
+        ShipmentStatus shipmentStatus = ShipmentStatus.valueOf(status.toUpperCase());
+        List<Shipment> entities = shipmentService.findByStatus(shipmentStatus);
+        List<ShipmentDTO> dtos = DTOConverter.toShipmentDTOList(entities);
+        return Response.ok(dtos).build();
     }
 
     /**
      * Creates a new shipment.
      */
     @POST
-    public Response createShipment(Shipment shipment) {
-        try {
-            Shipment created = shipmentService.createShipment(shipment);
-            return Response.status(Response.Status.CREATED)
-                    .entity(created)
-                    .build();
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error creating shipment", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\": \"Failed to create shipment: " + e.getMessage() + "\"}")
-                    .build();
-        }
+    public Response createShipment(ShipmentDTO shipmentDTO) throws ShipmentTrackingException {
+        Shipment entity = DTOConverter.toShipmentEntity(shipmentDTO);
+        Shipment created = shipmentService.createShipment(entity);
+        ShipmentDTO createdDTO = DTOConverter.toShipmentDTO(created);
+        return Response.status(Response.Status.CREATED)
+                .entity(createdDTO)
+                .build();
     }
 
     /**
@@ -119,20 +103,11 @@ public class ShipmentResource {
     @PUT
     @Path("/{id}/status")
     public Response updateStatus(@PathParam("id") Long id,
-                                 @QueryParam("status") String status) {
-        try {
-            ShipmentStatus newStatus = ShipmentStatus.valueOf(status.toUpperCase());
-            Shipment updated = shipmentService.updateShipmentStatus(id, newStatus);
-            return Response.ok(updated).build();
-        } catch (ShipmentTrackingException e) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
-                    .build();
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"Invalid status: " + status + "\"}")
-                    .build();
-        }
+                                 @QueryParam("status") String status) throws ShipmentTrackingException {
+        ShipmentStatus newStatus = ShipmentStatus.valueOf(status.toUpperCase());
+        Shipment updated = shipmentService.updateShipmentStatus(id, newStatus);
+        ShipmentDTO updatedDTO = DTOConverter.toShipmentDTO(updated);
+        return Response.ok(updatedDTO).build();
     }
 
     /**
@@ -140,15 +115,9 @@ public class ShipmentResource {
      */
     @DELETE
     @Path("/{id}")
-    public Response deleteShipment(@PathParam("id") Long id) {
-        try {
-            shipmentService.deleteShipment(id);
-            return Response.noContent().build();
-        } catch (ShipmentTrackingException e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
-                    .build();
-        }
+    public Response deleteShipment(@PathParam("id") Long id) throws ShipmentTrackingException {
+        shipmentService.deleteShipment(id);
+        return Response.noContent().build();
     }
 
     /**
@@ -157,7 +126,8 @@ public class ShipmentResource {
     @GET
     @Path("/delayed")
     public Response getDelayedShipments() {
-        List<Shipment> delayed = shipmentService.findDelayedShipments();
-        return Response.ok(delayed).build();
+        List<Shipment> entities = shipmentService.findDelayedShipments();
+        List<ShipmentDTO> dtos = DTOConverter.toShipmentDTOList(entities);
+        return Response.ok(dtos).build();
     }
 }

@@ -159,7 +159,7 @@ public class InventoryService {
     @PermitAll
     public List<InventoryItem> findExcessInventory() {
         return em.createQuery(
-                "SELECT i FROM InventoryItem i WHERE i.quantity > i.maxStockLevel * 0.8", InventoryItem.class)
+                        "SELECT i FROM InventoryItem i WHERE i.quantity > i.maxStockLevel * 0.8", InventoryItem.class)
                 .getResultList();
     }
 

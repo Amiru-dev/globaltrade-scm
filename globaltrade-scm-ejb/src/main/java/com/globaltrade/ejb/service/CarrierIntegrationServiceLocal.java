@@ -11,5 +11,6 @@ import jakarta.ejb.Local;
 @Local
 public interface CarrierIntegrationServiceLocal {
     String getCarrierInfoLocal(String carrierCode);
+
     CarrierQuote getQuoteLocal(String origin, String destination, double weight);
 }

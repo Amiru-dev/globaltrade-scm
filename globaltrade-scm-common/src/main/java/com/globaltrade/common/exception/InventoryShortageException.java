@@ -26,7 +26,15 @@ public class InventoryShortageException extends SupplyChainException {
         this.availableQuantity = availableQuantity;
     }
 
-    public String getSku() { return sku; }
-    public int getRequestedQuantity() { return requestedQuantity; }
-    public int getAvailableQuantity() { return availableQuantity; }
+    public String getSku() {
+        return sku;
+    }
+
+    public int getRequestedQuantity() {
+        return requestedQuantity;
+    }
+
+    public int getAvailableQuantity() {
+        return availableQuantity;
+    }
 }

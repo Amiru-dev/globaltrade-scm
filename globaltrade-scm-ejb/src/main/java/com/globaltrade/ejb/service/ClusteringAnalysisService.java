@@ -87,18 +87,18 @@ public class ClusteringAnalysisService {
     @Schedule(hour = "*", minute = "*/15", persistent = true)
     public void clusterHealthCheck() {
         LOGGER.log(Level.INFO, "CLUSTER: Persistent timer executing cluster health check");
-        
+
         // Simulate cluster health monitoring
         int nodes = activeNodes.get();
         int load = currentLoad.get();
-        
+
         LOGGER.log(Level.INFO, "CLUSTER HEALTH: Nodes: {0}, Load: {1}%",
                 new Object[]{nodes, load});
-        
+
         if (load > 80) {
             LOGGER.log(Level.WARNING, "CLUSTER: High load detected - consider scaling");
         }
-        
+
         if (nodes < 2) {
             LOGGER.log(Level.SEVERE, "CLUSTER: Insufficient nodes for high availability");
         }
@@ -184,7 +184,7 @@ public class ClusteringAnalysisService {
      * Demonstrates load balancing strategies for clustered environments.
      *
      * <p><strong>Load Balancing Algorithms:</strong></p>
- * <ul>
+     * <ul>
      *   <li><strong>Round Robin:</strong> Distribute requests evenly across nodes</li>
      *   <li><strong>Least Connections:</strong> Route to node with fewest active connections</li>
      *   <li><strong>Weighted Round Robin:</strong> Consider node capacity/performance</li>
@@ -222,7 +222,7 @@ public class ClusteringAnalysisService {
      * Simulates cluster failover scenarios.
      *
      * <p><strong>Failover Analysis:</strong></p>
- * <ul>
+     * <ul>
      *   <li><strong>Node Failure Detection:</strong> Health checks identify failed nodes</li>
      *   <li><strong>Request Rerouting:</strong> Load balancer redirects to healthy nodes</li>
      *   <li><strong>Session Recovery:</strong> Sessions must be preserved or recreated</li>
@@ -275,7 +275,7 @@ public class ClusteringAnalysisService {
         LOGGER.log(Level.INFO, "  Failed Requests: {0}", clusterMetrics.get("FAILED_REQUESTS").get());
         LOGGER.log(Level.INFO, "  Cache Hit Ratio: {0}%",
                 (clusterMetrics.get("CACHE_HITS").get() * 100.0 /
-                (clusterMetrics.get("CACHE_HITS").get() + clusterMetrics.get("CACHE_MISSES").get())));
+                        (clusterMetrics.get("CACHE_HITS").get() + clusterMetrics.get("CACHE_MISSES").get())));
 
         LOGGER.log(Level.INFO, "================================");
         LOGGER.log(Level.INFO, "Reliability Assessment:");
@@ -297,7 +297,7 @@ public class ClusteringAnalysisService {
      * Demonstrates distributed cache configuration for clustered environments.
      *
      * <p><strong>Distributed Cache Options:</strong></p>
- * <ul>
+     * <ul>
      *   <li><strong>Redis:</strong> Fast, feature-rich, widely adopted</li>
      *   <li><strong>Hazelcast:</strong> Java-based, embedded mode available</li>
      *   <li><strong>Infinispan:</strong> JBoss community project, highly scalable</li>
@@ -323,7 +323,7 @@ public class ClusteringAnalysisService {
      * Analyzes high availability architecture patterns.
      *
      * <p><strong>HA Architecture Patterns:</strong></p>
- * <ul>
+     * <ul>
      *   <li><strong>Active-Passive:</strong> One active, one standby (simple, but underutilized)</li>
      *   <li><strong>Active-Active:</strong> All nodes active (better utilization, more complex)</li>
      *   <li><strong>N+1 Redundancy:</strong> One extra node for failover (balanced approach)</li>

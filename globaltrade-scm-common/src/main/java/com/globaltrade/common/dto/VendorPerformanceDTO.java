@@ -1,6 +1,7 @@
 package com.globaltrade.common.dto;
 
 import com.globaltrade.common.enums.ComplianceStatus;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -29,36 +30,91 @@ public class VendorPerformanceDTO implements Serializable {
 
     // ======================== Getters and Setters ========================
 
-    public Long getVendorId() { return vendorId; }
-    public void setVendorId(Long vendorId) { this.vendorId = vendorId; }
+    public Long getVendorId() {
+        return vendorId;
+    }
 
-    public String getVendorCode() { return vendorCode; }
-    public void setVendorCode(String vendorCode) { this.vendorCode = vendorCode; }
+    public void setVendorId(Long vendorId) {
+        this.vendorId = vendorId;
+    }
 
-    public String getVendorName() { return vendorName; }
-    public void setVendorName(String vendorName) { this.vendorName = vendorName; }
+    public String getVendorCode() {
+        return vendorCode;
+    }
 
-    public String getCountry() { return country; }
-    public void setCountry(String country) { this.country = country; }
+    public void setVendorCode(String vendorCode) {
+        this.vendorCode = vendorCode;
+    }
 
-    public BigDecimal getPerformanceRating() { return performanceRating; }
-    public void setPerformanceRating(BigDecimal performanceRating) { this.performanceRating = performanceRating; }
+    public String getVendorName() {
+        return vendorName;
+    }
 
-    public ComplianceStatus getComplianceStatus() { return complianceStatus; }
-    public void setComplianceStatus(ComplianceStatus complianceStatus) { this.complianceStatus = complianceStatus; }
+    public void setVendorName(String vendorName) {
+        this.vendorName = vendorName;
+    }
 
-    public int getTotalOrders() { return totalOrders; }
-    public void setTotalOrders(int totalOrders) { this.totalOrders = totalOrders; }
+    public String getCountry() {
+        return country;
+    }
 
-    public int getOnTimeDeliveries() { return onTimeDeliveries; }
-    public void setOnTimeDeliveries(int onTimeDeliveries) { this.onTimeDeliveries = onTimeDeliveries; }
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
-    public BigDecimal getOnTimePercentage() { return onTimePercentage; }
-    public void setOnTimePercentage(BigDecimal onTimePercentage) { this.onTimePercentage = onTimePercentage; }
+    public BigDecimal getPerformanceRating() {
+        return performanceRating;
+    }
 
-    public int getQualityIssues() { return qualityIssues; }
-    public void setQualityIssues(int qualityIssues) { this.qualityIssues = qualityIssues; }
+    public void setPerformanceRating(BigDecimal performanceRating) {
+        this.performanceRating = performanceRating;
+    }
 
-    public BigDecimal getAverageDeliveryDelayDays() { return averageDeliveryDelayDays; }
-    public void setAverageDeliveryDelayDays(BigDecimal averageDeliveryDelayDays) { this.averageDeliveryDelayDays = averageDeliveryDelayDays; }
+    public ComplianceStatus getComplianceStatus() {
+        return complianceStatus;
+    }
+
+    public void setComplianceStatus(ComplianceStatus complianceStatus) {
+        this.complianceStatus = complianceStatus;
+    }
+
+    public int getTotalOrders() {
+        return totalOrders;
+    }
+
+    public void setTotalOrders(int totalOrders) {
+        this.totalOrders = totalOrders;
+    }
+
+    public int getOnTimeDeliveries() {
+        return onTimeDeliveries;
+    }
+
+    public void setOnTimeDeliveries(int onTimeDeliveries) {
+        this.onTimeDeliveries = onTimeDeliveries;
+    }
+
+    public BigDecimal getOnTimePercentage() {
+        return onTimePercentage;
+    }
+
+    public void setOnTimePercentage(BigDecimal onTimePercentage) {
+        this.onTimePercentage = onTimePercentage;
+    }
+
+    public int getQualityIssues() {
+        return qualityIssues;
+    }
+
+    public void setQualityIssues(int qualityIssues) {
+        this.qualityIssues = qualityIssues;
+    }
+
+    public BigDecimal getAverageDeliveryDelayDays() {
+        return averageDeliveryDelayDays;
+    }
+
+    public void setAverageDeliveryDelayDays(BigDecimal averageDeliveryDelayDays) {
+        this.averageDeliveryDelayDays = averageDeliveryDelayDays;
+    }
 }

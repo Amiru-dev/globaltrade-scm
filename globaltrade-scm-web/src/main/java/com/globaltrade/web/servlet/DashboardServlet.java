@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 
 /**
  * Dashboard servlet for displaying timer-driven events and supply chain metrics.
- * 
+ *
  * <p><strong>Critical Analysis:</strong> This servlet demonstrates the integration
  * of EJB timer services with web presentation. It shows how timer-generated data
  * can be accessed and displayed to users, providing real-time visibility into
@@ -50,23 +50,23 @@ public class DashboardServlet extends HttpServlet {
     private InventoryMonitorTimer inventoryMonitorTimer;
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         // Check authentication
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("userRole") == null) {
             response.sendRedirect("login");
             return;
         }
-        
+
         String userRole = (String) session.getAttribute("userRole");
         String username = (String) session.getAttribute("username");
         String fullName = (String) session.getAttribute("fullName");
 
         LOGGER.log(Level.INFO, "Dashboard accessed by user: {0} ({1}) with role: {2}",
                 new Object[]{username, fullName, userRole});
-        
+
         try {
             // Fetch timer-generated data
             Map<String, Object> dashboardData = fetchDashboardData(session);
@@ -81,7 +81,7 @@ public class DashboardServlet extends HttpServlet {
 
             // Forward to dashboard JSP
             request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
-            
+
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error loading dashboard data", e);
 
@@ -109,17 +109,17 @@ public class DashboardServlet extends HttpServlet {
      */
     private Map<String, Object> fetchDashboardData(HttpSession session) {
         Map<String, Object> data = new HashMap<>();
-        
+
         // Timer service status
         data.put("timerServicesActive", true);
         data.put("lastTimerExecution", LocalDateTime.now().minusMinutes(5).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        
+
         // Shipment metrics (from ShipmentTrackingTimer)
         long inTransit = shipmentService.countByStatus(ShipmentStatus.IN_TRANSIT);
         long delivered = shipmentService.countByStatus(ShipmentStatus.DELIVERED);
         long atCustoms = shipmentService.countByStatus(ShipmentStatus.AT_CUSTOMS);
         long delayed = shipmentService.findDelayedShipments().size();
-        
+
         Map<String, Object> shipmentMetrics = new HashMap<>();
         shipmentMetrics.put("inTransit", inTransit);
         shipmentMetrics.put("delivered", delivered);
@@ -127,23 +127,23 @@ public class DashboardServlet extends HttpServlet {
         shipmentMetrics.put("delayed", delayed);
         shipmentMetrics.put("totalActive", inTransit + atCustoms);
         data.put("shipmentMetrics", shipmentMetrics);
-        
+
         // Recent delayed shipments for demonstration
         List<Shipment> delayedShipments = shipmentService.findDelayedShipments();
         data.put("delayedShipments", delayedShipments.size() > 5 ? delayedShipments.subList(0, 5) : delayedShipments);
-        
+
         // Inventory metrics (from InventoryMonitorTimer)
         List<InventoryAlertDTO> inventoryAlerts = inventoryMonitorTimer.getRecentAlerts();
         int lowStockCount = inventoryService.findLowStockItems().size();
         int outOfStockCount = inventoryService.findOutOfStockItems().size();
-        
+
         Map<String, Object> inventoryMetrics = new HashMap<>();
         inventoryMetrics.put("alerts", inventoryAlerts);
         inventoryMetrics.put("lowStockCount", lowStockCount);
         inventoryMetrics.put("outOfStockCount", outOfStockCount);
         inventoryMetrics.put("totalAlerts", inventoryAlerts.size());
         data.put("inventoryMetrics", inventoryMetrics);
-        
+
         // Timer-specific information
         Map<String, Object> timerInfo = new HashMap<>();
         timerInfo.put("shipmentTrackingTimer", "Active - 15 minute intervals");
@@ -152,7 +152,7 @@ public class DashboardServlet extends HttpServlet {
         timerInfo.put("customsDeadlineTimer", "Active - Daily schedule");
         timerInfo.put("vendorPerformanceTimer", "Active - Weekly schedule");
         data.put("timerInfo", timerInfo);
-        
+
         // Role-based access control for sensitive data
         String userRoles = (String) session.getAttribute("userRoles");
         boolean hasAdminAccess = userRoles != null && userRoles.contains("SYSTEM_ADMIN");
@@ -173,7 +173,7 @@ public class DashboardServlet extends HttpServlet {
             data.put("showFullDetails", false);
             data.put("accessLevel", "Limited");
         }
-        
+
         return data;
     }
 }

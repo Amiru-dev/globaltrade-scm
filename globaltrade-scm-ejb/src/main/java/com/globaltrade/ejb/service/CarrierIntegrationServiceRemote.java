@@ -11,5 +11,6 @@ import jakarta.ejb.Remote;
 @Remote
 public interface CarrierIntegrationServiceRemote {
     String getCarrierInfoRemote(String carrierCode);
+
     CarrierQuote getQuoteRemote(String origin, String destination, double weight);
 }

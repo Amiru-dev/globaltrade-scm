@@ -170,7 +170,7 @@ public class ShipmentService {
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<Shipment> findHighValueShipments(double threshold) {
         return em.createQuery(
-                "SELECT s FROM Shipment s WHERE s.declaredValue >= :threshold", Shipment.class)
+                        "SELECT s FROM Shipment s WHERE s.declaredValue >= :threshold", Shipment.class)
                 .setParameter("threshold", threshold)
                 .getResultList();
     }
@@ -182,7 +182,7 @@ public class ShipmentService {
     @PermitAll
     public List<Shipment> findByCarrier(String carrier) {
         return em.createQuery(
-                "SELECT s FROM Shipment s WHERE s.carrier = :carrier", Shipment.class)
+                        "SELECT s FROM Shipment s WHERE s.carrier = :carrier", Shipment.class)
                 .setParameter("carrier", carrier)
                 .getResultList();
     }
@@ -194,7 +194,7 @@ public class ShipmentService {
     @PermitAll
     public List<Shipment> findByRoute(String route) {
         return em.createQuery(
-                "SELECT s FROM Shipment s WHERE s.originCity = :route OR s.destinationCity = :route", Shipment.class)
+                        "SELECT s FROM Shipment s WHERE s.originCity = :route OR s.destinationCity = :route", Shipment.class)
                 .setParameter("route", route)
                 .getResultList();
     }

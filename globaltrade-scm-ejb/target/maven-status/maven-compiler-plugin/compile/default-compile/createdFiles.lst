@@ -12,6 +12,7 @@ com\globaltrade\ejb\service\LogisticsRecoveryService.class
 com\globaltrade\ejb\service\InventoryService.class
 com\globaltrade\ejb\interceptor\SecurityAuditInterceptor.class
 com\globaltrade\ejb\service\StatefulLifecycleDemo.class
+com\globaltrade\ejb\interceptor\CustomsComplianceBinding.class
 com\globaltrade\ejb\service\CarrierIntegrationServiceLocal.class
 com\globaltrade\ejb\timer\InventoryMonitorTimer.class
 com\globaltrade\ejb\service\VendorManagementService.class

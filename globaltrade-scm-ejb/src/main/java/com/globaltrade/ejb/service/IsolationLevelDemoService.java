@@ -73,7 +73,7 @@ public class IsolationLevelDemoService {
 
         // Standard operation uses default READ_COMMITTED isolation
         List<PurchaseOrder> orders = em.createQuery(
-                "SELECT po FROM PurchaseOrder po WHERE po.status = 'CONFIRMED'", PurchaseOrder.class)
+                        "SELECT po FROM PurchaseOrder po WHERE po.status = 'CONFIRMED'", PurchaseOrder.class)
                 .getResultList();
 
         LOGGER.log(Level.INFO, "ISOLATION: Found {0} confirmed orders at READ_COMMITTED level", orders.size());
@@ -171,7 +171,7 @@ public class IsolationLevelDemoService {
         try {
             // Lock the inventory item immediately
             InventoryItem item = em.find(InventoryItem.class, itemId, LockModeType.PESSIMISTIC_WRITE);
-            
+
             LOGGER.log(Level.INFO, "ISOLATION: Locked SKU: {0}, Qty: {1}",
                     new Object[]{item.getSku(), item.getQuantity()});
 
@@ -206,7 +206,7 @@ public class IsolationLevelDemoService {
         try {
             // Read without locking
             InventoryItem item = em.find(InventoryItem.class, itemId);
-            
+
             LOGGER.log(Level.INFO, "ISOLATION: Read SKU: {0}, Qty: {1}",
                     new Object[]{item.getSku(), item.getQuantity()});
 
@@ -256,7 +256,7 @@ public class IsolationLevelDemoService {
                 }
 
                 LOGGER.log(Level.WARNING, "ISOLATION: Retry " + retryCount + " after " + backoffMs + "ms backoff");
-                
+
                 try {
                     Thread.sleep(backoffMs);
                     backoffMs *= 2; // Exponential backoff

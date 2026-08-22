@@ -143,9 +143,9 @@ public class VendorManagementService {
     @PermitAll
     public Vendor findBackupCarrier(String primaryCarrier) {
         return em.createQuery(
-                "SELECT v FROM Vendor v WHERE v.vendorCode <> :primaryCarrier " +
-                "AND v.complianceStatus = com.globaltrade.common.enums.ComplianceStatus.COMPLIANT " +
-                "AND v.performanceRating >= 3.0", Vendor.class)
+                        "SELECT v FROM Vendor v WHERE v.vendorCode <> :primaryCarrier " +
+                                "AND v.complianceStatus = com.globaltrade.common.enums.ComplianceStatus.COMPLIANT " +
+                                "AND v.performanceRating >= 3.0", Vendor.class)
                 .setParameter("primaryCarrier", primaryCarrier)
                 .setMaxResults(1)
                 .getResultList()
@@ -170,7 +170,7 @@ public class VendorManagementService {
 
     /**
      * Allows vendor representatives to view their own data.
-     * 
+     *
      * <p><strong>Security Enforcement:</strong> Vendor representatives can only access
      * their own vendor's data. This is enforced through programmatic security checks
      * in addition to declarative @RolesAllowed annotation.</p>
@@ -181,17 +181,17 @@ public class VendorManagementService {
         // Programmatic security check for vendor data isolation
         if (sessionContext.isCallerInRole("VENDOR_REPRESENTATIVE")) {
             String callerPrincipal = sessionContext.getCallerPrincipal().getName();
-            
+
             // Get the current user's vendor code from the database
             try {
                 String callerVendorCode = em.createQuery(
-                        "SELECT u.vendorCode FROM User u WHERE u.username = :username", String.class)
+                                "SELECT u.vendorCode FROM User u WHERE u.username = :username", String.class)
                         .setParameter("username", callerPrincipal)
                         .getSingleResult();
-                
+
                 // Ensure vendor representative can only access their own vendor
                 if (callerVendorCode == null || !callerVendorCode.equals(vendorCode)) {
-                    LOGGER.log(Level.WARNING, 
+                    LOGGER.log(Level.WARNING,
                             "SECURITY: Vendor representative {0} attempted to access vendor {1} (own vendor: {2})",
                             new Object[]{callerPrincipal, vendorCode, callerVendorCode});
                     return null; // Return null instead of throwing exception to avoid information leakage
@@ -201,7 +201,7 @@ public class VendorManagementService {
                 return null;
             }
         }
-        
+
         List<Vendor> results = em.createQuery(
                         "SELECT v FROM Vendor v WHERE v.vendorCode = :code", Vendor.class)
                 .setParameter("code", vendorCode)

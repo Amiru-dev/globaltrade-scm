@@ -1,6 +1,7 @@
 package com.globaltrade.common.entity;
 
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -22,10 +23,10 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @NamedQueries({
-    @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
-    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
-    @NamedQuery(name = "User.findByRole", query = "SELECT u FROM User u WHERE :role MEMBER OF u.roles"),
-    @NamedQuery(name = "User.findActiveUsers", query = "SELECT u FROM User u WHERE u.active = true")
+        @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
+        @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
+        @NamedQuery(name = "User.findByRole", query = "SELECT u FROM User u WHERE :role MEMBER OF u.roles"),
+        @NamedQuery(name = "User.findActiveUsers", query = "SELECT u FROM User u WHERE u.active = true")
 })
 public class User implements Serializable {
 

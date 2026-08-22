@@ -63,7 +63,7 @@ public class LogisticsRecoveryService {
         try {
             // 1. Identify affected shipments
             List<Shipment> affectedShipments = shipmentService.findByCarrier(exception.getCarrierName());
-            
+
             // 2. Apply recovery strategy based on outage type
             for (Shipment shipment : affectedShipments) {
                 switch (exception.getOutageType()) {
@@ -104,7 +104,7 @@ public class LogisticsRecoveryService {
 
         try {
             Shipment shipment = shipmentService.findByTrackingNumber(exception.getShipmentTrackingNumber());
-            
+
             if (shipment == null) {
                 LOGGER.log(Level.WARNING, "CUSTOMS FAILURE RECOVERY: Shipment not found: {0}",
                         exception.getShipmentTrackingNumber());
@@ -153,7 +153,7 @@ public class LogisticsRecoveryService {
         try {
             // 1. Identify shipments on affected route
             List<Shipment> affectedShipments = shipmentService.findByRoute(exception.getAffectedRoute());
-            
+
             // 2. Apply weather-specific recovery strategies
             for (Shipment shipment : affectedShipments) {
                 applyWeatherRecoveryStrategy(shipment, exception);
@@ -175,7 +175,7 @@ public class LogisticsRecoveryService {
     private void recoverViaAlternativeCarrier(Shipment shipment, String failedCarrier) {
         LOGGER.log(Level.INFO, "ALTERNATIVE CARRIER ROUTING: Rerouting shipment {0} from {1} to backup carrier",
                 new Object[]{shipment.getTrackingNumber(), failedCarrier});
-        
+
         // Find backup carrier from vendor database
         Vendor backupCarrier = vendorService.findBackupCarrier(failedCarrier);
         if (backupCarrier != null) {
@@ -197,7 +197,7 @@ public class LogisticsRecoveryService {
     private void recoverViaSystemFallback(Shipment shipment, String failedCarrier) {
         LOGGER.log(Level.INFO, "SYSTEM FALLBACK: Activating manual processing for shipment {0}",
                 shipment.getTrackingNumber());
-        
+
         shipment.setStatus(ShipmentStatus.MANUAL_PROCESSING);
         shipment.setNotes("Manual processing activated due to carrier system failure");
         em.merge(shipment);
@@ -209,7 +209,7 @@ public class LogisticsRecoveryService {
     private void recoverViaManualProcessing(Shipment shipment, String failedCarrier) {
         LOGGER.log(Level.INFO, "MANUAL PROCESSING: Converting shipment {0} to manual processing",
                 shipment.getTrackingNumber());
-        
+
         shipment.setStatus(ShipmentStatus.MANUAL_PROCESSING);
         shipment.setNotes("Manual processing due to network failure with carrier " + failedCarrier);
         em.merge(shipment);
@@ -221,7 +221,7 @@ public class LogisticsRecoveryService {
     private void recoverViaGenericStrategy(Shipment shipment, String failedCarrier) {
         LOGGER.log(Level.INFO, "GENERIC RECOVERY: Applying default recovery for shipment {0}",
                 shipment.getTrackingNumber());
-        
+
         shipment.setStatus(ShipmentStatus.ON_HOLD);
         shipment.setNotes("On hold due to carrier outage with " + failedCarrier + " - awaiting resolution");
         em.merge(shipment);
@@ -233,7 +233,7 @@ public class LogisticsRecoveryService {
     private void recoverViaHsCodeCorrection(Shipment shipment) {
         LOGGER.log(Level.INFO, "HS CODE CORRECTION: Initiating HS code review for shipment {0}",
                 shipment.getTrackingNumber());
-        
+
         shipment.setStatus(ShipmentStatus.CUSTOMS_REVIEW);
         shipment.setNotes("HS code correction required - customs review initiated");
         em.merge(shipment);
@@ -245,7 +245,7 @@ public class LogisticsRecoveryService {
     private void recoverViaDocumentationCompletion(Shipment shipment) {
         LOGGER.log(Level.INFO, "DOCUMENTATION COMPLETION: Gathering missing documentation for shipment {0}",
                 shipment.getTrackingNumber());
-        
+
         shipment.setStatus(ShipmentStatus.DOCUMENTATION_PENDING);
         shipment.setNotes("Missing documentation - completion required for customs clearance");
         em.merge(shipment);
@@ -257,7 +257,7 @@ public class LogisticsRecoveryService {
     private void recoverViaRestrictedGoodsHandling(Shipment shipment) {
         LOGGER.log(Level.SEVERE, "RESTRICTED GOODS HANDLING: Critical compliance issue for shipment {0}",
                 shipment.getTrackingNumber());
-        
+
         shipment.setStatus(ShipmentStatus.REJECTED);
         shipment.setNotes("Restricted goods detected - shipment rejected for compliance review");
         em.merge(shipment);
@@ -269,7 +269,7 @@ public class LogisticsRecoveryService {
     private void recoverViaTradeAgreementAdjustment(Shipment shipment) {
         LOGGER.log(Level.INFO, "TRADE AGREEMENT ADJUSTMENT: Adjusting trade agreement details for shipment {0}",
                 shipment.getTrackingNumber());
-        
+
         shipment.setStatus(ShipmentStatus.CUSTOMS_REVIEW);
         shipment.setNotes("Trade agreement adjustment required - customs review initiated");
         em.merge(shipment);
@@ -281,7 +281,7 @@ public class LogisticsRecoveryService {
     private void recoverViaCustomsLiaison(Shipment shipment) {
         LOGGER.log(Level.INFO, "CUSTOMS LIAISON: Contacting customs authority for shipment {0}",
                 shipment.getTrackingNumber());
-        
+
         shipment.setStatus(ShipmentStatus.CUSTOMS_REVIEW);
         shipment.setNotes("Customs liaison required - contacting authority for resolution");
         em.merge(shipment);
@@ -293,19 +293,19 @@ public class LogisticsRecoveryService {
     private void applyWeatherRecoveryStrategy(Shipment shipment, WeatherDisruptionException exception) {
         LOGGER.log(Level.INFO, "WEATHER RECOVERY: Applying strategy for shipment {0} - {1} hours delay estimated",
                 new Object[]{shipment.getTrackingNumber(), exception.getEstimatedDelayHours()});
-        
+
         // Update estimated delivery time
         if (shipment.getEstimatedDelivery() != null) {
             shipment.setEstimatedDelivery(shipment.getEstimatedDelivery().plusHours(exception.getEstimatedDelayHours()));
         }
-        
+
         // Update status and add customer communication
         shipment.setStatus(ShipmentStatus.DELAYED);
         shipment.setNotes(String.format("Weather disruption (%s) in %s - %d hours delay - customer notified",
                 exception.getWeatherEventType(), exception.getAffectedRegion(), exception.getEstimatedDelayHours()));
-        
+
         em.merge(shipment);
-        
+
         // Log for customer communication
         LOGGER.log(Level.INFO, "CUSTOMER NOTIFICATION: Weather delay notification sent for shipment {0}",
                 shipment.getTrackingNumber());

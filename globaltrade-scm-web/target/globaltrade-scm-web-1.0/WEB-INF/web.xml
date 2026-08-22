@@ -129,4 +129,8 @@
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>
 
+    <!-- ======================== JAX-RS Exception Mappers ======================== -->
+    <!-- Exception mappers are automatically discovered via @Provider annotation -->
+    <!-- No additional configuration needed for JAX-RS exception mapping -->
+
 </web-app>

@@ -2,9 +2,11 @@ package com.globaltrade.ejb.interceptor;
 
 import com.globaltrade.common.entity.CustomsDeclaration;
 import com.globaltrade.common.entity.Shipment;
+import com.globaltrade.common.enums.ShipmentStatus;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,12 +20,13 @@ import java.util.logging.Logger;
  * <p><strong>Regulatory Checks:</strong></p>
  * <ul>
  *   <li>HS Code validation against international harmonized system</li>
- *   <li>Trade agreement verification (USMCA, UK-EU TCA, EU-India FTA)</li>
+ *   <li>Trade agreement verification (United States-Mexico-Canada Agreement, UK-EU Trade and Cooperation Agreement, EU-India Free Trade Agreement)</li>
  *   <li>Customs deadline compliance for regulatory submissions</li>
  *   <li>Sanctions and restricted party screening</li>
  * </ul>
  */
 @Interceptor
+@CustomsComplianceBinding
 public class CustomsRegulationsInterceptor {
 
     private static final Logger LOGGER = Logger.getLogger(CustomsRegulationsInterceptor.class.getName());
@@ -37,9 +40,8 @@ public class CustomsRegulationsInterceptor {
      */
     @AroundInvoke
     public Object validateCustomsCompliance(InvocationContext ctx) throws Exception {
-        Object target = ctx.getTarget();
         String methodName = ctx.getMethod().getName();
-        
+
         LOGGER.log(Level.INFO, "CUSTOMS REGULATIONS VALIDATION: Checking method {0} for trade compliance",
                 methodName);
 
@@ -47,7 +49,7 @@ public class CustomsRegulationsInterceptor {
         if (isCustomsOperation(methodName)) {
             try {
                 Object[] parameters = ctx.getParameters();
-                
+
                 // Check for customs declaration objects in parameters
                 for (Object param : parameters) {
                     if (param instanceof CustomsDeclaration) {
@@ -56,7 +58,7 @@ public class CustomsRegulationsInterceptor {
                         validateShipmentForCustoms((Shipment) param);
                     }
                 }
-                
+
                 LOGGER.log(Level.INFO, "CUSTOMS REGULATIONS VALIDATION: Method {0} passed trade compliance checks",
                         methodName);
             } catch (Exception e) {
@@ -102,8 +104,8 @@ public class CustomsRegulationsInterceptor {
      */
     private void validateShipmentForCustoms(Shipment shipment) {
         // Validate that customs clearance is obtained before international transport
-        if (!"CUSTOMS_CLEARED".equals(shipment.getStatus()) && 
-            isInternationalShipment(shipment)) {
+        if (shipment.getStatus() != ShipmentStatus.CUSTOMS_CLEARED &&
+                isInternationalShipment(shipment)) {
             LOGGER.log(Level.WARNING, "CUSTOMS COMPLIANCE ALERT: International shipment {0} lacks customs clearance",
                     shipment.getTrackingNumber());
         }
@@ -119,10 +121,10 @@ public class CustomsRegulationsInterceptor {
      * Checks if the method is related to customs operations.
      */
     private boolean isCustomsOperation(String methodName) {
-        return methodName.contains("Customs") || 
-               methodName.contains("Declaration") ||
-               methodName.contains("Compliance") ||
-               methodName.toLowerCase().contains("regulatory");
+        return methodName.contains("Customs") ||
+                methodName.contains("Declaration") ||
+                methodName.contains("Compliance") ||
+                methodName.toLowerCase().contains("regulatory");
     }
 
     /**
@@ -145,7 +147,11 @@ public class CustomsRegulationsInterceptor {
         }
         // Known trade agreements for verification
         String[] knownAgreements = {
-            "USMCA", "UK-EU TCA", "EU-India FTA", "RCEP", "CPTPP"
+                "United States-Mexico-Canada Agreement",
+                "UK-EU Trade and Cooperation Agreement",
+                "European Union-India Free Trade Agreement",
+                "Regional Comprehensive Economic Partnership",
+                "Comprehensive and Progressive Agreement for Trans-Pacific Partnership"
         };
         for (String agreement : knownAgreements) {
             if (tradeAgreement.contains(agreement)) {

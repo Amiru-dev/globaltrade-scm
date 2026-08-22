@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  *       <ul>
  *         <li>Calls are within the same JVM (no network overhead)</li>
  *         <li>Parameters passed by reference (no serialization required)</li>
-         *         <li>Typical performance: ~0.1-0.5ms per method call</li>
+ *         <li>Typical performance: ~0.1-0.5ms per method call</li>
  *         <li>Use for: Same-application modules, web tier to EJB tier communication</li>
  *       </ul>
  *   </li>

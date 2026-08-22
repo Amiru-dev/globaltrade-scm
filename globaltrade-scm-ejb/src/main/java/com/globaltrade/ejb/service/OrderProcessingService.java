@@ -79,19 +79,19 @@ public class OrderProcessingService {
      * <p><strong>Transaction Flow:</strong></p>
      * <ol>
      *   <li>Begin transaction</li>
- *   <li>Validate inventory availability</li>
- *   <li>Deduct inventory stock</li>
- *   <li>Create/update purchase order</li>
- *   <li>Conditionally commit or rollback based on business rules</li>
- * </ol>
+     *   <li>Validate inventory availability</li>
+     *   <li>Deduct inventory stock</li>
+     *   <li>Create/update purchase order</li>
+     *   <li>Conditionally commit or rollback based on business rules</li>
+     * </ol>
      *
      * <p><strong>Rollback Conditions:</strong></p>
      * <ul>
      *   <li>Insufficient inventory availability</li>
- *   *   <li>Inventory deduction failure</li>
- *   *   <li>Purchase order creation failure</li>
- *   *   <li>Business rule violations</li>
- *   * </ul>
+     *   *   <li>Inventory deduction failure</li>
+     *   *   <li>Purchase order creation failure</li>
+     *   *   <li>Business rule violations</li>
+     *   * </ul>
      *
      * @param order The purchase order to process
      * @return The processed order with updated status

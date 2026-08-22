@@ -25,9 +25,23 @@ public class CarrierQuote implements Serializable {
     }
 
     // Getters
-    public String getOrigin() { return origin; }
-    public String getDestination() { return destination; }
-    public double getWeight() { return weight; }
-    public double getPrice() { return price; }
-    public String getCallType() { return callType; }
+    public String getOrigin() {
+        return origin;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public String getCallType() {
+        return callType;
+    }
 }

@@ -191,7 +191,7 @@ public class SecurityService {
     @PermitAll
     public boolean canAccessEntity(String entityType, String userRole) {
         String caller = getCurrentUser();
-        
+
         // Define entity access matrix for supply chain roles
         switch (entityType) {
             case "SHIPMENT":
@@ -214,9 +214,9 @@ public class SecurityService {
      */
     private boolean canAccessShipmentData() {
         return ctx.isCallerInRole("LOGISTICS_COORDINATOR") ||
-               ctx.isCallerInRole("WAREHOUSE_MANAGER") ||
-               ctx.isCallerInRole("CUSTOMS_AGENT") ||
-               ctx.isCallerInRole("SYSTEM_ADMIN");
+                ctx.isCallerInRole("WAREHOUSE_MANAGER") ||
+                ctx.isCallerInRole("CUSTOMS_AGENT") ||
+                ctx.isCallerInRole("SYSTEM_ADMIN");
     }
 
     /**
@@ -224,8 +224,8 @@ public class SecurityService {
      */
     private boolean canAccessInventoryData() {
         return ctx.isCallerInRole("WAREHOUSE_MANAGER") ||
-               ctx.isCallerInRole("LOGISTICS_COORDINATOR") ||
-               ctx.isCallerInRole("SYSTEM_ADMIN");
+                ctx.isCallerInRole("LOGISTICS_COORDINATOR") ||
+                ctx.isCallerInRole("SYSTEM_ADMIN");
     }
 
     /**
@@ -233,8 +233,8 @@ public class SecurityService {
      */
     private boolean canAccessVendorData() {
         return ctx.isCallerInRole("LOGISTICS_COORDINATOR") ||
-               ctx.isCallerInRole("VENDOR_REPRESENTATIVE") ||
-               ctx.isCallerInRole("SYSTEM_ADMIN");
+                ctx.isCallerInRole("VENDOR_REPRESENTATIVE") ||
+                ctx.isCallerInRole("SYSTEM_ADMIN");
     }
 
     /**
@@ -242,8 +242,8 @@ public class SecurityService {
      */
     private boolean canAccessCustomsData() {
         return ctx.isCallerInRole("CUSTOMS_AGENT") ||
-               ctx.isCallerInRole("LOGISTICS_COORDINATOR") ||
-               ctx.isCallerInRole("SYSTEM_ADMIN");
+                ctx.isCallerInRole("LOGISTICS_COORDINATOR") ||
+                ctx.isCallerInRole("SYSTEM_ADMIN");
     }
 
     /**
@@ -253,7 +253,7 @@ public class SecurityService {
     @RolesAllowed({"LOGISTICS_COORDINATOR", "SYSTEM_ADMIN"})
     public boolean authorizeHighValueOperation(String operationType, double declaredValue) {
         String caller = getCurrentUser();
-        
+
         // Basic role check
         if (!ctx.isCallerInRole("LOGISTICS_COORDINATOR") && !ctx.isCallerInRole("SYSTEM_ADMIN")) {
             LOGGER.log(Level.WARNING, "HIGH-VALUE OPERATION DENIED: Insufficient role for user {0}", caller);
@@ -279,7 +279,7 @@ public class SecurityService {
     @RolesAllowed({"SYSTEM_ADMIN"})
     public boolean authorizeMaintenanceWindow(String operationType, java.time.LocalDateTime scheduledTime) {
         String caller = getCurrentUser();
-        
+
         if (!ctx.isCallerInRole("SYSTEM_ADMIN")) {
             LOGGER.log(Level.WARNING, "MAINTENANCE ACCESS DENIED: Non-admin {0} attempted maintenance operation", caller);
             return false;
@@ -289,9 +289,9 @@ public class SecurityService {
         java.time.LocalTime operationTime = scheduledTime.toLocalTime();
         java.time.LocalTime windowStart = java.time.LocalTime.of(2, 0);
         java.time.LocalTime windowEnd = java.time.LocalTime.of(4, 0);
-        
+
         boolean inWindow = !operationTime.isBefore(windowStart) && !operationTime.isAfter(windowEnd);
-        
+
         if (inWindow) {
             LOGGER.log(Level.INFO, "MAINTENANCE ACCESS GRANTED: Operation {0} by {1} within approved window",
                     new Object[]{operationType, caller});
