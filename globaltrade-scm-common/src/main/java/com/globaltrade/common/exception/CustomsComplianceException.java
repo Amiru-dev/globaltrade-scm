@@ -18,19 +18,24 @@ public class CustomsComplianceException extends SupplyChainException {
     private final String violationType;
 
     public CustomsComplianceException(String message, String declarationNumber,
-                                       String violationType) {
+                                      String violationType) {
         super(message, "SCM-CUST-001", "CustomsDeclaration", declarationNumber);
         this.declarationNumber = declarationNumber;
         this.violationType = violationType;
     }
 
     public CustomsComplianceException(String message, String declarationNumber,
-                                       String violationType, Throwable cause) {
+                                      String violationType, Throwable cause) {
         super(message, "SCM-CUST-001", cause);
         this.declarationNumber = declarationNumber;
         this.violationType = violationType;
     }
 
-    public String getDeclarationNumber() { return declarationNumber; }
-    public String getViolationType() { return violationType; }
+    public String getDeclarationNumber() {
+        return declarationNumber;
+    }
+
+    public String getViolationType() {
+        return violationType;
+    }
 }

@@ -29,36 +29,91 @@ public class InventoryAlertDTO implements Serializable {
 
     // ======================== Getters and Setters ========================
 
-    public Long getItemId() { return itemId; }
-    public void setItemId(Long itemId) { this.itemId = itemId; }
+    public Long getItemId() {
+        return itemId;
+    }
 
-    public String getSku() { return sku; }
-    public void setSku(String sku) { this.sku = sku; }
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
+    }
 
-    public String getProductName() { return productName; }
-    public void setProductName(String productName) { this.productName = productName; }
+    public String getSku() {
+        return sku;
+    }
 
-    public Long getWarehouseId() { return warehouseId; }
-    public void setWarehouseId(Long warehouseId) { this.warehouseId = warehouseId; }
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
 
-    public String getWarehouseName() { return warehouseName; }
-    public void setWarehouseName(String warehouseName) { this.warehouseName = warehouseName; }
+    public String getProductName() {
+        return productName;
+    }
 
-    public int getCurrentQuantity() { return currentQuantity; }
-    public void setCurrentQuantity(int currentQuantity) { this.currentQuantity = currentQuantity; }
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
-    public int getReorderLevel() { return reorderLevel; }
-    public void setReorderLevel(int reorderLevel) { this.reorderLevel = reorderLevel; }
+    public Long getWarehouseId() {
+        return warehouseId;
+    }
 
-    public String getAlertType() { return alertType; }
-    public void setAlertType(String alertType) { this.alertType = alertType; }
+    public void setWarehouseId(Long warehouseId) {
+        this.warehouseId = warehouseId;
+    }
 
-    public String getSeverity() { return severity; }
-    public void setSeverity(String severity) { this.severity = severity; }
+    public String getWarehouseName() {
+        return warehouseName;
+    }
 
-    public LocalDateTime getAlertTimestamp() { return alertTimestamp; }
-    public void setAlertTimestamp(LocalDateTime alertTimestamp) { this.alertTimestamp = alertTimestamp; }
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
+    }
 
-    public String getSuggestedAction() { return suggestedAction; }
-    public void setSuggestedAction(String suggestedAction) { this.suggestedAction = suggestedAction; }
+    public int getCurrentQuantity() {
+        return currentQuantity;
+    }
+
+    public void setCurrentQuantity(int currentQuantity) {
+        this.currentQuantity = currentQuantity;
+    }
+
+    public int getReorderLevel() {
+        return reorderLevel;
+    }
+
+    public void setReorderLevel(int reorderLevel) {
+        this.reorderLevel = reorderLevel;
+    }
+
+    public String getAlertType() {
+        return alertType;
+    }
+
+    public void setAlertType(String alertType) {
+        this.alertType = alertType;
+    }
+
+    public String getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(String severity) {
+        this.severity = severity;
+    }
+
+    public LocalDateTime getAlertTimestamp() {
+        return alertTimestamp;
+    }
+
+    public void setAlertTimestamp(LocalDateTime alertTimestamp) {
+        this.alertTimestamp = alertTimestamp;
+    }
+
+    public String getSuggestedAction() {
+        return suggestedAction;
+    }
+
+    public void setSuggestedAction(String suggestedAction) {
+        this.suggestedAction = suggestedAction;
+    }
 }

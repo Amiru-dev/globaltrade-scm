@@ -23,8 +23,8 @@ public class WeatherDisruptionException extends SupplyChainException {
     private final int estimatedDelayHours;
 
     public WeatherDisruptionException(String message, String weatherEventType, String affectedRegion,
-                                     String affectedRoute, java.time.LocalDateTime disruptionStartTime,
-                                     int estimatedDelayHours) {
+                                      String affectedRoute, java.time.LocalDateTime disruptionStartTime,
+                                      int estimatedDelayHours) {
         super(message, "SCM-WEATHER-001", "WeatherDisruption", affectedRegion);
         this.weatherEventType = weatherEventType;
         this.affectedRegion = affectedRegion;
@@ -34,8 +34,8 @@ public class WeatherDisruptionException extends SupplyChainException {
     }
 
     public WeatherDisruptionException(String message, String weatherEventType, String affectedRegion,
-                                     String affectedRoute, java.time.LocalDateTime disruptionStartTime,
-                                     int estimatedDelayHours, Throwable cause) {
+                                      String affectedRoute, java.time.LocalDateTime disruptionStartTime,
+                                      int estimatedDelayHours, Throwable cause) {
         super(message, "SCM-WEATHER-001", "WeatherDisruption", affectedRegion, cause);
         this.weatherEventType = weatherEventType;
         this.affectedRegion = affectedRegion;
@@ -44,9 +44,23 @@ public class WeatherDisruptionException extends SupplyChainException {
         this.estimatedDelayHours = estimatedDelayHours;
     }
 
-    public String getWeatherEventType() { return weatherEventType; }
-    public String getAffectedRegion() { return affectedRegion; }
-    public String getAffectedRoute() { return affectedRoute; }
-    public java.time.LocalDateTime getDisruptionStartTime() { return disruptionStartTime; }
-    public int getEstimatedDelayHours() { return estimatedDelayHours; }
+    public String getWeatherEventType() {
+        return weatherEventType;
+    }
+
+    public String getAffectedRegion() {
+        return affectedRegion;
+    }
+
+    public String getAffectedRoute() {
+        return affectedRoute;
+    }
+
+    public java.time.LocalDateTime getDisruptionStartTime() {
+        return disruptionStartTime;
+    }
+
+    public int getEstimatedDelayHours() {
+        return estimatedDelayHours;
+    }
 }

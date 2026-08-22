@@ -21,7 +21,7 @@ public class CarrierOutageException extends SupplyChainException {
     private final int affectedShipments;
     private final java.time.LocalDateTime outageStartTime;
 
-    public CarrierOutageException(String message, String carrierName, String outageType, 
+    public CarrierOutageException(String message, String carrierName, String outageType,
                                   int affectedShipments, java.time.LocalDateTime outageStartTime) {
         super(message, "SCM-CARR-OUTAGE-001", "CarrierOutage", carrierName);
         this.carrierName = carrierName;
@@ -31,7 +31,7 @@ public class CarrierOutageException extends SupplyChainException {
     }
 
     public CarrierOutageException(String message, String carrierName, String outageType,
-                                  int affectedShipments, java.time.LocalDateTime outageStartTime, 
+                                  int affectedShipments, java.time.LocalDateTime outageStartTime,
                                   Throwable cause) {
         super(message, "SCM-CARR-OUTAGE-001", "CarrierOutage", carrierName, cause);
         this.carrierName = carrierName;
@@ -40,8 +40,19 @@ public class CarrierOutageException extends SupplyChainException {
         this.outageStartTime = outageStartTime;
     }
 
-    public String getCarrierName() { return carrierName; }
-    public String getOutageType() { return outageType; }
-    public int getAffectedShipments() { return affectedShipments; }
-    public java.time.LocalDateTime getOutageStartTime() { return outageStartTime; }
+    public String getCarrierName() {
+        return carrierName;
+    }
+
+    public String getOutageType() {
+        return outageType;
+    }
+
+    public int getAffectedShipments() {
+        return affectedShipments;
+    }
+
+    public java.time.LocalDateTime getOutageStartTime() {
+        return outageStartTime;
+    }
 }

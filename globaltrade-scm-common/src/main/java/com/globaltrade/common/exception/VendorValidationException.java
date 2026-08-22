@@ -22,6 +22,11 @@ public class VendorValidationException extends SupplyChainException {
         this.fieldName = fieldName;
     }
 
-    public String getVendorCode() { return vendorCode; }
-    public String getFieldName() { return fieldName; }
+    public String getVendorCode() {
+        return vendorCode;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
 }

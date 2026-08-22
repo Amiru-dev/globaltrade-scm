@@ -71,7 +71,15 @@ public abstract class SupplyChainException extends Exception {
         this.entityId = entityId;
     }
 
-    public String getErrorCode() { return errorCode; }
-    public String getEntityType() { return entityType; }
-    public String getEntityId() { return entityId; }
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public String getEntityType() {
+        return entityType;
+    }
+
+    public String getEntityId() {
+        return entityId;
+    }
 }
