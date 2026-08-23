@@ -1,10 +1,14 @@
 package com.globaltrade.ejb.security;
 
+import com.globaltrade.common.entity.User;
+import com.globaltrade.common.util.SystemConstants;
 import jakarta.annotation.Resource;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +40,52 @@ public class SecurityService {
 
     @Resource
     private SessionContext ctx;
+
+    @PersistenceContext(unitName = "GlobalTradePU")
+    private EntityManager em;
+
+    /**
+     * Authenticates user credentials for JWT token generation.
+     *
+     * <p><strong>Critical Analysis:</strong> This method provides authentication
+     * for JWT token generation, working with the BCrypt password hashing
+     * implemented in PasswordUtil. Used by AuthResource.login() endpoint.</p>
+     *
+     * @param username the username to authenticate
+     * @param password the plain text password
+     * @return User entity if authentication succeeds
+     * @throws Exception if authentication fails
+     */
+    @PermitAll
+    public User authenticate(String username, String password) throws Exception {
+        User user = em.createQuery(
+            "SELECT u FROM User u WHERE u.username = :username AND u.active = true", User.class)
+            .setParameter("username", username)
+            .getResultStream()
+            .findFirst()
+            .orElseThrow(() -> new Exception("Invalid username or password"));
+
+        // Check if account is locked
+        if (user.isAccountLocked()) {
+            throw new Exception("Account locked due to multiple failed login attempts");
+        }
+
+        // Verify password using BCrypt
+        if (!com.globaltrade.common.util.PasswordUtil.verifyPassword(password, user.getPasswordHash())) {
+            // Increment failed login attempts
+            user.recordFailedLogin();
+            em.merge(user);
+            throw new Exception("Invalid username or password");
+        }
+
+        // Reset failed login attempts on successful authentication
+        user.resetFailedLoginAttempts();
+        user.updateLastLogin();
+        em.merge(user);
+
+        LOGGER.log(Level.INFO, "SECURITY: JWT authentication succeeded for user: {0}", username);
+        return user;
+    }
 
     /**
      * Checks if the current caller has a specific role.
@@ -260,8 +310,8 @@ public class SecurityService {
             return false;
         }
 
-        // High-value threshold check (operations over $100,000 require admin approval)
-        if (declaredValue > 100000 && !ctx.isCallerInRole("SYSTEM_ADMIN")) {
+        // High-value threshold check (operations over threshold require admin approval)
+        if (declaredValue > SystemConstants.HIGH_VALUE_THRESHOLD && !ctx.isCallerInRole("SYSTEM_ADMIN")) {
             LOGGER.log(Level.WARNING, "HIGH-VALUE OPERATION DENIED: Value ${0} requires admin approval for user {1}",
                     new Object[]{declaredValue, caller});
             return false;

@@ -2,15 +2,16 @@ package com.globaltrade.common.dto;
 
 import com.globaltrade.common.entity.Shipment;
 import com.globaltrade.common.enums.ShipmentStatus;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Data Transfer Object for shipment information.
- * Used for transferring shipment data across service boundaries
- * without exposing JPA entity internals.
+ * Data Transfer Object for shipment information with Bean Validation.
  *
  * <p><strong>EJB Best Practice - DTO Pattern:</strong></p>
  * <ul>
@@ -19,19 +20,43 @@ import java.time.LocalDateTime;
  *   <li><strong>Performance:</strong> Only transfers needed data, avoiding lazy loading issues</li>
  *   <li><strong>Versioning:</strong> Supports API versioning independent of entity changes</li>
  * </ul>
+ *
+ * <p><strong>Input Validation:</strong> Uses Jakarta Bean Validation annotations
+ * for automatic input validation at REST endpoints.</p>
  */
 public class ShipmentDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long shipmentId;
+
+    @NotBlank(message = "Tracking number is required")
+    @Size(min = 1, max = 50, message = "Tracking number must be 1-50 characters")
     private String trackingNumber;
+
+    @NotBlank(message = "Origin country is required")
+    @Size(max = 100, message = "Origin country must not exceed 100 characters")
     private String originCountry;
+
+    @NotBlank(message = "Origin city is required")
+    @Size(max = 100, message = "Origin city must not exceed 100 characters")
     private String originCity;
+
+    @NotBlank(message = "Destination country is required")
+    @Size(max = 100, message = "Destination country must not exceed 100 characters")
     private String destinationCountry;
+
+    @NotBlank(message = "Destination city is required")
+    @Size(max = 100, message = "Destination city must not exceed 100 characters")
     private String destinationCity;
+
+    @NotBlank(message = "Carrier is required")
+    @Size(max = 100, message = "Carrier must not exceed 100 characters")
     private String carrier;
+
+    @NotNull(message = "Status is required")
     private ShipmentStatus status;
+
     private BigDecimal weightKg;
     private BigDecimal declaredValue;
     private String currency;

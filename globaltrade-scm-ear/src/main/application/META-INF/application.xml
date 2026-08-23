@@ -34,7 +34,7 @@
     <module>
         <web>
             <web-uri>globaltrade-scm-web.war</web-uri>
-            <context-root>/globaltrade</context-root>
+            <context-root>/globaltrade-scm</context-root>
         </web>
     </module>
 

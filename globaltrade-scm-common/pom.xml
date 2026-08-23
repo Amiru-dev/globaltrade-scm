@@ -19,4 +19,20 @@
         Shared entities, DTOs, enums, and exception hierarchy
         used across EJB and Web modules.
     </description>
+
+    <dependencies>
+        <!-- BCrypt for secure password hashing -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+
+        <!-- Bean Validation API -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+    </dependencies>
 </project>

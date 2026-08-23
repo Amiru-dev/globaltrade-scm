@@ -1,5 +1,6 @@
 package com.globaltrade.common.entity;
 
+import com.globaltrade.common.util.SystemConstants;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -12,12 +13,14 @@ import java.util.Set;
  *
  * <p><strong>Critical Analysis — User Management:</strong></p>
  * <ul>
- *   <li><strong>Password Security:</strong> Passwords are stored as BCrypt hashes,
- *       never in plain text. This provides industry-standard security for credential storage.</li>
+ *   <li><strong>Password Security:</strong> Passwords are stored as BCrypt hashes with work factor 12,
+ *       providing adaptive work factor resistance to GPU cracking attacks. Replaces previous SHA-256 implementation.</li>
  *   <li><strong>Role Management:</strong> Users can have multiple roles for flexible
  *       authorization control across different system components.</li>
  *   <li><strong>Account Status:</strong> Active/locked status enables account management
  *       and security controls for compromised accounts.</li>
+ *   <li><strong>Account Lockout:</strong> Failed login attempts tracking and automatic
+ *       account lockout after 5 failed attempts for 30 minutes.</li>
  * </ul>
  */
 @Entity
@@ -39,7 +42,7 @@ public class User implements Serializable {
     @Column(name = "username", unique = true, nullable = false, length = 50)
     private String username;
 
-    @Column(name = "password_hash", nullable = false, length = 256)
+    @Column(name = "password_hash", nullable = false, length = 60)
     private String passwordHash;
 
     @Column(name = "email", unique = true, nullable = false, length = 100)
@@ -207,12 +210,15 @@ public class User implements Serializable {
 
     /**
      * Increments failed login attempts and locks account if threshold exceeded.
+     *
+     * <p><strong>Critical Analysis:</strong> Matches database logic in GlobalTradeLoginModule
+     * for consistency. Account locks after threshold failed attempts for configured minutes.</p>
      */
     public void recordFailedLogin() {
         this.failedLoginAttempts++;
-        if (this.failedLoginAttempts >= 5) {
-            // Lock account for 30 minutes after 5 failed attempts
-            this.accountLockedUntil = LocalDateTime.now().plusMinutes(30);
+        if (this.failedLoginAttempts >= SystemConstants.MAX_LOGIN_ATTEMPTS) {
+            // Lock account for configured minutes after threshold failed attempts
+            this.accountLockedUntil = LocalDateTime.now().plusMinutes(SystemConstants.ACCOUNT_LOCK_MINUTES);
         }
     }
 

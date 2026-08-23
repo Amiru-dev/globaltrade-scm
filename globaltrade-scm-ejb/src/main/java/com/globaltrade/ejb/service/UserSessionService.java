@@ -2,6 +2,7 @@ package com.globaltrade.ejb.service;
 
 import com.globaltrade.common.dto.ShipmentDTO;
 import com.globaltrade.common.entity.Shipment;
+import com.globaltrade.common.util.SystemConstants;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -9,6 +10,7 @@ import jakarta.ejb.PostActivate;
 import jakarta.ejb.PrePassivate;
 import jakarta.ejb.Remove;
 import jakarta.ejb.Stateful;
+import jakarta.ejb.StatefulTimeout;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.annotation.security.RolesAllowed;
@@ -18,6 +20,7 @@ import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,8 +47,19 @@ import java.util.logging.Logger;
  * cannot be pooled like Stateless beans, making them less scalable.
  * For a 50+ country operation, careful session timeout configuration is essential
  * to prevent memory exhaustion.</p>
+ *
+ * <p><strong>Session Timeout Configuration:</strong></p>
+ * <ul>
+ *   <li><strong>@StatefulTimeout:</strong> Uses SystemConstants for configurable timeout,
+ *       balancing security (prevents session hijacking) with usability (reduced re-authentication).</li>
+ *   <li><strong>Memory Management:</strong> Timeout prevents memory leaks from
+ *       abandoned sessions. Container automatically removes timed-out beans.</li>
+ *   <li><strong>Clustering Implications:</strong> Stateful bean state is not shared
+ *       across cluster nodes. Session affinity required for clustering.</li>
+ * </ul>
  */
 @Stateful
+@StatefulTimeout(value = SystemConstants.STATEFUL_SESSION_TIMEOUT_MINUTES, unit = TimeUnit.MINUTES)
 @RolesAllowed({"LOGISTICS_COORDINATOR", "WAREHOUSE_MANAGER", "CUSTOMS_AGENT",
         "VENDOR_REPRESENTATIVE", "SYSTEM_ADMIN"})
 public class UserSessionService implements Serializable {
