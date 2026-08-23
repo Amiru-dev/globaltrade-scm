@@ -302,6 +302,7 @@
 
 <div class="nav-bar">
     <a href="dashboard">📊 Dashboard</a>
+    <a href="performance-dashboard">⚡ Performance</a>
     <a href="auditlog">📋 Audit Log</a>
     <a href="transaction" class="active">💳 Transaction Demo</a>
     <a href="admin">⚙️ Admin</a>
