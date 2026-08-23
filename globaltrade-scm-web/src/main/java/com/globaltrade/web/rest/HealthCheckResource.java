@@ -2,12 +2,12 @@ package com.globaltrade.web.rest;
 
 import jakarta.annotation.Resource;
 import jakarta.ejb.Stateless;
-import jakarta.sql.DataSource;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;

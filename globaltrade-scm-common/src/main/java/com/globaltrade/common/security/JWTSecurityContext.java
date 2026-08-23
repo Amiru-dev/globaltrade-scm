@@ -1,4 +1,4 @@
-package com.globaltrade.web.security;
+package com.globaltrade.common.security;
 
 import jakarta.ws.rs.core.SecurityContext;
 import java.security.Principal;

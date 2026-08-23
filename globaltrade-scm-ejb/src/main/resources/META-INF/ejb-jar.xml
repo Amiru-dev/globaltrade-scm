@@ -95,15 +95,5 @@
             <interceptor-class>com.globaltrade.ejb.interceptor.AuditLogInterceptor</interceptor-class>
         </interceptor-binding>
 
-        <!-- Transaction configuration -->
-        <!-- Default transaction attribute for all EJBs -->
-        <container-transaction>
-            <method>
-                <ejb-name>*</ejb-name>
-                <method-name>*</method-name>
-            </method>
-            <trans-attribute>Required</trans-attribute>
-        </container-transaction>
-
     </assembly-descriptor>
 </ejb-jar>

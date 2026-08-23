@@ -39,6 +39,21 @@ public final class SystemConstants {
      */
     public static final int BCRYPT_ROUNDS = 12;
 
+    /**
+     * Maximum login requests per client IP within the rate limit window.
+     */
+    public static final int RATE_LIMIT_LOGIN_MAX_REQUESTS = 10;
+
+    /**
+     * Maximum refresh token requests per client IP within the rate limit window.
+     */
+    public static final int RATE_LIMIT_REFRESH_MAX_REQUESTS = 20;
+
+    /**
+     * Rate limit sliding window duration in seconds.
+     */
+    public static final int RATE_LIMIT_WINDOW_SECONDS = 60;
+
     // ======================== Transaction Constants ========================
 
     /**

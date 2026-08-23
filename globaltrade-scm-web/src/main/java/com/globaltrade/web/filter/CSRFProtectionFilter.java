@@ -42,8 +42,13 @@ public class CSRFProtectionFilter implements Filter {
 
     // Paths excluded from CSRF protection (authentication endpoints)
     private static final Set<String> EXCLUDED_PATHS = new HashSet<>(Arrays.asList(
-            "/auth/login",
-            "/auth/refresh",
+            "/api/auth/login",
+            "/api/auth/refresh",
+            "/api/auth/logout",
+            "/api/health",
+            "/login",
+            "/refresh",
+            "/logout",
             "/health"
     ));
 
@@ -61,6 +66,7 @@ public class CSRFProtectionFilter implements Filter {
 
         String method = httpRequest.getMethod();
         String path = httpRequest.getRequestURI();
+        String contextPath = httpRequest.getContextPath();
 
         // Skip CSRF validation for safe methods
         if (SAFE_METHODS.contains(method)) {
@@ -69,8 +75,13 @@ public class CSRFProtectionFilter implements Filter {
         }
 
         // Skip CSRF validation for excluded paths
+        // Remove context root for path matching
+        String pathWithoutContext = path.startsWith(contextPath) 
+            ? path.substring(contextPath.length()) 
+            : path;
+        
         for (String excludedPath : EXCLUDED_PATHS) {
-            if (path.startsWith(excludedPath)) {
+            if (pathWithoutContext.equals(excludedPath) || pathWithoutContext.startsWith(excludedPath + "/")) {
                 chain.doFilter(request, response);
                 return;
             }

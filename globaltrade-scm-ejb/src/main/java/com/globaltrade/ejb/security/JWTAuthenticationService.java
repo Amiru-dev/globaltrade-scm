@@ -3,11 +3,10 @@ package com.globaltrade.ejb.security;
 import com.globaltrade.common.dto.TokenPair;
 import com.globaltrade.common.entity.RefreshToken;
 import com.globaltrade.common.entity.User;
+import com.globaltrade.common.security.JWTConfiguration;
 import com.globaltrade.common.util.SystemConstants;
-import com.globaltrade.web.security.JWTConfiguration;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
@@ -16,7 +15,7 @@ import jakarta.persistence.PersistenceContext;
 
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
@@ -41,9 +40,6 @@ import java.util.List;
 @Stateless
 public class JWTAuthenticationService {
 
-    @Inject
-    private JWTConfiguration jwtConfig;
-
     @PersistenceContext(unitName = "GlobalTradePU")
     private EntityManager em;
 
@@ -65,7 +61,7 @@ public class JWTAuthenticationService {
             .claim("vendorCode", user.getVendorCode())
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + SystemConstants.JWT_ACCESS_TOKEN_EXPIRY_MS))
-            .signWith(jwtConfig.getSigningKey())
+            .signWith(JWTConfiguration.getSigningKey())
             .compact();
 
         // Generate refresh token (opaque random value)
@@ -76,8 +72,8 @@ public class JWTAuthenticationService {
         RefreshToken tokenEntity = new RefreshToken();
         tokenEntity.setTokenHash(tokenHash);
         tokenEntity.setUser(user);
-        tokenEntity.setIssuedAt(Instant.now());
-        tokenEntity.setExpiresAt(Instant.now().plus(SystemConstants.JWT_REFRESH_TOKEN_EXPIRY_DAYS, ChronoUnit.DAYS));
+        tokenEntity.setIssuedAt(LocalDateTime.now());
+        tokenEntity.setExpiresAt(LocalDateTime.now().plus(SystemConstants.JWT_REFRESH_TOKEN_EXPIRY_DAYS, ChronoUnit.DAYS));
         tokenEntity.setDeviceInfo(deviceInfo);
         tokenEntity.setSessionId(sessionId);
         em.persist(tokenEntity);
@@ -130,7 +126,7 @@ public class JWTAuthenticationService {
         RefreshToken token = em.createQuery(
             "SELECT t FROM RefreshToken t WHERE t.tokenHash = :hash AND t.revoked = false AND t.expiresAt > :now", RefreshToken.class)
             .setParameter("hash", tokenHash)
-            .setParameter("now", Instant.now())
+            .setParameter("now", LocalDateTime.now())
             .getResultStream()
             .findFirst()
             .orElseThrow(() -> new SecurityException("Invalid refresh token"));
@@ -188,7 +184,7 @@ public class JWTAuthenticationService {
     public Claims parseAccessToken(String accessToken) {
         try {
             return Jwts.parserBuilder()
-                .setSigningKey(jwtConfig.getSigningKey())
+                .setSigningKey(JWTConfiguration.getSigningKey())
                 .build()
                 .parseClaimsJws(accessToken)
                 .getBody();

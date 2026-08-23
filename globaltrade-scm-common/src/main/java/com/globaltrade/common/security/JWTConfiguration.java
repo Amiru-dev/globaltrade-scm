@@ -1,7 +1,6 @@
-package com.globaltrade.web.security;
+package com.globaltrade.common.security;
 
 import com.globaltrade.common.util.SystemConstants;
-import jakarta.enterprise.context.ApplicationScoped;
 import io.jsonwebtoken.security.Keys;
 
 import java.nio.charset.StandardCharsets;
@@ -12,7 +11,7 @@ import java.security.Key;
  *
  * <p><strong>Critical Analysis — Centralized Configuration:</strong></p>
  * <ul>
- *   <li><strong>Secret Key Management:</strong> Centralized in JWTConfiguration bean
+ *   <li><strong>Secret Key Management:</strong> Centralized in JWTConfiguration class
  *       to eliminate duplication across JWTAuthenticationService and JWTAuthenticationFilter.
  *       This prevents configuration drift and enables single point of change.</li>
  *   <li><strong>Environment Variable:</strong> Uses JWT_SECRET_KEY environment variable
@@ -28,19 +27,14 @@ import java.security.Key;
  * mitigated by documentation. Production deployment requires proper key management service
  * integration and key rotation strategy.</p>
  */
-@ApplicationScoped
 public class JWTConfiguration {
 
     // Secret key from environment variable with fallback for development
     private static final String SECRET_KEY =
-        System.getenv().getOrDefault("JWT_SECRET_KEY", "dev-secret-key-change-in-production-256bits");
+            System.getenv().getOrDefault("JWT_SECRET_KEY", "732065811df984204b3b9ec003a228ec50aa5230ec25abe0b4991b1d67f7a0e3");
 
     // Convert string to Key object for jjwt 0.11.5 API
     private static final Key SIGNING_KEY = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
-
-    // Use SystemConstants for token expiry times
-    private static final long ACCESS_TOKEN_EXPIRY_MS = SystemConstants.JWT_ACCESS_TOKEN_EXPIRY_MS;
-    private static final long REFRESH_TOKEN_EXPIRY_DAYS = SystemConstants.JWT_REFRESH_TOKEN_EXPIRY_DAYS;
 
     /**
      * Returns the signing key for JWT token generation and validation.
@@ -48,7 +42,7 @@ public class JWTConfiguration {
      * <p><strong>Critical Analysis:</strong> Key object is generated once at startup
      * and reused for all JWT operations, providing consistent cryptographic operations.</p>
      */
-    public Key getSigningKey() {
+    public static Key getSigningKey() {
         return SIGNING_KEY;
     }
 
@@ -58,21 +52,21 @@ public class JWTConfiguration {
      * <p><strong>Security Note:</strong> Use with caution. Never log in production
      * or expose in error messages.</p>
      */
-    public String getSecretKey() {
+    public static String getSecretKey() {
         return SECRET_KEY;
     }
 
     /**
      * Returns access token expiry time in milliseconds.
      */
-    public long getAccessTokenExpiryMs() {
+    public static long getAccessTokenExpiryMs() {
         return SystemConstants.JWT_ACCESS_TOKEN_EXPIRY_MS;
     }
 
     /**
      * Returns refresh token expiry time in days.
      */
-    public long getRefreshTokenExpiryDays() {
+    public static long getRefreshTokenExpiryDays() {
         return SystemConstants.JWT_REFRESH_TOKEN_EXPIRY_DAYS;
     }
 }

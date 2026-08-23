@@ -6,7 +6,7 @@ import com.globaltrade.common.util.SystemConstants;
 import com.globaltrade.ejb.security.JWTAuthenticationService;
 import com.globaltrade.ejb.security.SecurityService;
 import com.globaltrade.web.security.CsrfTokenUtil;
-import com.globaltrade.web.security.JWTPrincipal;
+import com.globaltrade.common.security.JWTPrincipal;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
@@ -64,9 +64,17 @@ public class AuthResource {
                           @FormParam("password") String password,
                           @HeaderParam("User-Agent") String userAgent) {
 
+        // Validate required fields
+        if (username == null || username.isBlank() || password == null || password.isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Username and password are required\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+
         try {
             // Authenticate user using existing SecurityService
-            User user = authService.authenticate(username, password);
+            User user = authService.authenticate(username.trim(), password);
 
             // Generate tokens
             TokenPair tokens = jwtAuthService.generateTokens(user, userAgent, null);
@@ -100,8 +108,16 @@ public class AuthResource {
     public Response refresh(@FormParam("refreshToken") String refreshToken,
                             @HeaderParam("User-Agent") String userAgent) {
 
+        // Validate required field
+        if (refreshToken == null || refreshToken.isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Refresh token is required\"}")
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+
         try {
-            TokenPair tokens = jwtAuthService.refreshAccessToken(refreshToken, userAgent);
+            TokenPair tokens = jwtAuthService.refreshAccessToken(refreshToken.trim(), userAgent);
 
             return Response.ok(tokens)
                     .header("X-Auth-Token-Expiry", String.valueOf(SystemConstants.JWT_ACCESS_TOKEN_EXPIRY_MINUTES * 60))
@@ -127,8 +143,6 @@ public class AuthResource {
      */
     @POST
     @Path("/logout")
-    @RolesAllowed({"SYSTEM_ADMIN", "LOGISTICS_COORDINATOR", "WAREHOUSE_MANAGER",
-                    "CUSTOMS_AGENT", "VENDOR_REPRESENTATIVE"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response logout(@HeaderParam("Authorization") String authHeader) {
 
@@ -169,8 +183,6 @@ public class AuthResource {
      */
     @GET
     @Path("/validate")
-    @RolesAllowed({"SYSTEM_ADMIN", "LOGISTICS_COORDINATOR", "WAREHOUSE_MANAGER",
-                    "CUSTOMS_AGENT", "VENDOR_REPRESENTATIVE"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response validateToken() {
 

@@ -1,4 +1,4 @@
-package com.globaltrade.web.security;
+package com.globaltrade.common.security;
 
 import java.security.Principal;
 import java.util.List;

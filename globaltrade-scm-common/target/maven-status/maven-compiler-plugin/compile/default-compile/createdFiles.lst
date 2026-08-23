@@ -1,5 +1,7 @@
 com\globaltrade\common\enums\ComplianceStatus.class
+com\globaltrade\common\security\JWTConfiguration.class
 com\globaltrade\common\dto\VendorDTO.class
+com\globaltrade\common\entity\RefreshToken.class
 com\globaltrade\common\entity\AuditLog.class
 com\globaltrade\common\exception\VendorValidationException.class
 com\globaltrade\common\exception\TransactionRollbackException.class
@@ -7,6 +9,7 @@ com\globaltrade\common\entity\User.class
 com\globaltrade\common\exception\SupplyChainException.class
 com\globaltrade\common\util\PasswordUtil.class
 com\globaltrade\common\exception\InventoryShortageException.class
+com\globaltrade\common\security\JWTPrincipal.class
 com\globaltrade\common\dto\DTOConverter$EntityToDTOConverter.class
 com\globaltrade\common\exception\CarrierSystemException.class
 com\globaltrade\common\dto\DTOConverter.class
@@ -20,12 +23,15 @@ com\globaltrade\common\exception\CarrierOutageException.class
 com\globaltrade\common\dto\VendorPerformanceDTO.class
 com\globaltrade\common\entity\PurchaseOrder.class
 com\globaltrade\common\entity\Vendor.class
+com\globaltrade\common\util\SystemConstants.class
 com\globaltrade\common\dto\InventoryAlertDTO.class
 com\globaltrade\common\enums\OrderStatus.class
 com\globaltrade\common\entity\CarrierRoute.class
 com\globaltrade\common\entity\Warehouse.class
 com\globaltrade\common\dto\InventoryItemDTO.class
 com\globaltrade\common\exception\WeatherDisruptionException.class
+com\globaltrade\common\security\JWTSecurityContext.class
+com\globaltrade\common\dto\TokenPair.class
 com\globaltrade\common\entity\Shipment.class
 com\globaltrade\common\dto\ErrorResponseDTO$FieldError.class
 com\globaltrade\common\exception\ShipmentTrackingException.class

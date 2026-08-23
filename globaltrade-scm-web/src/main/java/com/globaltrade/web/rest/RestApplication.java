@@ -14,8 +14,12 @@ import jakarta.ws.rs.core.Application;
  * eliminates the need for servlet mapping in {@code web.xml}, following
  * the convention-over-configuration principle. However, the web.xml
  * security constraints still reference the {@code /api/*} path pattern.</p>
+ *
+ * <p><strong>JWT Filter Registration:</strong> JWTAuthenticationFilter is registered
+ * automatically via its {@code @Provider} annotation through JAX-RS auto-discovery.
+ * Do NOT override {@code getClasses()} with a non-empty set, as that disables
+ * auto-discovery of all {@code @Path} and {@code @Provider} classes.</p>
  */
 @ApplicationPath("/api")
 public class RestApplication extends Application {
-    // No override needed — JAX-RS auto-discovers @Path annotated resources
 }

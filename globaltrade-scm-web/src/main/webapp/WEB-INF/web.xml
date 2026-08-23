@@ -2,11 +2,10 @@
 <!--
     Web Deployment Descriptor for GlobalTrade SCM.
 
-    Critical Analysis — Declarative Security at Web Layer:
-    Security constraints defined here provide the first layer of defence
-    (URL-pattern based). EJB-level @RolesAllowed provides the second layer
-    (method-level). This defence-in-depth approach ensures that even if
-    the REST framework is bypassed, the EJB container enforces authorization.
+    Critical Analysis — JWT-based Authentication:
+    This application uses JWT authentication for REST API endpoints instead of 
+    container-managed FORM authentication. The JWTAuthenticationFilter handles
+    authentication by validating Bearer tokens and populating the SecurityContext.
 -->
 <web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -23,79 +22,23 @@
 
     <!-- ======================== Security Constraints ======================== -->
 
-    <!-- Admin-only endpoints (system config, audit logs) -->
+    <!-- Authentication endpoints — public access for JWT authentication -->
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>Admin Resources</web-resource-name>
-            <url-pattern>/api/dashboard/summary</url-pattern>
+            <web-resource-name>Authentication Resources</web-resource-name>
+            <url-pattern>/api/auth/*</url-pattern>
         </web-resource-collection>
-        <auth-constraint>
-            <role-name>SYSTEM_ADMIN</role-name>
-            <role-name>LOGISTICS_COORDINATOR</role-name>
-        </auth-constraint>
-        <user-data-constraint>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-        </user-data-constraint>
-    </security-constraint>
-
-    <!-- Shipment management — coordinators, warehouse managers, admins -->
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>Shipment Resources</web-resource-name>
-            <url-pattern>/api/shipments/*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>LOGISTICS_COORDINATOR</role-name>
-            <role-name>WAREHOUSE_MANAGER</role-name>
-            <role-name>CUSTOMS_AGENT</role-name>
-            <role-name>SYSTEM_ADMIN</role-name>
-        </auth-constraint>
-    </security-constraint>
-
-    <!-- Inventory management — warehouse managers and coordinators -->
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>Inventory Resources</web-resource-name>
-            <url-pattern>/api/inventory/*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>WAREHOUSE_MANAGER</role-name>
-            <role-name>LOGISTICS_COORDINATOR</role-name>
-            <role-name>SYSTEM_ADMIN</role-name>
-        </auth-constraint>
-    </security-constraint>
-
-    <!-- Vendor management — coordinators, vendor reps (own data), admins -->
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>Vendor Resources</web-resource-name>
-            <url-pattern>/api/vendors/*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>LOGISTICS_COORDINATOR</role-name>
-            <role-name>VENDOR_REPRESENTATIVE</role-name>
-            <role-name>SYSTEM_ADMIN</role-name>
-        </auth-constraint>
+        <!-- No auth-constraint = public access -->
     </security-constraint>
 
     <!-- Health check — public access (no auth-constraint) -->
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Health Check</web-resource-name>
-            <url-pattern>/api/dashboard/health</url-pattern>
+            <url-pattern>/api/health</url-pattern>
         </web-resource-collection>
         <!-- No auth-constraint = public access -->
     </security-constraint>
-
-    <!-- ======================== Login Configuration ======================== -->
-    <login-config>
-        <auth-method>FORM</auth-method>
-        <realm-name>GlobalTradeRealm</realm-name>
-        <form-login-config>
-            <form-login-page>/index.jsp</form-login-page>
-            <form-error-page>/index.jsp?error=true</form-error-page>
-        </form-login-config>
-    </login-config>
 
     <!-- ======================== Security Roles ======================== -->
     <security-role>
@@ -124,7 +67,7 @@
         <session-timeout>30</session-timeout>
         <cookie-config>
             <http-only>true</http-only>
-            <secure>true</secure>
+            <secure>false</secure>
         </cookie-config>
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>

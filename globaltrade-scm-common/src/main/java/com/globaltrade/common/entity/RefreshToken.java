@@ -3,9 +3,7 @@ package com.globaltrade.common.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 /**
  * Refresh token entity for JWT token rotation and session management.
@@ -32,26 +30,26 @@ public class RefreshToken implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 64)
+    @Column(name = "token_hash", nullable = false, unique = true, length = 64)
     private String tokenHash;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
-    private Instant issuedAt;
+    @Column(name = "issued_at", nullable = false)
+    private LocalDateTime issuedAt;
 
-    @Column(nullable = false)
-    private Instant expiresAt;
+    @Column(name = "expires_at", nullable = false)
+    private LocalDateTime expiresAt;
 
-    @Column(nullable = false)
+    @Column(name = "revoked", nullable = false)
     private boolean revoked = false;
 
-    @Column(length = 255)
+    @Column(name = "device_info", length = 255)
     private String deviceInfo;
 
-    @Column(length = 50)
+    @Column(name = "session_id", length = 50)
     private String sessionId; // For "log out everywhere" functionality
 
     @Column(name = "created_at", nullable = false)
@@ -62,7 +60,7 @@ public class RefreshToken implements Serializable {
     }
 
     // Constructor for token creation
-    public RefreshToken(String tokenHash, User user, Instant issuedAt, Instant expiresAt) {
+    public RefreshToken(String tokenHash, User user, LocalDateTime issuedAt, LocalDateTime expiresAt) {
         this.tokenHash = tokenHash;
         this.user = user;
         this.issuedAt = issuedAt;
@@ -94,19 +92,19 @@ public class RefreshToken implements Serializable {
         this.user = user;
     }
 
-    public Instant getIssuedAt() {
+    public LocalDateTime getIssuedAt() {
         return issuedAt;
     }
 
-    public void setIssuedAt(Instant issuedAt) {
+    public void setIssuedAt(LocalDateTime issuedAt) {
         this.issuedAt = issuedAt;
     }
 
-    public Instant getExpiresAt() {
+    public LocalDateTime getExpiresAt() {
         return expiresAt;
     }
 
-    public void setExpiresAt(Instant expiresAt) {
+    public void setExpiresAt(LocalDateTime expiresAt) {
         this.expiresAt = expiresAt;
     }
 
@@ -146,7 +144,7 @@ public class RefreshToken implements Serializable {
      * Checks if the refresh token is expired.
      */
     public boolean isExpired() {
-        return Instant.now().isAfter(expiresAt);
+        return LocalDateTime.now().isAfter(expiresAt);
     }
 
     /**

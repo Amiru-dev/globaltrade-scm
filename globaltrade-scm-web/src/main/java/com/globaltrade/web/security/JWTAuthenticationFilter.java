@@ -1,11 +1,13 @@
 package com.globaltrade.web.security;
 
+import com.globaltrade.common.security.JWTConfiguration;
+import com.globaltrade.common.security.JWTPrincipal;
+import com.globaltrade.common.security.JWTSecurityContext;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 
 import jakarta.annotation.Priority;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
@@ -42,9 +44,6 @@ import java.util.List;
 @Priority(Priorities.AUTHENTICATION)
 public class JWTAuthenticationFilter implements ContainerRequestFilter {
 
-    @Inject
-    private JWTConfiguration jwtConfig;
-
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         // Get Authorization header
@@ -60,7 +59,7 @@ public class JWTAuthenticationFilter implements ContainerRequestFilter {
         try {
             // Parse and validate JWT token using modern jjwt 0.11.5 API
             Claims claims = Jwts.parserBuilder()
-                .setSigningKey(jwtConfig.getSigningKey())
+                .setSigningKey(JWTConfiguration.getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
