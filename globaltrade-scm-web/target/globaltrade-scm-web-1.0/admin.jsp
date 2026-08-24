@@ -399,8 +399,8 @@
         Map<String, Object> securityFeatures = (Map<String, Object>) adminData.getOrDefault("securityFeatures", new HashMap<>());
         Map<String, List<String>> rolePermissions = (Map<String, List<String>>) adminData.getOrDefault("rolePermissions", new HashMap<>());
         List<Map<String, String>> emergencyAttempts = (List<Map<String, String>>) adminData.getOrDefault("emergencyAttempts", new ArrayList<>());
-        HttpSession session = request.getSession(false);
-        Map<String, Object> adminResult = (session != null) ? (Map<String, Object>) session.getAttribute("adminResult") : null;
+        HttpSession httpSession = request.getSession(false);
+        Map<String, Object> adminResult = (httpSession != null) ? (Map<String, Object>) httpSession.getAttribute("adminResult") : null;
     %>
 
     <div class="section">
@@ -442,7 +442,7 @@
         </div>
     </div>
 
-    <% if ((Boolean) adminData.get("hasAdminAccess")) { %>
+    <% if (Boolean.TRUE.equals(adminData.get("hasAdminAccess"))) { %>
 
     <div class="section">
         <h2>🚨 Admin Operations</h2>
@@ -465,8 +465,8 @@
                         <textarea name="reason" placeholder="Describe the emergency situation" required></textarea>
                     </div>
                     <button type="submit"
-                            class="btn btn-danger" <%= !((Boolean) adminData.get("canPerformEmergencyAccess")) ? "disabled" : "" %>>
-                        <%= ((Boolean) adminData.get("canPerformEmergencyAccess")) ? "Request Emergency Access" : "Admin Only" %>
+                            class="btn btn-danger" <%= !Boolean.TRUE.equals(adminData.get("canPerformEmergencyAccess")) ? "disabled" : "" %>>
+                        <%= Boolean.TRUE.equals(adminData.get("canPerformEmergencyAccess")) ? "Request Emergency Access" : "Admin Only" %>
                     </button>
                 </form>
             </div>
@@ -488,8 +488,8 @@
                         <input type="number" name="declaredValue" value="50000" required>
                     </div>
                     <button type="submit"
-                            class="btn" <%= !((Boolean) adminData.get("canPerformHighValueOperations")) ? "disabled" : "" %>>
-                        <%= ((Boolean) adminData.get("canPerformHighValueOperations")) ? "Authorize Operation" : "Admin/Coordinator Only" %>
+                            class="btn" <%= !Boolean.TRUE.equals(adminData.get("canPerformHighValueOperations")) ? "disabled" : "" %>>
+                        <%= Boolean.TRUE.equals(adminData.get("canPerformHighValueOperations")) ? "Authorize Operation" : "Admin/Coordinator Only" %>
                     </button>
                 </form>
             </div>
@@ -511,8 +511,8 @@
                         <input type="datetime-local" name="scheduledTime" required>
                     </div>
                     <button type="submit"
-                            class="btn" <%= !((Boolean) adminData.get("canScheduleMaintenance")) ? "disabled" : "" %>>
-                        <%= ((Boolean) adminData.get("canScheduleMaintenance")) ? "Check Maintenance Window" : "Admin Only" %>
+                            class="btn" <%= !Boolean.TRUE.equals(adminData.get("canScheduleMaintenance")) ? "disabled" : "" %>>
+                        <%= Boolean.TRUE.equals(adminData.get("canScheduleMaintenance")) ? "Check Maintenance Window" : "Admin Only" %>
                     </button>
                 </form>
             </div>
@@ -522,8 +522,8 @@
     <% if (adminResult != null) { %>
     <div class="section">
         <h2>📊 Admin Operation Result</h2>
-        <div class="result-box <%= (Boolean) adminResult.get("success") ? "success" : "error" %>">
-            <h4>Operation Status: <%= adminResult.get("success") ? "✅ SUCCESS" : "❌ FAILED" %>
+        <div class="result-box <%= Boolean.TRUE.equals(adminResult.get("success")) ? "success" : "error" %>">
+            <h4>Operation Status: <%= Boolean.TRUE.equals(adminResult.get("success")) ? "✅ SUCCESS" : "❌ FAILED" %>
             </h4>
             <p><strong>Operation:</strong> <%= adminResult.get("operation") %>
             </p>
@@ -537,7 +537,7 @@
             <% } %>
             <% if (adminResult.containsKey("authorized")) { %>
             <p><strong>Authorized:</strong> <span
-                    class="badge <%= (Boolean) adminResult.get("authorized") ? "badge-success" : "badge-danger" %>"><%= adminResult.get("authorized") %></span>
+                    class="badge <%= Boolean.TRUE.equals(adminResult.get("authorized")) ? "badge-success" : "badge-danger" %>"><%= adminResult.get("authorized") %></span>
             </p>
             <% } %>
             <p><strong>Message:</strong> <%= adminResult.get("message") %>
@@ -545,7 +545,7 @@
             <p><strong>Timestamp:</strong> <%= adminResult.get("timestamp") %>
             </p>
         </div>
-        <% session.removeAttribute("adminResult"); %>
+        <% httpSession.removeAttribute("adminResult"); %>
     </div>
     <% } %>
 

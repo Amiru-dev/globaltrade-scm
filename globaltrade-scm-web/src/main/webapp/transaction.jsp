@@ -345,8 +345,8 @@
 
         Map<String, Object> transactionInfo = (Map<String, Object>) transactionData.getOrDefault("transactionInfo", new HashMap<>());
         Map<String, String> transactionAttributes = (Map<String, String>) transactionData.getOrDefault("transactionAttributes", new HashMap<>());
-        HttpSession session = request.getSession(false);
-        Map<String, Object> transactionResult = (session != null) ? (Map<String, Object>) session.getAttribute("transactionResult") : null;
+        HttpSession httpSession = request.getSession(false);
+        Map<String, Object> transactionResult = (httpSession != null) ? (Map<String, Object>) httpSession.getAttribute("transactionResult") : null;
     %>
 
     <div class="section">
@@ -389,7 +389,7 @@
         </table>
     </div>
 
-    <% if ((Boolean) transactionData.get("canExecuteTransactions")) { %>
+    <% if (Boolean.TRUE.equals(transactionData.get("canExecuteTransactions"))) { %>
 
     <div class="section">
         <h2>🔄 Transaction Operations</h2>
@@ -467,8 +467,8 @@
     <% if (transactionResult != null) { %>
     <div class="section">
         <h2>📊 Transaction Result</h2>
-        <div class="result-box <%= (Boolean) transactionResult.get("success") ? "success" : "error" %>">
-            <h4>Transaction Status: <%= transactionResult.get("success") ? "✅ SUCCESS" : "❌ FAILED" %>
+        <div class="result-box <%= Boolean.TRUE.equals(transactionResult.get("success")) ? "success" : "error" %>">
+            <h4>Transaction Status: <%= Boolean.TRUE.equals(transactionResult.get("success")) ? "✅ SUCCESS" : "❌ FAILED" %>
             </h4>
             <p><strong>Operation:</strong> <%= transactionResult.get("operation") %>
             </p>
@@ -488,7 +488,7 @@
             </p>
             <% } %>
         </div>
-        <% session.removeAttribute("transactionResult"); %>
+        <% httpSession.removeAttribute("transactionResult"); %>
     </div>
     <% } %>
 
@@ -512,7 +512,7 @@
             <p><strong>Access Level:</strong> <%= transactionData.get("accessLevel") %>
             </p>
             <p><strong>Transaction
-                Execution:</strong> <%= transactionData.get("canExecuteTransactions") ? "Enabled" : "Disabled" %>
+                Execution:</strong> <%= Boolean.TRUE.equals(transactionData.get("canExecuteTransactions")) ? "Enabled" : "Disabled" %>
             </p>
         </div>
     </div>
