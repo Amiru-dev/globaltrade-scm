@@ -43,10 +43,27 @@
             display: flex;
             align-items: center;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .user-info span {
             font-size: 14px;
+        }
+
+        .user-info .role-info {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            max-width: 400px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .user-info .username {
+            font-weight: 600;
+            font-size: 15px;
         }
 
         .logout-btn {
@@ -58,6 +75,8 @@
             cursor: pointer;
             font-size: 14px;
             transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .logout-btn:hover {
@@ -88,7 +107,7 @@
 
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 20px;
         }
@@ -101,16 +120,20 @@
             text-align: center;
         }
 
-        .metric-card.warning {
+        .metric-card.green {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .metric-card.yellow {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
 
-        .metric-card.success {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        .metric-card.red {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
         }
 
         .metric-card h3 {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 700;
             margin-bottom: 5px;
         }
@@ -181,6 +204,11 @@
             font-weight: 600;
         }
 
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
         .badge-warning {
             background: #fff3cd;
             color: #856404;
@@ -191,9 +219,9 @@
             color: #721c24;
         }
 
-        .badge-success {
-            background: #d4edda;
-            color: #155724;
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
         }
 
         .nav-bar {
@@ -245,15 +273,14 @@
         <p style="font-size: 14px; opacity: 0.9; margin-top: 5px;">Supply Chain Management System</p>
     </div>
     <div class="user-info">
-        <div>
-            <span style="font-weight: 600;">👤 <%= request.getAttribute("fullName") != null ? request.getAttribute("fullName") : request.getAttribute("username") %></span>
-            <span style="opacity: 0.8;">|</span>
-            <span><%= request.getAttribute("userRole") %></span>
+        <div class="username">👤 <%= request.getAttribute("fullName") != null ? request.getAttribute("fullName") : request.getAttribute("username") %></div>
+        <div class="role-info" title="<%= request.getAttribute("userRole") %>">
+            <%= request.getAttribute("userRole") %>
         </div>
         <div class="access-level">
             Access Level: <%= ((Map<String, Object>) request.getAttribute("dashboardData")).get("accessLevel") %>
         </div>
-        <a href="login?logout=true" class="logout-btn" style="text-decoration: none; display: inline-block;">Logout</a>
+        <a href="login?logout=true" class="logout-btn">Logout</a>
     </div>
 </div>
 
@@ -288,12 +315,12 @@
                 </h3>
                 <p>In Transit</p>
             </div>
-            <div class="metric-card success">
+            <div class="metric-card green">
                 <h3><%= shipmentMetrics.get("delivered") %>
                 </h3>
                 <p>Delivered</p>
             </div>
-            <div class="metric-card warning">
+            <div class="metric-card yellow">
                 <h3><%= shipmentMetrics.get("atCustoms") %>
                 </h3>
                 <p>At Customs</p>
@@ -303,7 +330,7 @@
                 </h3>
                 <p>Delayed</p>
             </div>
-            <div class="metric-card warning">
+            <div class="metric-card yellow">
                 <h3><%= inventoryMetrics.get("lowStockCount") %>
                 </h3>
                 <p>Low Stock Alerts</p>

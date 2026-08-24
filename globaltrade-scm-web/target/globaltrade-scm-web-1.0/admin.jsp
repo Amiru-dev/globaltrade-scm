@@ -41,10 +41,27 @@
             display: flex;
             align-items: center;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .user-info span {
             font-size: 14px;
+        }
+
+        .user-info .role-info {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            max-width: 400px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .user-info .username {
+            font-weight: 600;
+            font-size: 15px;
         }
 
         .logout-btn {
@@ -273,9 +290,19 @@
             color: #155724;
         }
 
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
         .badge-danger {
             background: #f8d7da;
             color: #721c24;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
         }
 
         .table {
@@ -338,10 +365,9 @@
         <p style="font-size: 14px; opacity: 0.9; margin-top: 5px;">Advanced Security & Emergency Access</p>
     </div>
     <div class="user-info">
-        <div>
-            <span style="font-weight: 600;">👤 <%= request.getAttribute("username") %></span>
-            <span style="opacity: 0.8;">|</span>
-            <span><%= request.getAttribute("roleDescription") %></span>
+        <div class="username">👤 <%= request.getAttribute("username") %></div>
+        <div class="role-info" title="<%= request.getAttribute("roleDescription") %>">
+            <%= request.getAttribute("roleDescription") %>
         </div>
         <div class="access-level">
             Access Level: <%= ((Map<String, Object>) request.getAttribute("adminData")).get("accessLevel") %>

@@ -37,6 +37,59 @@
             font-weight: 600;
         }
 
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .user-info span {
+            font-size: 14px;
+        }
+
+        .user-info .role-info {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            max-width: 400px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .user-info .username {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .access-level {
+            background: #e8f4f8;
+            color: #2c5f7c;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 13px;
+            border-left: 3px solid #2c5f7c;
+        }
+
         .container {
             max-width: 1400px;
             margin: 30px auto;
@@ -144,6 +197,11 @@
             color: #721c24;
         }
 
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
         .nav-bar {
             background: white;
             padding: 15px 30px;
@@ -162,6 +220,11 @@
 
         .nav-bar a:hover {
             color: #764ba2;
+        }
+
+        .nav-bar a.active {
+            color: #764ba2;
+            font-weight: 600;
         }
 
         .performance-bar {
@@ -281,14 +344,19 @@
         <h1>⚡ Performance Monitoring Dashboard</h1>
         <p style="font-size: 14px; opacity: 0.9; margin-top: 5px;">Real-time Performance Metrics & Monitoring</p>
     </div>
-    <div>
+    <div class="user-info">
+        <div class="username">👤 <%= request.getAttribute("username") != null ? request.getAttribute("username") : "Guest" %></div>
+        <div class="role-info" title="<%= request.getAttribute("roleDescription") != null ? request.getAttribute("roleDescription") : "Viewer" %>">
+            <%= request.getAttribute("roleDescription") != null ? request.getAttribute("roleDescription") : "Viewer" %>
+        </div>
         <button class="refresh-btn" onclick="location.reload()">🔄 Refresh Metrics</button>
+        <a href="login?logout=true" class="logout-btn">Logout</a>
     </div>
 </div>
 
 <div class="nav-bar">
-    <a href="dashboard">📊 Main Dashboard</a>
-    <a href="performance-dashboard" style="color: #764ba2; font-weight: 600;">⚡ Performance</a>
+    <a href="dashboard">📊 Dashboard</a>
+    <a href="performance-dashboard" class="active">⚡ Performance</a>
     <a href="auditlog">📋 Audit Log</a>
     <a href="transaction">💳 Transaction Demo</a>
     <a href="admin">⚙️ Admin</a>

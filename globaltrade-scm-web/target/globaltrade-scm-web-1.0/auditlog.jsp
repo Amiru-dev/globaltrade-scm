@@ -44,10 +44,27 @@
             display: flex;
             align-items: center;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .user-info span {
             font-size: 14px;
+        }
+
+        .user-info .role-info {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            max-width: 400px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .user-info .username {
+            font-weight: 600;
+            font-size: 15px;
         }
 
         .logout-btn {
@@ -226,6 +243,26 @@
             text-align: center;
         }
 
+        .stat-card.success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .stat-card.warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .stat-card.info {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .stat-card.info {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .stat-card.blue {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
         .stat-card h3 {
             font-size: 24px;
             font-weight: 700;
@@ -245,10 +282,9 @@
         <p style="font-size: 14px; opacity: 0.9; margin-top: 5px;">Interceptor-Generated Audit Trail</p>
     </div>
     <div class="user-info">
-        <div>
-            <span style="font-weight: 600;">👤 <%= request.getAttribute("username") %></span>
-            <span style="opacity: 0.8;">|</span>
-            <span><%= request.getAttribute("roleDescription") %></span>
+        <div class="username">👤 <%= request.getAttribute("username") %></div>
+        <div class="role-info" title="<%= request.getAttribute("roleDescription") %>">
+            <%= request.getAttribute("roleDescription") %>
         </div>
         <div class="access-level">
             Access Level: <%= ((Map<String, Object>) request.getAttribute("auditData")).get("accessLevel") %>
@@ -309,17 +345,17 @@
                 </h3>
                 <p>Total Entries</p>
             </div>
-            <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+            <div class="stat-card success">
                 <h3><%= auditLogs.stream().filter(l -> "SUCCESS".equals(l.getResultStatus())).count() %>
                 </h3>
                 <p>Successful</p>
             </div>
-            <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <div class="stat-card warning">
                 <h3><%= auditLogs.stream().filter(l -> "FAILURE".equals(l.getResultStatus())).count() %>
                 </h3>
                 <p>Failed</p>
             </div>
-            <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+            <div class="stat-card blue">
                 <h3><%= Math.round(auditLogs.stream().mapToLong(l -> l.getExecutionTimeMs() != null ? l.getExecutionTimeMs() : 0L).average().orElse(0)) %>
                 </h3>
                 <p>Avg Time (ms)</p>
