@@ -345,8 +345,8 @@
 
         Map<String, Object> transactionInfo = (Map<String, Object>) transactionData.getOrDefault("transactionInfo", new HashMap<>());
         Map<String, String> transactionAttributes = (Map<String, String>) transactionData.getOrDefault("transactionAttributes", new HashMap<>());
-        HttpSession reqSession = request.getSession(false);
-        Map<String, Object> transactionResult = (reqSession != null) ? (Map<String, Object>) reqSession.getAttribute("transactionResult") : null;
+        HttpSession session = request.getSession(false);
+        Map<String, Object> transactionResult = (session != null) ? (Map<String, Object>) session.getAttribute("transactionResult") : null;
     %>
 
     <div class="section">
@@ -468,7 +468,7 @@
     <div class="section">
         <h2>📊 Transaction Result</h2>
         <div class="result-box <%= (Boolean) transactionResult.get("success") ? "success" : "error" %>">
-            <h4>Transaction Status: <%= (Boolean) transactionResult.get("success") ? "✅ SUCCESS" : "❌ FAILED" %>
+            <h4>Transaction Status: <%= transactionResult.get("success") ? "✅ SUCCESS" : "❌ FAILED" %>
             </h4>
             <p><strong>Operation:</strong> <%= transactionResult.get("operation") %>
             </p>
@@ -512,7 +512,7 @@
             <p><strong>Access Level:</strong> <%= transactionData.get("accessLevel") %>
             </p>
             <p><strong>Transaction
-                Execution:</strong> <%= (Boolean) transactionData.get("canExecuteTransactions") ? "Enabled" : "Disabled" %>
+                Execution:</strong> <%= transactionData.get("canExecuteTransactions") ? "Enabled" : "Disabled" %>
             </p>
         </div>
     </div>

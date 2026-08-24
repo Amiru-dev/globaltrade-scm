@@ -1,4 +1,3 @@
-com\globaltrade\ejb\test\PerformanceDashboardTest.class
 com\globaltrade\ejb\test\PerformanceBenchmarkTest$EntityBenchmarks.class
 com\globaltrade\ejb\test\PerformanceBenchmarkTest$InterceptorBenchmarks.class
 com\globaltrade\ejb\test\InterceptorTest.class
