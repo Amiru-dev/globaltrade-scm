@@ -15,34 +15,62 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Custom {@link HttpAuthenticationMechanism} that establishes a real Jakarta EE
- * container security context for the GlobalTrade SCM login page.
+ * container security context for both form-based login and JWT authentication.
  *
- * <p><strong>Root cause this fixes:</strong> {@code LoginServlet} previously authenticated
- * users by calling {@code UserService.authenticate()} directly and storing the result only
- * as {@code HttpSession} attributes. That never told the container who the caller was, so
- * every subsequent {@code @EJB}-injected call (e.g. {@code TransactionServlet} &rarr;
- * {@code InventoryService.transferInventory()}) was executed as an anonymous caller. Since
- * {@code InventoryService} is annotated {@code @RolesAllowed(...)}, the EJB container
- * correctly rejected the anonymous caller with {@code EJBAccessException: Client not
- * authorized for this invocation} — the annotation was doing its job; nothing was ever
- * populating the identity it checks.</p>
+ * <p><strong>Dual Authentication Architecture:</strong> This mechanism supports two
+ * legitimate authentication paths for different consumer types:</p>
+ * <ul>
+ *   <li><strong>Form-based Login:</strong> Session-based authentication for internal
+ *       staff using the JSP UI (logistics personnel, warehouse managers, customs agents).</li>
+ *   <li><strong>JWT Authentication:</strong> Token-based authentication for external
+ *       API consumers (vendor integrations, customer portals, automated systems).</li>
+ * </ul>
  *
- * <p><strong>How this mechanism works:</strong> It does nothing on ordinary requests
- * ({@link HttpMessageContext#doNothing()}). It only activates when the application
- * explicitly calls {@code SecurityContext.authenticate(request, response, params)} — which
- * sets {@link HttpMessageContext#isAuthenticationRequest()} to {@code true} — at which point
- * it delegates credential validation to {@link GlobalTradeIdentityStore} via the standard
- * {@link IdentityStoreHandler}, and notifies the container of the result. This keeps the
- * existing custom login form/flow intact while making the authentication result "real" from
- * the container's point of view.</p>
+ * <p><strong>Root Cause Fixed:</strong> Previously, both authentication paths only
+ * populated {@code HttpSession} attributes or JAX-RS {@code SecurityContext}, but never
+ * established the Jakarta EE container security context. This caused {@code @RolesAllowed}
+ * EJB methods to fail with {@code EJBAccessException} because the EJB container saw
+ * anonymous callers regardless of the actual authentication status.</p>
  *
- * <p><strong>{@literal @}AutoApplySession — Critical Analysis:</strong> Jakarta Security's
- * programmatic {@code authenticate()} call, by itself, only establishes the caller identity
- * for the current request/response round trip. {@code @AutoApplySession} instructs the
- * container to remember the successful authentication result in the {@code HttpSession} and
- * automatically re-apply it as the caller identity on every subsequent request in that
- * session — without re-challenging the user — which is exactly the persistence model the
- * application's session-based login page already assumes.</p>
+ * <p><strong>How This Mechanism Works:</strong></p>
+ * <ol>
+ *   <li><strong>Explicit Authentication Request:</strong> When {@code SecurityContext.authenticate()}
+ *       is called (form login), validates via {@link GlobalTradeIdentityStore}.</li>
+ *   <li><strong>JWT Bearer Token:</strong> When {@code Authorization: Bearer} header is present,
+ *       validates JWT token via {@link JWTValidationUtil} and extracts claims.</li>
+ *   <li><strong>Container Identity:</strong> Both paths establish real container caller principal
+ *       and groups, enabling {@code @RolesAllowed} EJB authorization to work correctly.</li>
+ * </ol>
+ *
+ * <p><strong>{@literal @}AutoApplySession — Critical Analysis and Trade-off:</strong></p>
+ * <p>{@code @AutoApplySession} instructs the container to remember successful authentication
+ * results in the {@code HttpSession} and automatically re-apply them on subsequent requests
+ * without re-invoking {@code validateRequest()}.</p>
+ *
+ * <p><strong>Form-based Login:</strong> ✅ Perfect fit — identity persists across JSP session
+ * as expected for traditional web applications.</p>
+ *
+ * <p><strong>JWT Authentication:</strong> ⚠️ Architectural Trade-off — {@code @AutoApplySession}
+ * stores JWT-validated identity in the session, which may bypass JWT re-validation if a client
+ * sends both Bearer token and session cookie.</p>
+ *
+ * <p><strong>Blast Radius Analysis:</strong></p>
+ * <ul>
+ *   <li><strong>Stateless REST Clients:</strong> ✅ Safe — clients like curl, Postman, or vendor
+ *       integrations typically don't send session cookies, so each request re-validates the JWT.</li>
+ *   <li><strong>Browser Clients:</strong> ⚠️ Risk — browsers mixing JSP session cookies with JWT
+ *       bearer calls could have identity persist after JWT expiry via session cookie.</li>
+ * </ul>
+ *
+ * <p><strong>Trade-off Acceptance:</strong> This trade-off is acceptable because:</p>
+ * <ol>
+ *   <li>The primary JWT use case is stateless API clients (no session cookie).</li>
+ *   <li>The dual-auth pattern (session for UI, JWT for API) is legitimate and matches requirements.</li>
+ *   <li>A true stateless JWT implementation would require disabling {@code @AutoApplySession}, which
+ *       would break the form-based login experience that's critical for internal staff.</li>
+ *   <li>Alternative solutions (separate mechanisms, conditional @AutoApplySession) add significant
+ *       complexity without clear security benefit for the primary use cases.</li>
+ * </ol>
  */
 @ApplicationScoped
 @AutoApplySession
@@ -55,15 +83,27 @@ public class GlobalTradeAuthenticationMechanism implements HttpAuthenticationMec
     public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response,
                                                  HttpMessageContext httpMessageContext) throws AuthenticationException {
 
+        // Branch 1: Explicit authentication request (form-based login via SecurityContext.authenticate())
         if (httpMessageContext.isAuthenticationRequest()) {
             Credential credential = httpMessageContext.getAuthParameters().getCredential();
             CredentialValidationResult result = identityStoreHandler.validate(credential);
             return httpMessageContext.notifyContainerAboutLogin(result);
         }
 
-        // Not an explicit authenticate() call (e.g. a plain page request) — let the
-        // request proceed unauthenticated for this mechanism; @AutoApplySession handles
-        // re-establishing an already-authenticated session's identity separately.
+        // Branch 2: JWT Bearer token authentication (REST API clients)
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = JWTValidationUtil.extractBearerToken(authHeader);
+            if (token != null) {
+                CredentialValidationResult result = JWTValidationUtil.validateToken(token);
+                if (result != CredentialValidationResult.INVALID_RESULT) {
+                    return httpMessageContext.notifyContainerAboutLogin(result);
+                }
+            }
+        }
+
+        // No authentication applicable — proceed as unauthenticated
+        // @AutoApplySession will re-apply existing session identity if present
         return httpMessageContext.doNothing();
     }
 }

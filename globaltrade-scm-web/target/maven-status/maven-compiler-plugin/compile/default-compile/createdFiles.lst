@@ -28,4 +28,5 @@ com\globaltrade\web\filter\CORSFilter.class
 com\globaltrade\web\servlet\AdminServlet.class
 com\globaltrade\web\rest\RestApplication.class
 com\globaltrade\web\rest\exception\VendorValidationExceptionMapper.class
+com\globaltrade\web\security\JWTValidationUtil.class
 com\globaltrade\web\rest\VendorResource.class
