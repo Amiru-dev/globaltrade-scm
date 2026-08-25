@@ -6,6 +6,7 @@ C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-ejb\src
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\interceptor\SecurityAuditInterceptor.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\interceptor\VendorDataValidator.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\security\GlobalTradeLoginModule.java
+C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\security\JAASAuthService.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\security\JWTAuthenticationService.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\security\SecurityService.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-ejb\src\main\java\com\globaltrade\ejb\security\SessionManager.java

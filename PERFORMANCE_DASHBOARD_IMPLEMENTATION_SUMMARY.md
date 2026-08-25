@@ -36,7 +36,7 @@ Successfully implemented a comprehensive Performance Monitoring Dashboard for th
 
 **Security**:
 - Admin-only access to sensitive performance data
-- JAAS authentication integration
+- Jakarta Security authentication integration
 - Role-based authorization enforcement
 
 ### 3. Navigation Integration
@@ -192,7 +192,7 @@ The dashboard is accessible from all major pages:
 
 ### Access Control
 - **Role-Based Access**: Limited to `SYSTEM_ADMIN` role only
-- **JAAS Authentication**: Integration with existing JAAS security realm
+- **Jakarta Security Authentication**: Integration with Jakarta Security mechanism
 - **Servlet-Level Security**: `@RolesAllowed({"SYSTEM_ADMIN"})` annotation
 - **Secure Communication**: HTTPS recommended for production deployment
 

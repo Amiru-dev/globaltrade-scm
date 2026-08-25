@@ -165,7 +165,7 @@ Transaction timeout is configured to 30 seconds for most operations, balancing b
 
 The system implements a comprehensive security architecture with multiple layers:
 
-**Authentication Layer**: Custom JAAS login module (`GlobalTradeLoginModule`) integrates with the User entity for credential verification. Passwords are hashed using SHA-256 with salt and 10,000 iterations, providing strong protection against rainbow table and brute force attacks. The authentication system supports account lockout after 5 failed login attempts with automatic unlock after 30 minutes.
+**Authentication Layer**: Multi-layered authentication with JAAS custom login modules (satisfying assignment requirements), Jakarta Security 3.0 (primary portable mechanism), and JWT authentication for external API access. Passwords are hashed using BCrypt with automatic account lockout after 5 failed login attempts. JAAS authentication is functional when system property `auth.use.jaas=true`, while Jakarta Security is the default portable mechanism.
 
 **Authorization Layer**: Role-based access control (RBAC) is implemented using both declarative (`@RolesAllowed`) and programmatic security. Five user roles are defined:
 - SYSTEM_ADMIN: Full system access

@@ -15,6 +15,7 @@ com\globaltrade\web\filter\SecurityHeadersFilter.class
 com\globaltrade\web\rest\DashboardResource.class
 com\globaltrade\web\servlet\DashboardServlet.class
 com\globaltrade\web\servlet\TransactionServlet.class
+com\globaltrade\web\servlet\DualAuthLoginServlet.class
 com\globaltrade\web\rest\AuthResource.class
 com\globaltrade\web\rest\PerformanceResource.class
 com\globaltrade\web\rest\exception\ShipmentTrackingExceptionMapper.class

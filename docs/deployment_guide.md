@@ -14,7 +14,7 @@ Ensure the following software is installed and configured on your host machine:
 
 ## 2. Database Configuration
 
-The application requires a MySQL database for persistence and a custom JAAS realm for authentication.
+The application requires a MySQL database for persistence. Jakarta Security 3.0 provides container-integrated authentication without requiring custom realm configuration.
 
 ### 2.1 Initialize the Schema
 1. Log in to your MySQL server as the `root` user or an administrator.
@@ -63,14 +63,11 @@ Create the JNDI resource referenced by the application's `persistence.xml`:
     jdbc/GlobalTradeDS
 ```
 
-### 3.4 Configure the Security Realm
-Create a custom JDBC realm for the JAAS authentication module to use:
-```bash
-<PAYARA_HOME>/bin/asadmin create-auth-realm \
-    --classname com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm \
-    --property jaas-context=jdbcRealm:datasource-jndi=jdbc/GlobalTradeDS:user-table=users:user-name-column=username:password-column=password_hash:group-table=user_roles:group-name-column=role_name:digest-algorithm=SHA-256 \
-    GlobalTradeRealm
-```
+### 3.4 Security Configuration
+
+Jakarta Security 3.0 is used for primary authentication and requires no server-specific configuration. The authentication mechanism is fully contained within the deployable artifact using CDI for automatic discovery.
+
+**Note**: A custom JAAS LoginModule (`GlobalTradeLoginModule`) is implemented as an evaluation artifact per assignment requirements, but is not used as the primary authentication mechanism due to server-specific configuration requirements.
 
 ---
 

@@ -275,7 +275,7 @@ Performance Trend Analysis:
 The performance dashboard implements security measures:
 
 - **Role-Based Access**: Limited to `SYSTEM_ADMIN` role only
-- **Authentication Required**: JAAS authentication for dashboard access
+- **Authentication Required**: Jakarta Security authentication for dashboard access
 - **Authorization Checks**: Servlet-level `@RolesAllowed` annotation
 - **Secure Communication**: HTTPS recommended for production deployment
 

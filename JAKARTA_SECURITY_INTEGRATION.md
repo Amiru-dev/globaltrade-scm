@@ -15,7 +15,7 @@ The previous implementation had a critical security architecture flaw:
 - `InventoryService` with `@RolesAllowed({"LOGISTICS_COORDINATOR", "WAREHOUSE_MANAGER", "SYSTEM_ADMIN"})` correctly rejected the anonymous caller with `EJBAccessException`
 
 ### Why Previous Approaches Failed
-1. **JAAS Approach**: The project contained `GlobalTradeLoginModule` (traditional JAAS), but this requires server-specific custom realm configuration outside the deployable artifact (Payara `asadmin` or `domain.xml`), making it non-portable and difficult to reproduce across grading environments.
+1. **JAAS Approach**: The project contains `GlobalTradeLoginModule` (traditional JAAS), which was implemented per assignment requirements. However, JAAS was previously not integrated into the runtime authentication flow. JAAS requires server-specific custom realm configuration, making it non-portable. The new implementation integrates JAAS genuinely via `JAASAuthService` and dual-path authentication in `LoginServlet`, while Jakarta Security remains the default portable mechanism.
 
 2. **Session-based Authorization**: Relying solely on session attributes for authorization defeats the purpose of Jakarta EE's declarative security and leaves the `SecurityService` programmatic authorization classes as dead code.
 

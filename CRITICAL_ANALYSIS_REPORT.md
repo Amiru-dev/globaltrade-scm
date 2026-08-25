@@ -32,7 +32,7 @@ This critical analysis report provides comprehensive analysis of all major archi
 - **Essential Component**: JWTAuthenticationFilter is critical for @RolesAllowed to work. Without it, SecurityContext would not contain JWT principal, and role-based authorization would fail.
 - **SecurityContext Population**: Filter parses Bearer token, validates signature and expiry, extracts user claims, creates JWTPrincipal, and sets JWTSecurityContext.
 - **Error Handling**: Returns 401 Unauthorized for invalid tokens, preventing unauthorized access.
-- **Integration**: Works seamlessly with both JAAS and JWT authentication systems.
+- **Integration**: Works seamlessly with Jakarta Security for internal applications and JWT authentication for external API consumers.
 
 **Centralized Secret Management Analysis**:
 - **JWTConfiguration Bean**: Centralizes secret key management in JWTConfiguration bean, eliminating duplication across JWTAuthenticationService and JWTAuthenticationFilter.

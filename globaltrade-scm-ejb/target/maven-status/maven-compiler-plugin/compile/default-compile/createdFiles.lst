@@ -37,6 +37,7 @@ com\globaltrade\ejb\service\ShipmentService.class
 com\globaltrade\ejb\interceptor\AuditLogInterceptor.class
 com\globaltrade\ejb\transaction\BeanManagedTxService.class
 com\globaltrade\ejb\security\SessionManager$SessionInfo.class
+com\globaltrade\ejb\security\JAASAuthService.class
 com\globaltrade\ejb\service\AuditService.class
 com\globaltrade\ejb\service\ResourcePoolingAnalysisService.class
 com\globaltrade\ejb\security\SessionManager.class

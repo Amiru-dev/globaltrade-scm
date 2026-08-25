@@ -93,7 +93,7 @@ Specific beans have additional interceptors applied via annotations:
 - **Complementary Role**: Adds audit layer to declarative @RolesAllowed
 - **Non-Intrusive**: Security events logged without affecting business logic
 - **Enhanced Logging**: Sensitive operations (delete, admin, password) trigger enhanced audit
-- **Integration**: Works with JAAS and JWT authentication systems
+- **Integration**: Works with Jakarta Security and JWT authentication systems
 
 ### ComplianceCheckInterceptor
 
@@ -160,7 +160,7 @@ Specific beans have additional interceptors applied via annotations:
 - **Integration**: SecurityAuditInterceptor extracts caller principal for audit logging
 - **Critical Component**: JWTAuthenticationFilter is essential for @RolesAllowed to work
 
-**Critical Analysis**: Interceptors work seamlessly with both JAAS and JWT authentication systems, providing unified security monitoring across authentication mechanisms.
+**Critical Analysis**: Interceptors work seamlessly with Jakarta Security and JWT authentication systems, providing unified security monitoring across authentication mechanisms.
 
 ### Account Lockout Integration
 
@@ -185,7 +185,7 @@ The GlobalTrade SCM interceptor architecture demonstrates enterprise-grade cross
 ### Strengths
 - **Comprehensive Coverage**: Global interceptors ensure consistent behavior across all EJBs
 - **Proper Transaction Isolation**: Audit logging uses REQUIRES_NEW for integrity
-- **Security Integration**: Seamless integration with JAAS and JWT authentication
+- **Security Integration**: Seamless integration with Jakarta Security and JWT authentication
 - **Performance Monitoring**: Thread-safe metrics collection with minimal overhead
 - **Flexible Binding**: Support for class-level, method-level, and XML-based binding
 

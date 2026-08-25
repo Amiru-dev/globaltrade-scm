@@ -162,11 +162,12 @@ public void demonstrateOptimisticLocking(Long itemId, int newQuantity) {
 
 ### Authentication Configuration
 
-The application uses JAAS with JDBC realm for authentication:
+The application uses Jakarta Security 3.0 for primary authentication with JWT for external API access:
 
 ```xml
-<auth-realm name="jdbcRealm" classname="com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm">
-    <property name="datasource-jndi" value="jdbc/GlobalTradeDS"/>
+<!-- Jakarta Security Configuration (CDI-based, no server configuration required) -->
+<beans bean-discovery-mode="all" version="4.0">
+</beans>
     <property name="user-table" value="users"/>
     <property name="user-name-column" value="username"/>
     <property name="password-column" value="password"/>
