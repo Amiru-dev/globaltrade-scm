@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.globaltrade.ejb.test.PerformanceDashboardTest
 -------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 105.4 s -- in com.globaltrade.ejb.test.PerformanceDashboardTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 106.3 s -- in com.globaltrade.ejb.test.PerformanceDashboardTest

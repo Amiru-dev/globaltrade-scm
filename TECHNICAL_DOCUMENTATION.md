@@ -165,7 +165,7 @@ Transaction timeout is configured to 30 seconds for most operations, balancing b
 
 The system implements a comprehensive security architecture with multiple layers:
 
-**Authentication Layer**: Multi-layered authentication with JAAS custom login modules (satisfying assignment requirements), Jakarta Security 3.0 (primary portable mechanism), and JWT authentication for external API access. Passwords are hashed using BCrypt with automatic account lockout after 5 failed login attempts. JAAS authentication is functional when system property `auth.use.jaas=true`, while Jakarta Security is the default portable mechanism.
+**Authentication Layer**: Multi-layered authentication with JAAS custom login modules as the primary mechanism per assignment requirements, Jakarta Security 3.0 as the application security integration layer for container-level authorization, and JWT authentication for external API access. Passwords are hashed using BCrypt with automatic account lockout after 5 failed login attempts. JAAS authentication is the default mechanism (auth.use.jaas=true), while Jakarta Security is available as an alternative for critical analysis.
 
 **Authorization Layer**: Role-based access control (RBAC) is implemented using both declarative (`@RolesAllowed`) and programmatic security. Five user roles are defined:
 - SYSTEM_ADMIN: Full system access

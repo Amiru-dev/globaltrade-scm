@@ -40,7 +40,7 @@ GlobalTrade Logistics Corporation manages supply chains for multinational corpor
 ### System Capabilities
 
 - **Automated Scheduling**: Timer services for shipment tracking, inventory monitoring, vendor performance evaluation, customs deadline tracking, and route optimization
-- **Comprehensive Security**: Multi-layer security with role-based access control, JAAS custom login modules, Jakarta Security authentication, JWT for external APIs, and vendor data isolation
+- **Comprehensive Security**: Multi-layer security with role-based access control, JAAS custom login modules (primary authentication per assignment requirements), Jakarta Security integration layer, JWT for external APIs, and vendor data isolation
 - **Transaction Management**: ACID-compliant transaction management with both container-managed and bean-managed transactions
 - **Audit Trail**: Comprehensive audit logging for customs compliance and trade regulation requirements
 - **Real-time Monitoring**: Performance monitoring, security auditing, and supply chain metrics

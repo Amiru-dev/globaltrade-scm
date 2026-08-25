@@ -59,7 +59,7 @@ public class LoginServlet extends HttpServlet {
 
     // Configuration property to select authentication mechanism
     private static final String USE_JAAS_PROPERTY = "auth.use.jaas";
-    private static final boolean USE_JAAS_DEFAULT = false;
+    private static final boolean USE_JAAS_DEFAULT = true; // JAAS is primary per assignment requirements
 
     /**
      * Determines which authentication mechanism to use based on system property.
