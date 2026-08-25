@@ -1,6 +1,7 @@
 package com.globaltrade.web.servlet;
 
 import com.globaltrade.ejb.service.InventoryService;
+import com.globaltrade.web.security.CsrfTokenUtil;
 import jakarta.ejb.EJB;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -59,6 +60,7 @@ public class TransactionServlet extends HttpServlet {
             request.setAttribute("userRole", userRole);
             request.setAttribute("roleDescription", session.getAttribute("roleDescription"));
             request.setAttribute("currentTime", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            request.setAttribute("csrfToken", CsrfTokenUtil.getToken(request));
 
             // Forward to transaction JSP
             request.getRequestDispatcher("/transaction.jsp").forward(request, response);
@@ -77,6 +79,7 @@ public class TransactionServlet extends HttpServlet {
             request.setAttribute("userRole", userRole);
             request.setAttribute("roleDescription", session.getAttribute("roleDescription"));
             request.setAttribute("currentTime", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            request.setAttribute("csrfToken", CsrfTokenUtil.getToken(request));
 
             request.getRequestDispatcher("/transaction.jsp").forward(request, response);
         }

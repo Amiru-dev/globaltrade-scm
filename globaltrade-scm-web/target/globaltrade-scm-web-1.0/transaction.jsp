@@ -397,6 +397,7 @@
             <div class="transaction-card">
                 <h3>📦 Inventory Transfer</h3>
                 <form action="transaction" method="post">
+                    <input type="hidden" name="csrf_token" value="<%= request.getAttribute("csrfToken") %>">
                     <input type="hidden" name="operation" value="transfer">
                     <div class="form-group">
                         <label>From Item ID</label>
@@ -417,6 +418,7 @@
             <div class="transaction-card">
                 <h3>➖ Stock Deduction</h3>
                 <form action="transaction" method="post">
+                    <input type="hidden" name="csrf_token" value="<%= request.getAttribute("csrfToken") %>">
                     <input type="hidden" name="operation" value="deduct">
                     <div class="form-group">
                         <label>Item ID</label>
@@ -433,6 +435,7 @@
             <div class="transaction-card">
                 <h3>➕ Stock Replenishment</h3>
                 <form action="transaction" method="post">
+                    <input type="hidden" name="csrf_token" value="<%= request.getAttribute("csrfToken") %>">
                     <input type="hidden" name="operation" value="replenish">
                     <div class="form-group">
                         <label>Item ID</label>
@@ -449,6 +452,7 @@
             <div class="transaction-card">
                 <h3>↩️ Rollback Demo</h3>
                 <form action="transaction" method="post">
+                    <input type="hidden" name="csrf_token" value="<%= request.getAttribute("csrfToken") %>">
                     <input type="hidden" name="operation" value="rollback">
                     <div class="form-group">
                         <label>Item ID</label>
