@@ -1,383 +1,663 @@
-# GlobalTrade SCM Deployment Guide
+# GlobalTrade SCM - Deployment Guide
+
+This guide provides step-by-step instructions for deploying the GlobalTrade Supply Chain Management application to a new machine.
+
+## Table of Contents
+1. [Prerequisites](#prerequisites)
+2. [Environment Setup](#environment-setup)
+3. [Database Configuration](#database-configuration)
+4. [Application Build](#application-build)
+5. [Payara Server Installation](#payara-server-installation)
+6. [Payara JDBC Configuration](#payara-jdbc-configuration)
+7. [JAAS Security Configuration](#jaas-security-configuration)
+8. [Custom LoginModule Setup](#custom-loginmodule-setup)
+9. [Application Deployment](#application-deployment)
+10. [Testing and Verification](#testing-and-verification)
+11. [Troubleshooting](#troubleshooting)
+
+---
 
 ## Prerequisites
 
-- **Payara Server** 6.2023.x or higher
-- **MySQL** 8.0 or higher
-- **Java** 17 or higher
-- **Maven** 3.8 or higher
-- **Git** (for version control)
+### Required Software
+- **Java Development Kit (JDK) 17 or higher**
+- **Apache Maven 3.6+**
+- **MySQL Server 8.0+**
+- **Payara Server 6.x**
+- **Git** (for cloning the repository)
 
-## Database Setup
+### System Requirements
+- **RAM**: Minimum 4GB (8GB recommended)
+- **Disk Space**: Minimum 10GB free space
+- **Operating System**: Windows 10/11, Linux, or macOS
 
-### 1. Create Database
+---
+
+## Environment Setup
+
+### 1. Install Java Development Kit (JDK)
+
+#### Windows:
+```bash
+# Download JDK 17 from Oracle or Adoptium
+# Set JAVA_HOME environment variable
+set JAVA_HOME=C:\Program Files\Java\jdk-17
+# Add to PATH
+set PATH=%JAVA_HOME%\bin;%PATH%
+```
+
+#### Linux:
+```bash
+sudo apt update
+sudo apt install openjdk-17-jdk
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export PATH=$JAVA_HOME/bin:$PATH
+```
+
+### 2. Install Apache Maven
+
+#### Windows:
+```bash
+# Download Maven from https://maven.apache.org/download.cgi
+# Extract to C:\Program Files\Apache\maven
+set MAVEN_HOME=C:\Program Files\Apache\maven
+set PATH=%MAVEN_HOME%\bin;%PATH%
+```
+
+#### Linux:
+```bash
+sudo apt install maven
+# Verify installation
+mvn --version
+```
+
+### 3. Install MySQL Server
+
+#### Windows:
+```bash
+# Download MySQL Installer from https://dev.mysql.com/downloads/installer/
+# Install MySQL Server 8.0+
+# Set root password during installation
+```
+
+#### Linux:
+```bash
+sudo apt update
+sudo apt install mysql-server
+sudo mysql_secure_installation
+```
+
+### 4. Install Payara Server
+
+#### Windows:
+```bash
+# Download Payara Server 6.x from https://www.payara.fish/downloads
+# Extract to C:\Program Files\Payara\payara6
+cd C:\Program Files\Payara\payara6\bin
+asadmin start-domain
+```
+
+#### Linux:
+```bash
+# Download Payara Server 6.x
+wget https://www.payara.fish/downloads/payara-6.2025.11.zip
+unzip payara-6.2025.11.zip -d /opt/payara6
+cd /opt/payara6/bin
+./asadmin start-domain
+```
+
+---
+
+## Database Configuration
+
+### 1. Create Database and User
+
+```sql
+-- Connect to MySQL as root
+mysql -u root -p
+
+-- Create database
+CREATE DATABASE globaltrade_scm CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Create database user
+CREATE USER 'globaltrade_user'@'localhost' IDENTIFIED BY 'secure_password';
+
+-- Grant privileges
+GRANT ALL PRIVILEGES ON globaltrade_scm.* TO 'globaltrade_user'@'localhost';
+
+-- Flush privileges
+FLUSH PRIVILEGES;
+
+-- Exit
+EXIT;
+```
+
+### 2. Verify Database Connection
 
 ```bash
-mysql -u root -p < db/init-schema.sql
+# Test connection
+mysql -u globaltrade_user -p globaltrade_scm
+# Should connect successfully
 ```
 
-This will:
-- Create the `globaltrade_scm` database
-- Create all required tables (users, user_roles, refresh_tokens, etc.)
-- Insert sample data for testing
+---
 
-### 2. Verify Database
+## Application Build
+
+### 1. Clone the Repository
 
 ```bash
-mysql -u root -p -e "USE globaltrade_scm; SHOW TABLES;"
+git clone <repository-url> globaltrade-scm
+cd globaltrade-scm
 ```
 
-Expected output:
-```
-+------------------------+
-| Tables_in_globaltrade_scm |
-+------------------------+
-| audit_logs             |
-| carrier_routes         |
-| customs_declarations   |
-| inventory_items        |
-| purchase_orders        |
-| refresh_tokens         |
-| shipments              |
-| user_roles             |
-| users                  |
-| vendors                |
-| warehouses             |
-+------------------------+
-```
-
-## Application Deployment
-
-### 1. Build Application
+### 2. Build the Application
 
 ```bash
-mvn clean install
+# Clean and build without tests
+mvn clean package -DskipTests
+
+# The following artifacts will be created:
+# - globaltrade-scm-common/target/globaltrade-scm-common-1.0.jar
+# - globaltrade-scm-ejb/target/globaltrade-scm-ejb-1.0.jar
+# - globaltrade-scm-web/target/globaltrade-scm-web-1.0.war
+# - globaltrade-scm-ear/target/globaltrade-scm-ear-1.0.ear
 ```
 
-This will:
-- Compile all modules (common, ejb, web, ear)
-- Run unit tests
-- Package the EAR file
-
-### 2. Configure Payara Datasource
-
-#### Option A: Using payara-resources.xml (Automatic)
-
-The `payara-resources.xml` file is included in the EAR and will automatically configure the datasource:
-
-```xml
-<jdbc-connection-pool name="GlobalTradePool"
-                      datasource-classname="com.mysql.cj.jdbc.MysqlDataSource"
-                      res-type="javax.sql.DataSource">
-    <property name="Url" value="jdbc:mysql://localhost:3306/globaltrade_scm"/>
-    <property name="User" value="globaltrade_user"/>
-    <property name="Password" value="secure_password"/>
-    <property name="useSSL" value="false"/>
-</jdbc-connection-pool>
-```
-
-**Important**: Update the database credentials in `payara-resources.xml` before deployment.
-
-#### Option B: Manual Configuration via Admin Console
-
-1. Access Payara Admin Console: `http://localhost:4848`
-2. Navigate to: Resources → JDBC → JDBC Connection Pools
-3. Create new pool:
-   - **Pool Name**: GlobalTradePool
-   - **Datasource Classname**: com.mysql.cj.jdbc.MysqlDataSource
-   - **Resource Type**: javax.sql.DataSource
-4. Configure properties:
-   - **Url**: jdbc:mysql://localhost:3306/globaltrade_scm
-   - **User**: globaltrade_user
-   - **Password**: secure_password
-   - **useSSL**: false
-5. Test connection: "Ping" button
-6. Create JDBC Resource:
-   - **JNDI Name**: jdbc/GlobalTradeDS
-   - **Pool Name**: GlobalTradePool
-
-### 3. Deploy Application
-
-#### Using Deployment Script (Linux/Mac)
+### 3. Verify Build Output
 
 ```bash
-chmod +x deploy.sh
-./deploy.sh
+# Check that EAR file was created
+ls -la globaltrade-scm-ear/target/globaltrade-scm-ear-1.0.ear
 ```
 
-#### Using Deployment Script (Windows)
+---
 
-```cmd
-deploy.bat
-```
+## Payara JDBC Configuration
 
-#### Manual Deployment
+### Option 1: Payara Admin Console (GUI)
+
+#### Step 1: Access Admin Console
+1. Open browser: `http://localhost:4848`
+2. Login with default credentials (admin/adminadmin)
+
+#### Step 2: Create JDBC Connection Pool
+1. Navigate to: Resources → JDBC → JDBC Connection Pools
+2. Click "New"
+3. Configure:
+   - **Name**: `GlobalTradePool`
+   - **Resource Type**: `javax.sql.DataSource`
+   - **Database Vendor**: `MySQL`
+4. Click "Next"
+5. Configure pool settings:
+   - **Datasource Classname**: `com.mysql.cj.jdbc.MysqlDataSource`
+   - **Additional Properties**:
+     - `Url`: `jdbc:mysql://localhost:3306/globaltrade_scm`
+     - `User`: `globaltrade_user`
+     - `Password`: `secure_password`
+     - `DatabaseName`: `globaltrade_scm`
+     - `ServerName`: `localhost`
+     - `PortNumber`: `3306`
+     - `useSSL`: `false`
+6. Click "Finish"
+
+#### Step 3: Create JDBC Resource
+1. Navigate to: Resources → JDBC → JDBC Resources
+2. Click "New"
+3. Configure:
+   - **JNDI Name**: `jdbc/GlobalTradeDS`
+   - **Pool Name**: `GlobalTradePool`
+4. Click "OK"
+
+#### Step 4: Test Connection
+1. Navigate to: Resources → JDBC → JDBC Connection Pools
+2. Select `GlobalTradePool`
+3. Click "Ping"
+4. Should return "Ping Succeeded"
+
+### Option 2: Command Line
 
 ```bash
-# Start Payara Server
-$PAYARA_HOME/bin/asadmin start-domain
+cd <payara-installation>/bin
+asadmin
 
-# Deploy EAR
-$PAYARA_HOME/bin/asadmin deploy --contextroot /globaltrade-scm globaltrade-scm-ear/target/globaltrade-scm-ear.ear
+# Create JDBC connection pool
+create-jdbc-connection-pool \
+  --datasourceclassname com.mysql.cj.jdbc.MysqlDataSource \
+  --restype javax.sql.DataSource \
+  --property Url=jdbc\:mysql\://localhost\:3306/globaltrade_scm:User=globaltrade_user:Password=secure_password:DatabaseName=globaltrade_scm:ServerName=localhost:PortNumber=3306:useSSL=false \
+  GlobalTradePool
 
-# Verify deployment
-$PAYARA_HOME/bin/asadmin list-applications
+# Create JDBC resource
+create-jdbc-resource --poolname GlobalTradePool jdbc/GlobalTradeDS
+
+# Test connection
+ping-connection-pool GlobalTradePool
+
+# Exit asadmin
+exit
 ```
 
-### 4. Verify Deployment
+---
 
-```bash
-# Check application status
-$PAYARA_HOME/bin/asadmin list-applications
+## JAAS Security Configuration
 
-# Test datasource connection
-$PAYARA_HOME/bin/asadmin ping-connection-pool GlobalTradePool
+### 1. Configure JDBC Realm in Admin Console
 
-# Check server logs
-$PAYARA_HOME/bin/asadmin log-file-view
-```
-
-## Security Configuration
-
-### 1. JAAS Security Realm
-
-#### Configure via Admin Console
-
+#### Step 1: Create Security Realm
 1. Navigate to: Configurations → server-config → Security → Realms
-2. Create new realm:
-   - **Realm Name**: GlobalTradeRealm
-   - **Class Name**: com.globaltrade.ejb.security.GlobalTradeLoginModule
-3. Configure properties:
-   - **Datasource JNDI**: jdbc/GlobalTradeDS
-   - **Password Hash Algorithm**: BCrypt
+2. Click "New"
+3. Configure:
+   - **Realm Name**: `GlobalTradeRealm`
+   - **Class Name**: `com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm`
+4. Click "OK"
 
-#### Configure via login.conf
+#### Step 2: Configure Realm Properties
+1. Select `GlobalTradeRealm`
+2. Configure properties:
+   - **JAAS Context**: `jdbcRealm`
+   - **JNDI**: `jdbc/GlobalTradeDS`
+   - **User Table**: `users`
+   - **User Name Column**: `username`
+   - **Password Column**: `password_hash`
+   - **Group Table**: `user_roles`
+   - **Group Table User Name Column**: `user_id`
+   - **Group Name Column**: `role_name`
+   - **Digest Algorithm**: (leave blank)
+3. Click "Save"
 
-Create `$PAYARA_HOME/domains/domain1/config/login.conf`:
+### 2. Update login.conf File
 
-```properties
+```bash
+# Navigate to Payara config directory
+cd <payara-installation>/glassfish/domains/domain1/config
+
+# Edit login.conf file
+# Add the following at the end:
+
 GlobalTradeRealm {
     com.globaltrade.ejb.security.GlobalTradeLoginModule required;
 };
 ```
 
-### 2. JWT Secret Key
+---
 
-Set environment variable for JWT secret key:
+## Custom LoginModule Setup
 
-```bash
-# Linux/Mac
-export JWT_SECRET_KEY="your-256-bit-secret-key-here"
-
-# Windows
-set JWT_SECRET_KEY=your-256-bit-secret-key-here
-```
-
-**Critical**: Use a strong, randomly generated secret key in production. Consider using a key management service (AWS KMS, HashiCorp Vault) for production deployments.
-
-### 3. SSL/TLS Configuration
-
-For production deployment, configure SSL/TLS:
-
-1. Navigate to: Configurations → server-config → HTTP Service → HTTP Listeners
-2. Configure SSL settings:
-   - Enable SSL
-   - Configure certificate
-   - Set appropriate cipher suites
-
-## Monitoring and Logging
-
-### 1. Enable Application Logging
+### 1. Copy Custom LoginModule JARs to Payara
 
 ```bash
-$PAYARA_HOME/bin/asadmin set-log-level com.globaltrade:INFO
+# Copy the common module (contains LoginModule and dependencies)
+copy globaltrade-scm-common\target\globaltrade-scm-common-1.0.jar <payara-installation>\glassfish\lib\
+
+# Copy BCrypt library
+copy globaltrade-scm-ear\target\globaltrade-scm-ear-1.0\lib\org.mindrot-jbcrypt-0.4.jar <payara-installation>\glassfish\lib\jbcrypt-0.4.jar
 ```
 
-### 2. Configure Monitoring
+### 2. Linux/Mac Commands:
+```bash
+cp globaltrade-scm-common/target/globaltrade-scm-common-1.0.jar /opt/payara6/glassfish/lib/
+cp globaltrade-scm-ear/target/globaltrade-scm-ear-1.0/lib/org.mindrot-jbcrypt-0.4.jar /opt/payara6/glassfish/lib/jbcrypt-0.4.jar
+```
+
+### 3. Restart Payara Server
 
 ```bash
-# Enable monitoring
-$PAYARA_HOME/bin/asadmin enable-monitoring
-
-# Configure specific monitoring levels
-$PAYARA_HOME/bin/asadmin set monitoring-level=HIGH
+cd <payara-installation>/bin
+asadmin restart-domain
 ```
 
-### 3. Health Check
+---
 
-Test application health:
+## Application Deployment
+
+### Option 1: Admin Console Deployment
+
+#### Step 1: Deploy EAR File
+1. Navigate to: Applications
+2. Click "Deploy"
+3. Upload the EAR file: `globaltrade-scm-ear/target/globaltrade-scm-ear-1.0.ear`
+4. Configure:
+   - **Application Name**: `globaltrade-scm-ear-1.0`
+   - **Context Root**: `/globaltrade`
+5. Click "OK"
+
+#### Step 2: Verify Deployment
+1. Check that application appears in Applications list
+2. Status should be "Enabled"
+
+### Option 2: Command Line Deployment
 
 ```bash
-curl http://localhost:8080/globaltrade-scm/health
+cd <payara-installation>/bin
+asadmin
+
+# Deploy the application
+deploy --name globaltrade-scm-ear-1.0 --contextroot /globaltrade <path-to-ear>/globaltrade-scm-ear-1.0.ear
+
+# Verify deployment
+list-applications
+
+# Exit asadmin
+exit
 ```
 
-Expected response:
-```json
-{
-  "status": "UP",
-  "database": "UP",
-  "memory": {
-    "max": "1024 MB",
-    "total": "512 MB",
-    "used": "256 MB",
-    "free": "256 MB",
-    "usage_percent": 25
-  },
-  "timestamp": 1692672000000
-}
+---
+
+## Testing and Verification
+
+### 1. Test Application Access
+
+```bash
+# Access the application
+http://localhost:8080/globaltrade
 ```
 
-### 4. MicroProfile Metrics (STUB)
+### 2. Test Authentication
 
-**IMPORTANT**: The current MicroProfile Metrics implementation is a STUB that demonstrates the integration pattern. Full implementation requires:
+#### Default Test Users (created by DatabaseSeeder):
+- **Username**: `admin`
+- **Password**: `admin123`
+- **Role**: `SYSTEM_ADMIN`
 
-1. **Enable MicroProfile Metrics in Payara**: Configure Payara server to enable MicroProfile Metrics extension
-2. **Add Implementation Dependency**: Add Payara MicroProfile Metrics implementation to pom.xml
-3. **Configure Metrics Endpoint**: Configure automatic /metrics endpoint in server configuration
-4. **Test Metrics Endpoint**: Verify metrics are available at /metrics endpoint
+Other test users:
+- `logistics_user` / `logistics123` (LOGISTICS role)
+- `warehouse_user` / `warehouse123` (WAREHOUSE role)
+- `customs_user` / `customs123` (CUSTOMS role)
+- `vendor_user` / `vendor123` (VENDOR role)
 
-**Current Stub Status**:
-- `MetricsResource.java` demonstrates @Counted, @Timed, and @Gauge annotation patterns
-- Metrics API dependency added to pom.xml but implementation is not configured
-- Annotations are commented out to prevent runtime errors
-- Manual metrics endpoint available at /metrics (not automatic MicroProfile endpoint)
+### 3. Verify Database Operations
 
-**Production Implementation**:
-- Uncomment @Gauge annotations after implementing MicroProfile Metrics
-- Configure Payara server for automatic metrics endpoint
-- Integrate with monitoring systems (Prometheus, Grafana)
-- Configure custom metrics for business-specific monitoring
+```sql
+-- Connect to database
+mysql -u globaltrade_user -p globaltrade_scm
 
-## Environment-Specific Configuration
+-- Check if tables were created
+SHOW TABLES;
 
-### Development
+-- Check if users were seeded
+SELECT username, full_name, email FROM users;
 
-```properties
-# application-dev.properties
-db.url=jdbc:mysql://localhost:3306/globaltrade_scm
-db.username=globaltrade_user
-db.password=dev_password
-jwt.secret.key=dev-secret-key-change-in-production
-server.port=8080
-server.ssl.enabled=false
+-- Check if roles were assigned
+SELECT u.username, r.role_name FROM users u
+JOIN user_roles r ON u.id = r.user_id;
 ```
 
-### Production
+### 4. Check Server Logs
 
-```properties
-# application-prod.properties
-db.url=jdbc:mysql://prod-db-server:3306/globaltrade_scm
-db.username=prod_user
-db.password=${DB_PASSWORD}
-jwt.secret.key=${JWT_SECRET_KEY}
-server.port=8080
-server.ssl.enabled=true
+```bash
+# View server logs
+cd <payara-installation>/glassfish/domains/domain1/logs
+tail -f server.log
+
+# Look for successful authentication messages:
+# "SECURITY: Authentication SUCCEEDED for user: admin"
+# "SECURITY: Committed 2 principals for user: admin"
 ```
+
+### 5. Test Business Functions
+
+1. **Dashboard**: Verify dashboard loads with statistics
+2. **Shipment Management**: Create/view shipments
+3. **Inventory**: Check inventory levels
+4. **Audit Logs**: Verify audit logging is working
+5. **Performance**: Check response times
+
+---
 
 ## Troubleshooting
 
-### Common Issues
+### Common Issues and Solutions
 
-#### 1. Datasource Connection Failed
+#### 1. EntityManagerFactory Error
+**Error**: `Unable to retrieve EntityManagerFactory for unitName GlobalTradePU`
 
-**Symptoms**: Application fails to start, datasource connection errors
+**Solution**:
+- Verify JDBC connection pool is configured correctly
+- Test connection pool ping in admin console
+- Ensure database user has proper privileges
+- Restart Payara server after JDBC configuration
 
-**Solutions**:
-- Verify MySQL is running: `mysql -u root -p -e "SELECT 1"`
-- Check datasource configuration in Payara admin console
-- Test connection pool: `asadmin ping-connection-pool GlobalTradePool`
-- Verify MySQL Connector/J driver is in Payara classpath
+#### 2. Authentication Failure
+**Error**: Login fails with "Invalid username or password"
 
-#### 2. JAAS Authentication Failed
+**Solution**:
+- Verify custom LoginModule JARs are in Payara lib directory
+- Check login.conf configuration
+- Ensure database users table is populated
+- Verify BCrypt library is accessible
+- Check server logs for detailed error messages
 
-**Symptoms**: Login failures, authentication errors
+#### 3. Database Connection Error
+**Error**: `Access denied for user 'globaltrade_user'@'localhost'`
 
-**Solutions**:
-- Verify login module is configured correctly
-- Check datasource JNDI name matches configuration
-- Verify user table contains valid BCrypt password hashes
-- Check Payara server logs for authentication errors
+**Solution**:
+- Verify database user exists and has correct password
+- Check MySQL user privileges
+- Ensure MySQL service is running
+- Test connection with MySQL client: `mysql -u globaltrade_user -p globaltrade_scm`
 
-#### 3. JWT Token Validation Failed
+#### 4. Port Conflicts
+**Error**: Payara fails to start due to port conflicts
 
-**Symptoms**: 401 Unauthorized errors on API calls
+**Solution**:
+```bash
+# Check which ports are in use
+netstat -ano | findstr :4848  # Admin console
+netstat -ano | findstr :8080  # HTTP
+netstat -ano | findstr :3306  # MySQL
 
-**Solutions**:
-- Verify JWT_SECRET_KEY environment variable is set
-- Check JWT secret key matches between generation and validation
-- Verify token expiration time is appropriate
-- Check JWTAuthenticationFilter is registered as provider
+# Change Payara ports if needed
+cd <payara-installation>/bin
+asadmin
+set configs.config.server-config.network-config.network-listeners.network-listener.http-listener-1.port=8081
+set configs.config.server-config.admin-service.das-config.admin-listener.port=4849
+restart-domain
+```
 
-#### 4. Deployment Failed
+#### 5. Class Loading Issues
+**Error**: `ClassNotFoundException: com.globaltrade.ejb.security.GlobalTradeLoginModule`
 
-**Symptoms**: EAR deployment fails with errors
+**Solution**:
+- Verify JAR files are copied to correct location: `<payara>/glassfish/lib/`
+- Ensure BCrypt JAR is also in the lib directory
+- Restart Payara server
+- Check JAR file permissions on Linux/Mac
 
-**Solutions**:
-- Check Maven build completed successfully
-- Verify EAR file exists: `ls -la globaltrade-scm-ear/target/`
-- Check Payara server logs for deployment errors
-- Verify Payara version compatibility (Jakarta EE 10)
+#### 6. Application Deployment Failures
+**Error**: Deployment fails with missing dependencies
+
+**Solution**:
+- Verify build completed successfully: `mvn clean package -DskipTests`
+- Check EAR file contents
+- Ensure all dependency JARs are included in EAR/lib
+- Review Payara server logs for specific dependency errors
+
+---
 
 ## Production Deployment Considerations
 
-### 1. High Availability
+### Security Hardening
 
-- Configure clustering for multiple Payara instances
-- Use load balancer (nginx, HAProxy) for distribution
-- Configure session replication for stateful beans
-- Use external session store (Redis) for session management
+1. **Change Default Admin Passwords**:
+```bash
+cd <payara-installation>/bin
+asadmin
+change-admin-password
+```
 
-### 2. Backup and Recovery
+2. **Enable SSL/HTTPS**:
+```bash
+asadmin
+create-ssl --type http-listener --listenername http-listener-2
+set configs.config.server-config.network-config.protocols.protocol.http-listener-2.security-enabled=true
+```
 
-- Regular database backups
-- Application configuration backups
-- Disaster recovery plan testing
-- Rollback procedures for failed deployments
-
-### 3. Performance Tuning
-
-- Configure JVM heap size appropriate for workload
-- Tune database connection pool size
-- Configure thread pool settings
-- Enable HTTP/2 for improved performance
-
-### 4. Security Hardening
-
-- Enable SSL/TLS for all connections
-- Configure firewall rules
+3. **Database Security**:
+- Use strong passwords for database users
+- Restrict database access to localhost only
+- Enable MySQL SSL for remote connections
 - Regular security updates
-- Security audit logging
-- Intrusion detection systems
 
-## Verification Checklist
+4. **Application Security**:
+- Review and update security policies
+- Enable rate limiting
+- Configure firewall rules
+- Regular security audits
 
-- [ ] Database created and initialized
-- [ ] Datasource configured and tested
-- [ ] JAAS security realm configured
-- [ ] JWT secret key configured
-- [ ] Application deployed successfully
-- [ ] Health check endpoint responding
-- [ ] Authentication endpoints working
-- [ ] Security headers present in responses
-- [ ] CSRF protection enabled
-- [ ] Monitoring and logging configured
-- [ ] SSL/TLS configured (production)
+### Performance Optimization
 
-## Support and Maintenance
+1. **JVM Tuning**:
+```bash
+# Edit <payara>/glassfish/domains/domain1/config/domain.xml
+# Increase heap size
+<jvm-options>-Xmx2048m</jvm-options>
+<jvm-options>-Xms512m</jvm-options>
+```
 
-For issues or questions:
-- Check Payara Server documentation: https://docs.payara.fish
-- Review Jakarta EE 10 specifications: https://jakarta.ee/specifications/
-- Consult application logs: `$PAYARA_HOME/domains/domain1/logs/server.log`
-- Enable debug logging for troubleshooting
+2. **Connection Pool Tuning**:
+- Increase pool size based on expected load
+- Configure connection validation
+- Set appropriate timeout values
 
-## Next Steps
+3. **Database Optimization**:
+- Add indexes to frequently queried columns
+- Configure MySQL buffer pool size
+- Enable query cache if appropriate
 
-After successful deployment:
-1. Test authentication flow with sample users
-2. Verify REST API endpoints are accessible
-3. Test JWT token generation and validation
-4. Verify security headers are present
-5. Test CSRF protection on state-changing operations
-6. Monitor application performance and logs
-7. Configure backup and monitoring systems
+### Monitoring and Logging
+
+1. **Enable Application Logging**:
+```bash
+asadmin
+set-log-level com.globaltrade.ejb.security.GlobalTradeLoginModule=INFO
+set-log-level com.globaltrade.web.servlet.LoginServlet=INFO
+```
+
+2. **Configure Log Rotation**:
+- Set up automatic log file rotation
+- Configure log retention policy
+- Enable error log monitoring
+
+3. **Performance Monitoring**:
+- Enable Payara monitoring
+- Set up JVM monitoring
+- Configure database query logging
+
+### Backup and Recovery
+
+1. **Database Backups**:
+```bash
+# Regular database backups
+mysqldump -u globaltrade_user -p globaltrade_scm > backup_$(date +%Y%m%d).sql
+```
+
+2. **Application Backups**:
+- Backup EAR file
+- Backup Payara configuration
+- Document any custom configurations
+
+3. **Disaster Recovery**:
+- Test restore procedures regularly
+- Maintain offsite backups
+- Document recovery procedures
+
+---
+
+## Maintenance
+
+### Regular Maintenance Tasks
+
+1. **Weekly**:
+- Review server logs for errors
+- Check disk space usage
+- Monitor application performance
+
+2. **Monthly**:
+- Apply security updates
+- Review and optimize database
+- Test backup and recovery procedures
+
+3. **Quarterly**:
+- Security audit
+- Performance review
+- Capacity planning
+
+### Updates and Upgrades
+
+1. **Application Updates**:
+```bash
+# Build new version
+mvn clean package -DskipTests
+
+# Undeploy old version
+asadmin undeploy globaltrade-scm-ear-1.0
+
+# Deploy new version
+asadmin deploy --name globaltrade-scm-ear-1.0 --contextroot /globaltrade target/globaltrade-scm-ear-1.0.ear
+```
+
+2. **Payara Updates**:
+- Follow Payara upgrade documentation
+- Test in staging environment first
+- Backup configuration before upgrade
+
+3. **MySQL Updates**:
+- Schedule maintenance windows
+- Backup database before updates
+- Test compatibility with application
+
+---
+
+## Contact and Support
+
+For issues or questions regarding deployment:
+- Review server logs: `<payara>/glassfish/domains/domain1/logs/server.log`
+- Check Payara documentation: https://docs.payara.fish
+- Review application documentation in the project repository
+
+---
+
+## Appendix: Quick Reference
+
+### Essential Commands
+
+```bash
+# Payara Server
+asadmin start-domain
+asadmin stop-domain
+asadmin restart-domain
+asadmin list-applications
+asadmin deploy <ear-file>
+asadmin undeploy <app-name>
+
+# Database
+mysql -u globaltrade_user -p globaltrade_scm
+mysqldump -u globaltrade_user -p globaltrade_scm > backup.sql
+
+# Application Build
+mvn clean package -DskipTests
+mvn clean install -DskipTests
+```
+
+### Important File Locations
+
+- **Payara Config**: `<payara>/glassfish/domains/domain1/config/`
+- **Payara Logs**: `<payara>/glassfish/domains/domain1/logs/`
+- **Application EAR**: `globaltrade-scm-ear/target/globaltrade-scm-ear-1.0.ear`
+- **Login Config**: `<payara>/glassfish/domains/domain1/config/login.conf`
+- **Database Config**: `<payara>/glassfish/domains/domain1/config/payara-resources.xml`
+
+### Default Credentials
+
+- **Payara Admin**: admin / adminadmin (change immediately)
+- **Database User**: globaltrade_user / secure_password (change in production)
+- **Application Admin**: admin / admin123 (change in production)
+
+---
+
+**Deployment Guide Version**: 1.0
+**Last Updated**: 2025-08-25
+**Application Version**: 1.0
+**Compatible Payara Version**: 6.x
+**Compatible MySQL Version**: 8.0+
