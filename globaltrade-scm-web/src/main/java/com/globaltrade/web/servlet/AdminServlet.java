@@ -1,6 +1,7 @@
 package com.globaltrade.web.servlet;
 
 import com.globaltrade.ejb.security.SecurityService;
+import com.globaltrade.web.security.CsrfTokenUtil;
 import jakarta.ejb.EJB;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -55,12 +56,17 @@ public class AdminServlet extends HttpServlet {
             // Fetch admin data
             Map<String, Object> adminData = fetchAdminData(userRole, username);
 
+            // Generate CSRF token for form protection
+            String csrfToken = CsrfTokenUtil.getToken(request);
+
             // Set data for JSP
             request.setAttribute("adminData", adminData);
             request.setAttribute("username", username);
             request.setAttribute("userRole", userRole);
             request.setAttribute("roleDescription", session.getAttribute("roleDescription"));
             request.setAttribute("currentTime", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            request.setAttribute("csrfToken", csrfToken);
+            request.setAttribute("csrfParamName", CsrfTokenUtil.getParamName());
 
             // Forward to admin JSP
             request.getRequestDispatcher("/admin.jsp").forward(request, response);
@@ -82,6 +88,8 @@ public class AdminServlet extends HttpServlet {
             request.setAttribute("userRole", userRole);
             request.setAttribute("roleDescription", session.getAttribute("roleDescription"));
             request.setAttribute("currentTime", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            request.setAttribute("csrfToken", CsrfTokenUtil.getToken(request));
+            request.setAttribute("csrfParamName", CsrfTokenUtil.getParamName());
 
             request.getRequestDispatcher("/admin.jsp").forward(request, response);
         }

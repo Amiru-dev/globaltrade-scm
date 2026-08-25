@@ -451,6 +451,7 @@
                 <h3>🚨 Emergency Access Override</h3>
                 <form action="admin" method="post">
                     <input type="hidden" name="operation" value="emergency_access">
+                    <input type="hidden" name="<%= request.getAttribute("csrfParamName") %>" value="<%= request.getAttribute("csrfToken") %>">
                     <div class="form-group">
                         <label>Resource Type</label>
                         <select name="resourceType" required>
@@ -475,6 +476,7 @@
                 <h3>💰 High-Value Operation Authorization</h3>
                 <form action="admin" method="post">
                     <input type="hidden" name="operation" value="high_value_operation">
+                    <input type="hidden" name="<%= request.getAttribute("csrfParamName") %>" value="<%= request.getAttribute("csrfToken") %>">
                     <div class="form-group">
                         <label>Operation Type</label>
                         <select name="operationType" required>
@@ -498,6 +500,7 @@
                 <h3>🕐 Maintenance Window Check</h3>
                 <form action="admin" method="post">
                     <input type="hidden" name="operation" value="maintenance_window">
+                    <input type="hidden" name="<%= request.getAttribute("csrfParamName") %>" value="<%= request.getAttribute("csrfToken") %>">
                     <div class="form-group">
                         <label>Operation Type</label>
                         <select name="operationType" required>
