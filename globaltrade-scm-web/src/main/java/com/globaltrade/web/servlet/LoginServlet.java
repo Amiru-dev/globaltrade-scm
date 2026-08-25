@@ -2,7 +2,6 @@ package com.globaltrade.web.servlet;
 
 import com.globaltrade.common.entity.User;
 import com.globaltrade.ejb.service.UserService;
-import jakarta.annotation.security.DeclareRoles;
 import jakarta.ejb.EJB;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.AuthenticationStatus;
@@ -34,7 +33,6 @@ import java.util.logging.Logger;
  * what downstream {@code @EJB}-injected calls (e.g. {@code InventoryService}, which is
  * annotated {@code @RolesAllowed}) are authorized against.</p>
  */
-@DeclareRoles({"LOGISTICS_COORDINATOR", "WAREHOUSE_MANAGER", "CUSTOMS_AGENT", "VENDOR_REPRESENTATIVE", "SYSTEM_ADMIN"})
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
