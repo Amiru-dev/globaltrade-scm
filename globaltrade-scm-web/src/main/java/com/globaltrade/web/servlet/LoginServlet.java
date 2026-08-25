@@ -2,7 +2,13 @@ package com.globaltrade.web.servlet;
 
 import com.globaltrade.common.entity.User;
 import com.globaltrade.ejb.service.UserService;
+import jakarta.annotation.security.DeclareRoles;
 import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
+import jakarta.security.enterprise.AuthenticationStatus;
+import jakarta.security.enterprise.SecurityContext;
+import jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
+import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,10 +24,17 @@ import java.util.logging.Logger;
 /**
  * Login servlet for proper authentication with user credentials.
  *
- * <p><strong>Critical Analysis:</strong> This servlet provides real authentication
- * using the UserService for credential verification. It replaces the demo mode
- * with proper password-based authentication and role assignment from the database.</p>
+ * <p><strong>Critical Analysis:</strong> Credential verification itself still happens in
+ * {@link UserService#authenticate(String, String)} (BCrypt + account lockout). What changed
+ * is that {@code doPost} now drives that check through {@link SecurityContext#authenticate}
+ * instead of calling {@code userService.authenticate()} directly. This routes the result
+ * through {@code GlobalTradeIdentityStore} / {@code GlobalTradeAuthenticationMechanism},
+ * which establishes a real Jakarta EE container security context (caller principal + groups)
+ * for the session — not just {@code HttpSession} attributes. That container-level identity is
+ * what downstream {@code @EJB}-injected calls (e.g. {@code InventoryService}, which is
+ * annotated {@code @RolesAllowed}) are authorized against.</p>
  */
+@DeclareRoles({"LOGISTICS_COORDINATOR", "WAREHOUSE_MANAGER", "CUSTOMS_AGENT", "VENDOR_REPRESENTATIVE", "SYSTEM_ADMIN"})
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
@@ -29,6 +42,9 @@ public class LoginServlet extends HttpServlet {
 
     @EJB
     private UserService userService;
+
+    @Inject
+    private SecurityContext securityContext;
 
     // Role descriptions for display purposes
     private static final String ROLE_DESCRIPTIONS =
@@ -83,14 +99,25 @@ public class LoginServlet extends HttpServlet {
         }
 
         try {
-            // Authenticate user
-            User user = userService.authenticate(username, password);
+            // Authenticate against the container security context. Internally this invokes
+            // GlobalTradeAuthenticationMechanism -> GlobalTradeIdentityStore ->
+            // UserService.authenticate() (BCrypt + account lockout), and on success
+            // establishes the real caller principal/groups that @RolesAllowed EJBs check.
+            AuthenticationStatus status = securityContext.authenticate(
+                    request, response,
+                    AuthenticationParameters.withParams()
+                            .credential(new UsernamePasswordCredential(username, password)));
 
-            if (user == null) {
+            if (status != AuthenticationStatus.SUCCESS) {
+                LOGGER.log(Level.WARNING, "LOGIN: Authentication failed for user: {0}", username);
                 request.setAttribute("error", "Invalid username or password");
                 request.getRequestDispatcher("/index.jsp").forward(request, response);
                 return;
             }
+
+            // Credentials were already verified above; this lookup is only for display
+            // attributes (fullName, id) and does not re-check the password.
+            User user = userService.findByUsername(username);
 
             // Get user roles
             Set<String> roles = user.getRoles();
@@ -100,7 +127,8 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
-            // Create session and set user attributes
+            // Create session and set user attributes (kept for JSP/UI display purposes;
+            // authorization itself is now enforced by the container, not these attributes)
             HttpSession session = request.getSession(true);
             session.setAttribute("username", user.getUsername());
             session.setAttribute("userId", user.getId());

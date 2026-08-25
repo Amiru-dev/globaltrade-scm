@@ -20,6 +20,8 @@ C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src\main\java\com\globaltrade\web\rest\ShipmentResource.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src\main\java\com\globaltrade\web\rest\VendorResource.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src\main\java\com\globaltrade\web\security\CsrfTokenUtil.java
+C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src\main\java\com\globaltrade\web\security\GlobalTradeAuthenticationMechanism.java
+C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src\main\java\com\globaltrade\web\security\GlobalTradeIdentityStore.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src\main\java\com\globaltrade\web\security\JWTAuthenticationFilter.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src\main\java\com\globaltrade\web\servlet\AdminServlet.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src\main\java\com\globaltrade\web\servlet\AuditLogServlet.java

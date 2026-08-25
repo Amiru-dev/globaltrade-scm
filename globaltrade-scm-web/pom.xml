@@ -60,6 +60,14 @@
             <artifactId>microprofile-metrics-api</artifactId>
             <version>5.1.0</version>
         </dependency>
+
+        <!-- Jakarta Security 3.0 (JSR 375) - for programmatic authentication -->
+        <dependency>
+            <groupId>jakarta.security.enterprise</groupId>
+            <artifactId>jakarta.security.enterprise-api</artifactId>
+            <version>3.0.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

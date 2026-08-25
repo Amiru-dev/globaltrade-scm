@@ -10,6 +10,7 @@ com\globaltrade\web\rest\MetricsResource.class
 com\globaltrade\web\servlet\AuditLogServlet.class
 com\globaltrade\web\rest\exception\TransactionRollbackExceptionMapper.class
 com\globaltrade\web\security\JWTAuthenticationFilter.class
+com\globaltrade\web\security\GlobalTradeIdentityStore.class
 com\globaltrade\web\filter\SecurityHeadersFilter.class
 com\globaltrade\web\rest\DashboardResource.class
 com\globaltrade\web\servlet\DashboardServlet.class
@@ -18,6 +19,7 @@ com\globaltrade\web\rest\AuthResource.class
 com\globaltrade\web\rest\PerformanceResource.class
 com\globaltrade\web\rest\exception\ShipmentTrackingExceptionMapper.class
 com\globaltrade\web\security\CsrfTokenUtil.class
+com\globaltrade\web\security\GlobalTradeAuthenticationMechanism.class
 com\globaltrade\web\rest\InventoryResource.class
 com\globaltrade\web\rest\exception\CarrierSystemExceptionMapper.class
 com\globaltrade\web\servlet\PerformanceDashboardServlet.class

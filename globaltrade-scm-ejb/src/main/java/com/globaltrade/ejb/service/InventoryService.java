@@ -4,6 +4,7 @@ import com.globaltrade.common.entity.InventoryItem;
 import com.globaltrade.common.exception.InventoryShortageException;
 import com.globaltrade.common.exception.TransactionRollbackException;
 
+import jakarta.annotation.security.DeclareRoles;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
@@ -26,6 +27,7 @@ import java.util.logging.Logger;
  * to avoid unnecessary transaction overhead.</p>
  */
 @Stateless
+@DeclareRoles({"LOGISTICS_COORDINATOR", "WAREHOUSE_MANAGER", "SYSTEM_ADMIN"})
 @RolesAllowed({"LOGISTICS_COORDINATOR", "WAREHOUSE_MANAGER", "SYSTEM_ADMIN"})
 public class InventoryService {
 
