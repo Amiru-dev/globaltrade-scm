@@ -600,7 +600,7 @@
             </p>
             <p><strong>Access Level:</strong> <%= adminData.get("accessLevel") %>
             </p>
-            <p><strong>Admin Access:</strong> <%= adminData.get("hasAdminAccess") ? "Granted" : "Denied" %>
+            <p><strong>Admin Access:</strong> <%= ((Boolean) adminData.get("hasAdminAccess")) ? "Granted" : "Denied" %>
             </p>
         </div>
     </div>
