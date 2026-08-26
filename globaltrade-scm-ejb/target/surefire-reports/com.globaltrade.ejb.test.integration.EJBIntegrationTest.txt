@@ -1,0 +1,58 @@
+-------------------------------------------------------------------------------
+Test set: com.globaltrade.ejb.test.integration.EJBIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.152 s <<< FAILURE! -- in com.globaltrade.ejb.test.integration.EJBIntegrationTest
+com.globaltrade.ejb.test.integration.EJBIntegrationTest -- Time elapsed: 1.152 s <<< ERROR!
+org.jboss.arquillian.container.spi.client.container.LifecycleException: Could not connect to DAS on: http://localhost:4848 | Connection refused: connect
+	at fish.payara.arquillian.container.payara.CommonPayaraManager.start(CommonPayaraManager.java:126)
+	at fish.payara.arquillian.container.payara.remote.PayaraRemoteDeployableContainer.start(PayaraRemoteDeployableContainer.java:92)
+	at org.jboss.arquillian.container.impl.ContainerImpl.start(ContainerImpl.java:179)
+	at org.jboss.arquillian.container.impl.client.container.ContainerLifecycleController$8.perform(ContainerLifecycleController.java:137)
+	at org.jboss.arquillian.container.impl.client.container.ContainerLifecycleController$8.perform(ContainerLifecycleController.java:133)
+	at org.jboss.arquillian.container.impl.client.container.ContainerLifecycleController.forContainer(ContainerLifecycleController.java:208)
+	at org.jboss.arquillian.container.impl.client.container.ContainerLifecycleController.startContainer(ContainerLifecycleController.java:133)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:86)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:103)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:90)
+	at org.jboss.arquillian.container.impl.client.ContainerDeploymentContextHandler.createContainerContext(ContainerDeploymentContextHandler.java:54)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:86)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:95)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:133)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:105)
+	at org.jboss.arquillian.core.impl.EventImpl.fire(EventImpl.java:62)
+	at org.jboss.arquillian.container.impl.client.container.ContainerLifecycleController$2.perform(ContainerLifecycleController.java:70)
+	at org.jboss.arquillian.container.impl.client.container.ContainerLifecycleController$2.perform(ContainerLifecycleController.java:64)
+	at org.jboss.arquillian.container.impl.client.container.ContainerLifecycleController.forEachSuiteContainer(ContainerLifecycleController.java:181)
+	at org.jboss.arquillian.container.impl.client.container.ContainerLifecycleController.startSuiteContainers(ContainerLifecycleController.java:64)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:86)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:103)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:90)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:133)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:105)
+	at org.jboss.arquillian.core.impl.EventImpl.fire(EventImpl.java:62)
+	at org.jboss.arquillian.container.test.impl.client.ContainerEventController.execute(ContainerEventController.java:83)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:86)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:103)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:90)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createSuiteContext(TestContextHandler.java:69)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:86)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:95)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:133)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:105)
+	at org.jboss.arquillian.test.impl.EventTestRunnerAdaptor.beforeSuite(EventTestRunnerAdaptor.java:71)
+	at org.jboss.arquillian.junit5.JUnitJupiterTestClassLifecycleManager.initializeAdaptor(JUnitJupiterTestClassLifecycleManager.java:40)
+	at org.jboss.arquillian.junit5.JUnitJupiterTestClassLifecycleManager.getManager(JUnitJupiterTestClassLifecycleManager.java:25)
+	at org.jboss.arquillian.junit5.ArquillianExtension.beforeAll(ArquillianExtension.java:35)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	Suppressed: java.lang.RuntimeException: Arquillian initialization has already been attempted, but failed. See previous exceptions for cause
+		at org.jboss.arquillian.junit5.JUnitJupiterTestClassLifecycleManager.handleSuiteLevelFailure(JUnitJupiterTestClassLifecycleManager.java:62)
+		at org.jboss.arquillian.junit5.JUnitJupiterTestClassLifecycleManager.getManager(JUnitJupiterTestClassLifecycleManager.java:30)
+		at org.jboss.arquillian.junit5.ArquillianExtension.afterAll(ArquillianExtension.java:42)
+		... 1 more
+	Caused by: [CIRCULAR REFERENCE: org.jboss.arquillian.container.spi.client.container.LifecycleException: Could not connect to DAS on: http://localhost:4848 | Connection refused: connect]
+

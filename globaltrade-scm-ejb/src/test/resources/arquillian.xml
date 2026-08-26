@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<arquillian xmlns="http://jboss.org/schema/arquillian"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://jboss.org/schema/arquillian
+                               http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+    <container qualifier="payara-remote" default="true">
+        <configuration>
+            <!-- Connect to already running Payara Server -->
+            <property name="adminHost">localhost</property>
+            <property name="adminPort">4848</property>
+            <property name="adminHttps">false</property>
+            <!-- Domain configuration -->
+            <property name="domain">domain1</property>
+        </configuration>
+    </container>
+</arquillian>

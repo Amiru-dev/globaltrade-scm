@@ -30,7 +30,7 @@
         <!-- Arquillian JUnit 5 Integration -->
         <dependency>
             <groupId>org.jboss.arquillian.junit5</groupId>
-            <artifactId>arquillian-junit5-core</artifactId>
+            <artifactId>arquillian-junit5-container</artifactId>
             <version>1.8.0.Final</version>
             <scope>test</scope>
         </dependency>
@@ -46,6 +46,22 @@
             <groupId>org.jboss.shrinkwrap</groupId>
             <artifactId>shrinkwrap-impl-base</artifactId>
             <version>1.2.6</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Payara Arquillian Container Adapter for Payara 6.x (Remote) -->
+        <dependency>
+            <groupId>fish.payara.arquillian</groupId>
+            <artifactId>arquillian-payara-server-remote</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Payara Client EE9 for Jakarta EE compatibility -->
+        <dependency>
+            <groupId>fish.payara.arquillian</groupId>
+            <artifactId>payara-client-ee9</artifactId>
+            <version>3.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -73,6 +89,21 @@
         <!-- Arquillian Integration Testing Profile -->
         <profile>
             <id>arquillian</id>
+            <dependencies>
+                <!-- Payara Arquillian Container Adapter -->
+                <dependency>
+                    <groupId>fish.payara.arquillian</groupId>
+                    <artifactId>arquillian-payara-server-remote</artifactId>
+                    <version>3.1</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>fish.payara.arquillian</groupId>
+                    <artifactId>payara-client-ee9</artifactId>
+                    <version>3.0</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
             <build>
                 <plugins>
                     <plugin>
@@ -80,9 +111,15 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>3.2.5</version>
                         <configuration>
+                            <excludes>
+                                <exclude>none</exclude>
+                            </excludes>
                             <includes>
                                 <include>**/*IntegrationTest.java</include>
                             </includes>
+                            <systemPropertyVariables>
+                                <arquillian.launch>payara-remote</arquillian.launch>
+                            </systemPropertyVariables>
                         </configuration>
                     </plugin>
                 </plugins>
