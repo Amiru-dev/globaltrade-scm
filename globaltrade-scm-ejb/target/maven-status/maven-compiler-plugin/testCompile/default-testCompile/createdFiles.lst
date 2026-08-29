@@ -23,6 +23,7 @@ com\globaltrade\ejb\test\TransactionTest$StockDeductionTests.class
 com\globaltrade\ejb\test\ShipmentServiceTest$CreateShipmentTests.class
 com\globaltrade\ejb\test\TimerServiceTest$TimerConfigValidationTests.class
 com\globaltrade\ejb\test\SecurityTest$EmergencyAccessTests.class
+com\globaltrade\ejb\test\PerformanceBenchmarkTest$PT002InterceptorChainBenchmark.class
 com\globaltrade\ejb\test\ExceptionHandlingTest$ExceptionHierarchyTests.class
 com\globaltrade\ejb\test\TransactionTest.class
 com\globaltrade\ejb\test\PerformanceBenchmarkTest.class
