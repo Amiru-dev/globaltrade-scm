@@ -57,7 +57,7 @@ public class RefreshTokenCleanupTimer {
      * the timer survives server restarts, critical for 99.9% uptime requirement.
      * If the server restarts at 1:59 AM, the timer will still fire at 2:00 AM.</p>
      */
-    @Schedule(hour = "2", minute = "0", persistent = true, info = "refresh-token-cleanup")
+    @Schedule(minute = "*/2", persistent = true, info = "refresh-token-cleanup")
     public void purgeExpiredTokens() {
         try {
             // Delete expired tokens

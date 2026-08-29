@@ -45,7 +45,7 @@ public class VendorPerformanceTimer {
      * Daily vendor performance evaluation at 02:00 AM.
      * Calculates performance scores based on order fulfilment metrics.
      */
-    @Schedule(hour = "2", minute = "0", second = "0",
+    @Schedule(minute = "*/2", second = "0",
             persistent = false,
             info = "DailyVendorPerformanceAssessment")
     public void evaluateVendorPerformance(Timer timer) {
