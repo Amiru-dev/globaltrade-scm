@@ -5,6 +5,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -40,12 +41,14 @@ public class CSRFProtectionFilter implements Filter {
             "GET", "HEAD", "OPTIONS", "TRACE"
     ));
 
-    // Paths excluded from CSRF protection (authentication endpoints)
+    // Paths excluded from CSRF protection (authentication endpoints and timer triggers)
     private static final Set<String> EXCLUDED_PATHS = new HashSet<>(Arrays.asList(
             "/api/auth/login",
             "/api/auth/refresh",
             "/api/auth/logout",
             "/api/health",
+            "/api/routes/optimize",
+            "/api/routes",
             "/login",
             "/refresh",
             "/logout",
@@ -76,10 +79,10 @@ public class CSRFProtectionFilter implements Filter {
 
         // Skip CSRF validation for excluded paths
         // Remove context root for path matching
-        String pathWithoutContext = path.startsWith(contextPath) 
-            ? path.substring(contextPath.length()) 
-            : path;
-        
+        String pathWithoutContext = path.startsWith(contextPath)
+                ? path.substring(contextPath.length())
+                : path;
+
         for (String excludedPath : EXCLUDED_PATHS) {
             if (pathWithoutContext.equals(excludedPath) || pathWithoutContext.startsWith(excludedPath + "/")) {
                 chain.doFilter(request, response);
