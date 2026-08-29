@@ -45,7 +45,7 @@ public class VendorPerformanceTimer {
      * Daily vendor performance evaluation at 02:00 AM.
      * Calculates performance scores based on order fulfilment metrics.
      */
-    @Schedule(minute = "*/2", second = "0",
+    @Schedule(hour = "2", minute = "0", second = "0",
             persistent = false,
             info = "DailyVendorPerformanceAssessment")
     public void evaluateVendorPerformance(Timer timer) {
@@ -152,15 +152,15 @@ public class VendorPerformanceTimer {
     private void analyzeRegionalVendorPerformance(List<Vendor> vendors) {
         // Group vendors by country and analyze regional performance patterns
         vendors.stream()
-            .collect(java.util.stream.Collectors.groupingBy(Vendor::getCountry))
-            .forEach((country, countryVendors) -> {
-                double avgRating = countryVendors.stream()
-                        .map(v -> v.getPerformanceRating() != null ? v.getPerformanceRating().doubleValue() : 3.0)
-                        .mapToDouble(Double::doubleValue)
-                        .average()
-                        .orElse(3.0);
-                LOGGER.log(Level.INFO, "REGIONAL VENDOR PERFORMANCE: {0} — Average rating: {1}/5.00 — {2} vendors",
-                        new Object[]{country, avgRating, countryVendors.size()});
-            });
+                .collect(java.util.stream.Collectors.groupingBy(Vendor::getCountry))
+                .forEach((country, countryVendors) -> {
+                    double avgRating = countryVendors.stream()
+                            .map(v -> v.getPerformanceRating() != null ? v.getPerformanceRating().doubleValue() : 3.0)
+                            .mapToDouble(Double::doubleValue)
+                            .average()
+                            .orElse(3.0);
+                    LOGGER.log(Level.INFO, "REGIONAL VENDOR PERFORMANCE: {0} — Average rating: {1}/5.00 — {2} vendors",
+                            new Object[]{country, avgRating, countryVendors.size()});
+                });
     }
 }

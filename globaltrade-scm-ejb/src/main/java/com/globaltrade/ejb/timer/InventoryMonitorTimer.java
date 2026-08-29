@@ -51,7 +51,7 @@ public class InventoryMonitorTimer {
      * <p>{@code persistent = false}: Timer is recreated on server restart.
      * Inventory checks are idempotent, so missing one during restart is safe.</p>
      */
-    @Schedule(minute = "*/2", second = "0",
+    @Schedule(hour = "*", minute = "0", second = "0",
             persistent = false,
             info = "HourlyInventoryMonitor")
     public void monitorInventoryLevels(Timer timer) {

@@ -57,19 +57,19 @@ public class RefreshTokenCleanupTimer {
      * the timer survives server restarts, critical for 99.9% uptime requirement.
      * If the server restarts at 1:59 AM, the timer will still fire at 2:00 AM.</p>
      */
-    @Schedule(minute = "*/2", persistent = true, info = "refresh-token-cleanup")
+    @Schedule(hour = "2", minute = "0", persistent = true, info = "refresh-token-cleanup")
     public void purgeExpiredTokens() {
         try {
             // Delete expired tokens
             int expiredDeleted = em.createQuery(
-                "DELETE FROM RefreshToken t WHERE t.expiresAt < :now")
-                .setParameter("now", Instant.now())
-                .executeUpdate();
+                            "DELETE FROM RefreshToken t WHERE t.expiresAt < :now")
+                    .setParameter("now", Instant.now())
+                    .executeUpdate();
 
             // Delete revoked tokens
             int revokedDeleted = em.createQuery(
-                "DELETE FROM RefreshToken t WHERE t.revoked = true")
-                .executeUpdate();
+                            "DELETE FROM RefreshToken t WHERE t.revoked = true")
+                    .executeUpdate();
 
             int totalDeleted = expiredDeleted + revokedDeleted;
 
@@ -103,22 +103,22 @@ public class RefreshTokenCleanupTimer {
     public String getTokenStatistics() {
         try {
             Long totalTokens = em.createQuery(
-                "SELECT COUNT(t) FROM RefreshToken t", Long.class)
-                .getSingleResult();
+                            "SELECT COUNT(t) FROM RefreshToken t", Long.class)
+                    .getSingleResult();
 
             Long expiredTokens = em.createQuery(
-                "SELECT COUNT(t) FROM RefreshToken t WHERE t.expiresAt < :now", Long.class)
-                .setParameter("now", Instant.now())
-                .getSingleResult();
+                            "SELECT COUNT(t) FROM RefreshToken t WHERE t.expiresAt < :now", Long.class)
+                    .setParameter("now", Instant.now())
+                    .getSingleResult();
 
             Long revokedTokens = em.createQuery(
-                "SELECT COUNT(t) FROM RefreshToken t WHERE t.revoked = true", Long.class)
-                .getSingleResult();
+                            "SELECT COUNT(t) FROM RefreshToken t WHERE t.revoked = true", Long.class)
+                    .getSingleResult();
 
             Long activeTokens = em.createQuery(
-                "SELECT COUNT(t) FROM RefreshToken t WHERE t.revoked = false AND t.expiresAt >= :now", Long.class)
-                .setParameter("now", Instant.now())
-                .getSingleResult();
+                            "SELECT COUNT(t) FROM RefreshToken t WHERE t.revoked = false AND t.expiresAt >= :now", Long.class)
+                    .setParameter("now", Instant.now())
+                    .getSingleResult();
 
             return String.format(
                     "Token Statistics - Total: %d, Active: %d, Expired: %d, Revoked: %d",
