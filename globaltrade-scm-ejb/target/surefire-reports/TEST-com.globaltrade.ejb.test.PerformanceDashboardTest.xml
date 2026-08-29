@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.globaltrade.ejb.test.PerformanceDashboardTest" time="118.529" tests="3" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.globaltrade.ejb.test.PerformanceDashboardTest" time="105.988" tests="3" errors="0" skipped="0" failures="0">
   <properties>
     <property name="env.ONEDRIVE" value="C:\Users\ASUS\OneDrive"/>
     <property name="env.NUMBER_OF_PROCESSORS" value="16"/>
@@ -18,7 +18,7 @@
     <property name="env.OS" value="Windows_NT"/>
     <property name="env.EFC_11604_2775293581" value="1"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Microsoft\jdk-17.0.16.8-hotspot\bin"/>
-    <property name="sun.java.command" value="C:\Users\ASUS\AppData\Local\Temp\surefire4099572934523397867\surefirebooter-20260829102218926_3.jar C:\Users\ASUS\AppData\Local\Temp\surefire4099572934523397867 2026-08-29T10-22-14_089-jvmRun1 surefire-20260829102218926_1tmp surefire_0-20260829102218926_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\ASUS\AppData\Local\Temp\surefire3481493033478947640\surefirebooter-20260829123112436_3.jar C:\Users\ASUS\AppData\Local\Temp\surefire3481493033478947640 2026-08-29T12-31-06_439-jvmRun1 surefire-20260829123112436_1tmp surefire_0-20260829123112436_2tmp"/>
     <property name="env.SYSTEMROOT" value="C:\WINDOWS"/>
     <property name="jdk.debug" value="release"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
@@ -34,6 +34,7 @@
     <property name="env.PROMPT" value="$P$G"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="env.EFC_11604_344590478" value="1"/>
     <property name="env.RLSSVCPORT" value="22112"/>
     <property name="env.CHOCOLATEYINSTALL" value="C:\ProgramData\chocolatey"/>
     <property name="env.LOCALAPPDATA" value="C:\Users\ASUS\AppData\Local"/>
@@ -53,7 +54,7 @@
     <property name="file.encoding" value="Cp1252"/>
     <property name="env.DRIVERDATA" value="C:\Windows\System32\Drivers\DriverData"/>
     <property name="java.vendor.version" value="Microsoft-11926163"/>
-    <property name="env.TERM_SESSION_ID" value="86130ffd-1be3-4619-84a5-70b2a17fece6"/>
+    <property name="env.TERM_SESSION_ID" value="b7c80bb9-3875-494d-aa43-bce609d05622"/>
     <property name="env.COMPUTERNAME" value="DESKTOP-UO11V5R"/>
     <property name="env.HOMEPATH" value="\Users\ASUS"/>
     <property name="env.SYSTEMDRIVE" value="C:"/>
@@ -62,7 +63,7 @@
     <property name="env.JVMCONFIG" value="\.mvn\jvm.config"/>
     <property name="java.io.tmpdir" value="C:\Users\ASUS\AppData\Local\Temp\"/>
     <property name="env.PROGRAMFILES(X86)" value="C:\Program Files (x86)"/>
-    <property name="env.JETBRAINS_INTELLIJ_COMMAND_END_MARKER" value="QgkGHXdSJ1FHgvLFy5c16r1bsCD9dZQpmz0nrP04gJT174JUR0q2he3EzS4rRv8d"/>
+    <property name="env.JETBRAINS_INTELLIJ_COMMAND_END_MARKER" value="Wf8y3kXs6ajfcKoHuIp8Fh8jbjqRuutoNR9woTDZDZfRhkziNmX8NN1vWfcleOE5"/>
     <property name="java.version" value="17.0.16"/>
     <property name="env.PROCESSOR_LEVEL" value="25"/>
     <property name="env.HOMEDRIVE" value="C:"/>
@@ -106,7 +107,7 @@
     <property name="env.ALLUSERSPROFILE" value="C:\ProgramData"/>
     <property name="env.SESSIONNAME" value="Console"/>
     <property name="env.MAVEN_HOME" value="C:\ProgramData\chocolatey\lib\maven\apache-maven-3.9.16"/>
-    <property name="surefire.real.class.path" value="C:\Users\ASUS\AppData\Local\Temp\surefire4099572934523397867\surefirebooter-20260829102218926_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\ASUS\AppData\Local\Temp\surefire3481493033478947640\surefirebooter-20260829123112436_3.jar"/>
     <property name="env.INTELLIJ IDEA" value="C:\Program Files\JetBrains\IntelliJ IDEA 2025.2.4\bin"/>
     <property name="env.WDIR" value="C:\"/>
     <property name="path.separator" value=";"/>
@@ -134,37 +135,37 @@
     <property name="env.TEMP" value="C:\Users\ASUS\AppData\Local\Temp"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="generateRealisticMetrics" classname="com.globaltrade.ejb.test.PerformanceDashboardTest" time="17.205">
+  <testcase name="generateRealisticMetrics" classname="com.globaltrade.ejb.test.PerformanceDashboardTest" time="11.583">
     <system-out><![CDATA[=== PERFORMANCE DASHBOARD DATA GENERATION COMPLETE ===
 Total Invocations: 1285
-Average Execution Time: 13.026459143968872ms
+Average Execution Time: 8.711284046692606ms
 === DASHBOARD READY FOR SCREENSHOT ===
 ]]></system-out>
   </testcase>
-  <testcase name="simulateLoadTesting" classname="com.globaltrade.ejb.test.PerformanceDashboardTest" time="92.666">
+  <testcase name="simulateLoadTesting" classname="com.globaltrade.ejb.test.PerformanceDashboardTest" time="85.69">
     <system-out><![CDATA[=== LOAD TESTING SIMULATION STARTED ===
 Light load (100 ops) completed
-Light Load - Avg Time: 23.29078014184397ms
+Light Load - Avg Time: 18.43971631205674ms
 Medium load (500 ops) completed
-Medium Load - Avg Time: 31.15683962264151ms
+Medium Load - Avg Time: 25.329009433962263ms
 Heavy load (1000 ops) completed
-Heavy Load - Avg Time: 40.388250883392224ms
+Heavy Load - Avg Time: 37.35335689045937ms
 === LOAD TESTING SIMULATION COMPLETE ===
 === DASHBOARD READY FOR LOAD TESTING SCREENSHOT ===
 ]]></system-out>
   </testcase>
-  <testcase name="generatePerformanceTrends" classname="com.globaltrade.ejb.test.PerformanceDashboardTest" time="8.656">
+  <testcase name="generatePerformanceTrends" classname="com.globaltrade.ejb.test.PerformanceDashboardTest" time="8.713">
     <system-out><![CDATA[=== PERFORMANCE TREND GENERATION STARTED ===
-Interval 1 - Avg Time: 14.727272727272727ms, Invocations: 33
-Interval 2 - Avg Time: 13.91304347826087ms, Invocations: 69
-Interval 3 - Avg Time: 14.166666666666666ms, Invocations: 108
-Interval 4 - Avg Time: 14.673333333333334ms, Invocations: 150
-Interval 5 - Avg Time: 15.056410256410256ms, Invocations: 195
-Interval 6 - Avg Time: 14.925925925925926ms, Invocations: 243
-Interval 7 - Avg Time: 15.15986394557823ms, Invocations: 294
-Interval 8 - Avg Time: 15.683908045977011ms, Invocations: 348
-Interval 9 - Avg Time: 15.975308641975309ms, Invocations: 405
-Interval 10 - Avg Time: 15.804301075268818ms, Invocations: 465
+Interval 1 - Avg Time: 17.12121212121212ms, Invocations: 33
+Interval 2 - Avg Time: 15.46376811594203ms, Invocations: 69
+Interval 3 - Avg Time: 15.592592592592593ms, Invocations: 108
+Interval 4 - Avg Time: 14.993333333333334ms, Invocations: 150
+Interval 5 - Avg Time: 15.317948717948719ms, Invocations: 195
+Interval 6 - Avg Time: 15.97119341563786ms, Invocations: 243
+Interval 7 - Avg Time: 16.132653061224488ms, Invocations: 294
+Interval 8 - Avg Time: 15.669540229885058ms, Invocations: 348
+Interval 9 - Avg Time: 15.77530864197531ms, Invocations: 405
+Interval 10 - Avg Time: 15.890322580645162ms, Invocations: 465
 === PERFORMANCE TREND GENERATION COMPLETE ===
 === DASHBOARD READY FOR TREND VISUALIZATION SCREENSHOT ===
 ]]></system-out>

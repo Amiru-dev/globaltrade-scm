@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.globaltrade.ejb.test.TransactionTest" time="0.068" tests="0" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.globaltrade.ejb.test.TransactionTest" time="0.058" tests="0" errors="0" skipped="0" failures="0">
   <properties>
     <property name="env.ONEDRIVE" value="C:\Users\ASUS\OneDrive"/>
     <property name="env.NUMBER_OF_PROCESSORS" value="16"/>
@@ -18,7 +18,7 @@
     <property name="env.OS" value="Windows_NT"/>
     <property name="env.EFC_11604_2775293581" value="1"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Microsoft\jdk-17.0.16.8-hotspot\bin"/>
-    <property name="sun.java.command" value="C:\Users\ASUS\AppData\Local\Temp\surefire4099572934523397867\surefirebooter-20260829102218926_3.jar C:\Users\ASUS\AppData\Local\Temp\surefire4099572934523397867 2026-08-29T10-22-14_089-jvmRun1 surefire-20260829102218926_1tmp surefire_0-20260829102218926_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\ASUS\AppData\Local\Temp\surefire3481493033478947640\surefirebooter-20260829123112436_3.jar C:\Users\ASUS\AppData\Local\Temp\surefire3481493033478947640 2026-08-29T12-31-06_439-jvmRun1 surefire-20260829123112436_1tmp surefire_0-20260829123112436_2tmp"/>
     <property name="env.SYSTEMROOT" value="C:\WINDOWS"/>
     <property name="jdk.debug" value="release"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
@@ -34,6 +34,7 @@
     <property name="env.PROMPT" value="$P$G"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="env.EFC_11604_344590478" value="1"/>
     <property name="env.RLSSVCPORT" value="22112"/>
     <property name="env.CHOCOLATEYINSTALL" value="C:\ProgramData\chocolatey"/>
     <property name="env.LOCALAPPDATA" value="C:\Users\ASUS\AppData\Local"/>
@@ -53,7 +54,7 @@
     <property name="file.encoding" value="Cp1252"/>
     <property name="env.DRIVERDATA" value="C:\Windows\System32\Drivers\DriverData"/>
     <property name="java.vendor.version" value="Microsoft-11926163"/>
-    <property name="env.TERM_SESSION_ID" value="86130ffd-1be3-4619-84a5-70b2a17fece6"/>
+    <property name="env.TERM_SESSION_ID" value="b7c80bb9-3875-494d-aa43-bce609d05622"/>
     <property name="env.COMPUTERNAME" value="DESKTOP-UO11V5R"/>
     <property name="env.HOMEPATH" value="\Users\ASUS"/>
     <property name="env.SYSTEMDRIVE" value="C:"/>
@@ -62,7 +63,7 @@
     <property name="env.JVMCONFIG" value="\.mvn\jvm.config"/>
     <property name="java.io.tmpdir" value="C:\Users\ASUS\AppData\Local\Temp\"/>
     <property name="env.PROGRAMFILES(X86)" value="C:\Program Files (x86)"/>
-    <property name="env.JETBRAINS_INTELLIJ_COMMAND_END_MARKER" value="QgkGHXdSJ1FHgvLFy5c16r1bsCD9dZQpmz0nrP04gJT174JUR0q2he3EzS4rRv8d"/>
+    <property name="env.JETBRAINS_INTELLIJ_COMMAND_END_MARKER" value="Wf8y3kXs6ajfcKoHuIp8Fh8jbjqRuutoNR9woTDZDZfRhkziNmX8NN1vWfcleOE5"/>
     <property name="java.version" value="17.0.16"/>
     <property name="env.PROCESSOR_LEVEL" value="25"/>
     <property name="env.HOMEDRIVE" value="C:"/>
@@ -106,7 +107,7 @@
     <property name="env.ALLUSERSPROFILE" value="C:\ProgramData"/>
     <property name="env.SESSIONNAME" value="Console"/>
     <property name="env.MAVEN_HOME" value="C:\ProgramData\chocolatey\lib\maven\apache-maven-3.9.16"/>
-    <property name="surefire.real.class.path" value="C:\Users\ASUS\AppData\Local\Temp\surefire4099572934523397867\surefirebooter-20260829102218926_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\ASUS\AppData\Local\Temp\surefire3481493033478947640\surefirebooter-20260829123112436_3.jar"/>
     <property name="env.INTELLIJ IDEA" value="C:\Program Files\JetBrains\IntelliJ IDEA 2025.2.4\bin"/>
     <property name="env.WDIR" value="C:\"/>
     <property name="path.separator" value=";"/>

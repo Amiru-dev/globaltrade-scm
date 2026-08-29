@@ -1,9 +1,9 @@
 -------------------------------------------------------------------------------
 Test set: com.globaltrade.ejb.test.PerformanceBenchmarkTest$PT002InterceptorChainBenchmark
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 1.916 s <<< FAILURE! -- in com.globaltrade.ejb.test.PerformanceBenchmarkTest$PT002InterceptorChainBenchmark
-com.globaltrade.ejb.test.PerformanceBenchmarkTest$PT002InterceptorChainBenchmark.pt002_InterceptorChainOverhead_Under2Percent -- Time elapsed: 1.909 s <<< FAILURE!
-org.opentest4j.AssertionFailedError: Interceptor overhead should be under 2.0%, was: 47.47272453924769% ==> expected: <true> but was: <false>
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 39.06 s <<< FAILURE! -- in com.globaltrade.ejb.test.PerformanceBenchmarkTest$PT002InterceptorChainBenchmark
+com.globaltrade.ejb.test.PerformanceBenchmarkTest$PT002InterceptorChainBenchmark.pt002_InterceptorChainOverhead_Under2Percent -- Time elapsed: 39.04 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Interceptor overhead should be under 2.0%, was: 2.308111001475914% ==> expected: <true> but was: <false>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
 	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
