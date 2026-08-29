@@ -1,5 +1,6 @@
 package com.globaltrade.common.dto;
 
+import com.globaltrade.common.entity.CarrierRoute;
 import com.globaltrade.common.entity.InventoryItem;
 import com.globaltrade.common.entity.Shipment;
 import com.globaltrade.common.entity.Vendor;
@@ -142,6 +143,27 @@ public class DTOConverter {
      * Converts a VendorDTO to Vendor entity.
      */
     public static Vendor toVendorEntity(VendorDTO dto) {
+        return dto.toEntity();
+    }
+
+    /**
+     * Converts a CarrierRoute entity to CarrierRouteDTO.
+     */
+    public static CarrierRouteDTO toCarrierRouteDTO(CarrierRoute entity) {
+        return CarrierRouteDTO.fromEntity(entity);
+    }
+
+    /**
+     * Converts a list of CarrierRoute entities to CarrierRouteDTOs.
+     */
+    public static List<CarrierRouteDTO> toCarrierRouteDTOList(List<CarrierRoute> entities) {
+        return convertToDTOList(entities, CarrierRouteDTO::fromEntity);
+    }
+
+    /**
+     * Converts a CarrierRouteDTO to CarrierRoute entity.
+     */
+    public static CarrierRoute toCarrierRouteEntity(CarrierRouteDTO dto) {
         return dto.toEntity();
     }
 

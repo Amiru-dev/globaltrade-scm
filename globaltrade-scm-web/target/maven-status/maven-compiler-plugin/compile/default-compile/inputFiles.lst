@@ -3,6 +3,7 @@ C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src\main\java\com\globaltrade\web\filter\RateLimitFilter.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src\main\java\com\globaltrade\web\filter\SecurityHeadersFilter.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src\main\java\com\globaltrade\web\rest\AuthResource.java
+C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src\main\java\com\globaltrade\web\rest\CarrierRouteResource.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src\main\java\com\globaltrade\web\rest\DashboardResource.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src\main\java\com\globaltrade\web\rest\exception\CarrierSystemExceptionMapper.java
 C:\Users\ASUS\Documents\BCD 2\New folder\globaltrade-scm\globaltrade-scm-web\src\main\java\com\globaltrade\web\rest\exception\CustomsComplianceExceptionMapper.java

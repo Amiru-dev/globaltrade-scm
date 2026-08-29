@@ -140,6 +140,25 @@ public class RouteOptimizationService {
         return route;
     }
 
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public CarrierRoute findRouteById(Long routeId) {
+        return em.find(CarrierRoute.class, routeId);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public CarrierRoute updateRoute(CarrierRoute route) {
+        return em.merge(route);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void updateRouteCost(Long routeId, BigDecimal newCost) {
+        CarrierRoute route = em.find(CarrierRoute.class, routeId);
+        if (route != null) {
+            route.setCostPerKg(newCost);
+            em.merge(route);
+        }
+    }
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateReliabilityScore(Long routeId, BigDecimal score) {
         CarrierRoute route = em.find(CarrierRoute.class, routeId);

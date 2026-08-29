@@ -120,6 +120,54 @@ When integration tests run successfully, you should see:
 - **testInterceptorChainExecution**: Validates interceptor chain execution on EJB methods
 - **testTransactionAttributeConfiguration**: Validates transaction attribute configuration
 
+### Timer Trigger Integration Tests
+- **RouteOptimizationTriggerTest**: Validates RouteOptimizationTimer trigger mechanism
+  - **testTimerTriggerMechanism**: Tests programmatic timer scheduling
+  - **testTimerDefaultDelay**: Tests timer with default delay configuration
+  - **testRouteServiceIntegration**: Tests RouteOptimizationService integration
+
+## RouteOptimizationTimer Trigger Mechanism
+
+### REST API Integration
+The RouteOptimizationTimer is now fully integrated with REST endpoints for automatic triggering:
+
+#### Automatic Triggering Endpoints
+- **POST /routes** - Creates new carrier route (triggers timer for route recalculation)
+- **PUT /routes/{id}** - Updates carrier route (triggers timer if cost changes)
+- **PUT /routes/{id}/cost** - Updates route cost specifically (triggers timer if cost changes)
+- **DELETE /routes/{id}** - Deactivates route (triggers timer for route availability update)
+
+#### Manual Triggering Endpoint
+- **POST /routes/optimize** - Manual trigger for immediate optimization
+  - Query parameter: `delay` (default: 5000ms)
+  - Example: `POST /routes/optimize?delay=3000`
+
+### Trigger Mechanism Testing
+
+#### Via REST API
+```bash
+# Trigger route optimization manually
+curl -X POST http://localhost:8080/globaltrade-scm-web/api/routes/optimize?delay=3000 \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Update route cost (auto-triggers optimization)
+curl -X PUT "http://localhost:8080/globaltrade-scm-web/api/routes/1/cost?cost=15.50" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+#### Via Integration Tests
+```bash
+# Run timer trigger integration test
+mvn clean test -Parquillian -Dtest=RouteOptimizationTriggerTest
+```
+
+### Architecture Benefits
+1. **Automatic Triggering**: Timer fires automatically when business data changes
+2. **Manual Control**: Provides manual trigger for testing and immediate optimization
+3. **Debouncing**: Built-in debouncing prevents excessive optimization
+4. **Security Maintained**: Uses existing role-based security (@RolesAllowed)
+5. **Consistent Design**: Follows existing REST resource patterns
+
 ## Troubleshooting
 
 ### Connection Refused

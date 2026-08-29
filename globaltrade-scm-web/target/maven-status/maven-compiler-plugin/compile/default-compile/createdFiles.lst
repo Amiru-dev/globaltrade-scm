@@ -10,6 +10,7 @@ com\globaltrade\web\rest\MetricsResource.class
 com\globaltrade\web\servlet\AuditLogServlet.class
 com\globaltrade\web\rest\exception\TransactionRollbackExceptionMapper.class
 com\globaltrade\web\security\JWTAuthenticationFilter.class
+com\globaltrade\web\rest\CarrierRouteResource.class
 com\globaltrade\web\security\GlobalTradeIdentityStore.class
 com\globaltrade\web\filter\SecurityHeadersFilter.class
 com\globaltrade\web\rest\DashboardResource.class
