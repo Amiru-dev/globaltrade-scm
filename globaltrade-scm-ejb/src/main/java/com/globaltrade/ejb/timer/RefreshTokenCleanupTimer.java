@@ -6,7 +6,7 @@ import jakarta.ejb.Startup;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -63,7 +63,7 @@ public class RefreshTokenCleanupTimer {
             // Delete expired tokens
             int expiredDeleted = em.createQuery(
                             "DELETE FROM RefreshToken t WHERE t.expiresAt < :now")
-                    .setParameter("now", Instant.now())
+                    .setParameter("now", LocalDateTime.now())
                     .executeUpdate();
 
             // Delete revoked tokens
@@ -91,7 +91,27 @@ public class RefreshTokenCleanupTimer {
      */
     public void manualCleanup() {
         LOGGER.log(Level.INFO, "Manual refresh token cleanup triggered");
-        purgeExpiredTokens();
+        try {
+            // Delete expired tokens
+            int expiredDeleted = em.createQuery(
+                            "DELETE FROM RefreshToken t WHERE t.expiresAt < :now")
+                    .setParameter("now", LocalDateTime.now())
+                    .executeUpdate();
+
+            // Delete revoked tokens
+            int revokedDeleted = em.createQuery(
+                            "DELETE FROM RefreshToken t WHERE t.revoked = true")
+                    .executeUpdate();
+
+            int totalDeleted = expiredDeleted + revokedDeleted;
+
+            LOGGER.log(Level.INFO,
+                    "Manual refresh token cleanup completed: {0} expired tokens purged, {1} revoked tokens purged, {2} total",
+                    new Object[]{expiredDeleted, revokedDeleted, totalDeleted});
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Manual refresh token cleanup failed", e);
+        }
     }
 
     /**
@@ -108,7 +128,7 @@ public class RefreshTokenCleanupTimer {
 
             Long expiredTokens = em.createQuery(
                             "SELECT COUNT(t) FROM RefreshToken t WHERE t.expiresAt < :now", Long.class)
-                    .setParameter("now", Instant.now())
+                    .setParameter("now", LocalDateTime.now())
                     .getSingleResult();
 
             Long revokedTokens = em.createQuery(
@@ -117,7 +137,7 @@ public class RefreshTokenCleanupTimer {
 
             Long activeTokens = em.createQuery(
                             "SELECT COUNT(t) FROM RefreshToken t WHERE t.revoked = false AND t.expiresAt >= :now", Long.class)
-                    .setParameter("now", Instant.now())
+                    .setParameter("now", LocalDateTime.now())
                     .getSingleResult();
 
             return String.format(
