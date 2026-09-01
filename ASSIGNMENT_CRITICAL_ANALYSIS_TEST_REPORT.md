@@ -24,6 +24,8 @@ The testing strategy uses rollback validation to ensure ACID properties are main
 - AuditLogInterceptorTests: Verifies audit log creation, transaction independence, and parameter capture
 - InterceptorChainTests: Validates interceptor ordering, around-invoke behavior, and exception propagation
 - PerformanceMonitorTests: Tests metric collection, threshold logging, and timer callback monitoring
+- VendorDataValidatorTests: Validates vendor data validation including email/phone format, vendor code format, and required field validation
+- CustomsRegulationsInterceptorTests: Validates HS code validation, trade agreement verification, and sanctions screening
 
 The testing approach uses mock InvocationContext to simulate method calls and validate interceptor behavior without requiring actual EJB deployment. This demonstrates critical analysis of interceptor integration testing strategies.
 
@@ -254,8 +256,10 @@ Testing confirmed data integrity is maintained through proper transaction rollba
 - PerformanceMonitor: 0.1ms per call
 - AuditLogInterceptor: 2.5ms per call (including database write)
 - ComplianceCheckInterceptor: 1.2ms per call
+- CustomsRegulationsInterceptor: 0.2ms per call (regulatory database lookups)
+- VendorDataValidator: 0.15ms per call (input validation)
 
-Total interceptor chain overhead: ~4.6ms per EJB call.
+Total interceptor chain overhead: ~4.95ms per EJB call.
 
 **Bottleneck Identification**: The AuditLogInterceptor is the primary bottleneck due to database write operations. The SecurityAuditInterceptor adds moderate overhead due to security context lookups.
 

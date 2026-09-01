@@ -3,6 +3,7 @@ package com.globaltrade.ejb.service;
 import com.globaltrade.common.entity.Vendor;
 import com.globaltrade.common.enums.ComplianceStatus;
 import com.globaltrade.common.exception.VendorValidationException;
+import com.globaltrade.ejb.interceptor.VendorDataValidator;
 
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -11,6 +12,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.annotation.Resource;
 import jakarta.ejb.SessionContext;
+import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -46,6 +48,7 @@ public class VendorManagementService {
      * vendor registration. Timeout can be configured via ejb-jar.xml if needed.</p>
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @Interceptors(VendorDataValidator.class)
     public Vendor registerVendor(Vendor vendor) throws VendorValidationException {
         // Check for duplicate vendor code
         List<Vendor> existing = em.createQuery(
@@ -69,6 +72,7 @@ public class VendorManagementService {
      * Updates vendor details.
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @Interceptors(VendorDataValidator.class)
     public Vendor updateVendor(Vendor vendor) throws VendorValidationException {
         Vendor existing = em.find(Vendor.class, vendor.getVendorId());
         if (existing == null) {
