@@ -546,11 +546,13 @@ globaltrade-scm/
 
 **JVM Configuration**:
 ```bash
+
 asadmin create-jvm-options -Xmx2g -Xms512m -XX:+UseG1GC
 ```
 
 **Connection Pool Configuration**:
 ```bash
+
 asadmin set resources.jdbc-connection-pool.GlobalTradePool.max-pool-size=100
 asadmin set resources.jdbc-connection-pool.GlobalTradePool.initial-pool-size=10
 ```
@@ -578,16 +580,17 @@ Edit `ejb-jar.xml` to adjust pool sizes for individual EJBs.
 - Session Timeout: 30 minutes
 - Session Fixation Prevention: New session on login
 - Concurrent Session Prevention: Single session per user
+- HttpOnly, Secure, and SameSite flags on cookies
 
 **Recommended Enhancements**:
 - Implement HTTPS
-- Set HttpOnly, Secure, and SameSite flags on cookies
+
 - Implement session binding with IP address
 
 ### Data Encryption
 
 **Current Configuration**:
-- Password hashing: SHA-256 with salt
+- Password hashing: BCrypt with work factor 12
 - Data at rest: Not encrypted
 - Data in transit: Not encrypted (HTTP)
 
@@ -628,10 +631,8 @@ Edit `ejb-jar.xml` to adjust pool sizes for individual EJBs.
 ### Support
 
 For additional support:
-- Check technical documentation: `TECHNICAL_DOCUMENTATION.md`
-- Review critical analysis report: `CRITICAL_ANALYSIS_REPORT.md`
-- Consult performance monitoring results: `PERFORMANCE_MONITORING_RESULTS.md`
-- Review security testing report: `SECURITY_TESTING_REPORT.md`
+- Check technical documentation: `TECHNICAL_DOCUMENTATION.pdf`
+- Review critical analysis report: `CRITICAL_ANALYSIS_AND_TEST_REPORT.pdf` 
 
 ## Development Guide
 
@@ -707,5 +708,5 @@ For questions or support regarding this implementation, please refer to the acco
 ---
 
 **Version**: 1.0
-**Last Updated**: 2026-08-21
+**Last Updated**: 2026-09-01
 **Documentation Version**: 1.0
