@@ -13,6 +13,7 @@ com\globaltrade\web\security\JWTAuthenticationFilter.class
 com\globaltrade\web\rest\CarrierRouteResource.class
 com\globaltrade\web\security\GlobalTradeIdentityStore.class
 com\globaltrade\web\filter\SecurityHeadersFilter.class
+com\globaltrade\web\filter\SessionSecurityFilter.class
 com\globaltrade\web\rest\DashboardResource.class
 com\globaltrade\web\servlet\DashboardServlet.class
 com\globaltrade\web\servlet\TransactionServlet.class

@@ -70,7 +70,20 @@
             <secure>true</secure>
         </cookie-config>
         <tracking-mode>COOKIE</tracking-mode>
+        <!-- Session cookie security: HttpOnly prevents XSS, Secure ensures HTTPS-only 
+             SameSite attribute is set via SessionSecurityFilter for CSRF protection -->
     </session-config>
+
+    <!-- ======================== Security Filters ======================== -->
+    <!-- Session Security Filter for SameSite cookie attribute -->
+    <filter>
+        <filter-name>SessionSecurityFilter</filter-name>
+        <filter-class>com.globaltrade.web.filter.SessionSecurityFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SessionSecurityFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
     <!-- ======================== JAX-RS Exception Mappers ======================== -->
     <!-- Exception mappers are automatically discovered via @Provider annotation -->

@@ -36,9 +36,6 @@
         <interceptor>
             <interceptor-class>com.globaltrade.ejb.interceptor.ComplianceCheckInterceptor</interceptor-class>
         </interceptor>
-        <interceptor>
-            <interceptor-class>com.globaltrade.ejb.interceptor.VendorDataValidator</interceptor-class>
-        </interceptor>
     </interceptors>
 
     <assembly-descriptor>
