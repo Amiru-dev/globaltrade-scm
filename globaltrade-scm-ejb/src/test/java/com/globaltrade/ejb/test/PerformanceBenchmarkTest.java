@@ -112,10 +112,11 @@ class PerformanceBenchmarkTest {
             System.out.println("Warm-up iterations: " + WARMUP_ITERATIONS);
             System.out.println();
 
-            // Warm-up
+            // Warm-up both code paths so JIT compiles them equally
             System.out.println("Warming up...");
             for (int i = 0; i < WARMUP_ITERATIONS; i++) {
                 simulateBusinessMethodWithoutInterceptors();
+                simulateBusinessMethodWithInterceptorChain();
             }
             System.out.println("Warm-up complete.");
             System.out.println();
