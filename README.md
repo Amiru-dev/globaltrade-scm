@@ -536,11 +536,18 @@ globaltrade-scm/
 
 ### Key Performance Metrics
 
-- **Response Time**: Average 48ms, 95th percentile 82ms
-- **Throughput**: 1,470 operations/second
-- **Error Rate**: 0.05%
-- **Transaction Success Rate**: 99.92%
-- **Timer Execution Success Rate**: 100%
+**PT002 Interceptor Chain Benchmark Results** (tested with Java 17.0.16, 10,000 iterations):
+
+- **Baseline (without interceptors)**: Average 1.82ms, 95th percentile 2.23ms
+- **With interceptor chain**: Average 1.84ms, 95th percentile 2.34ms
+- **Interceptor overhead**: Average 0.03ms, Overhead percentage 1.38%, 95th percentile overhead 0.11ms
+- **Target**: < 2.00% overhead
+- **Result**: PASS
+
+**Additional performance monitoring**:
+- **PerformanceMonitor Interceptor**: Provides real-time method-level performance monitoring
+- **Payara Monitoring Console**: Access at http://localhost:4848 for server-level metrics
+- **Performance Dashboard**: Access at /performance-dashboard for application-level metrics
 
 ### Performance Tuning
 
