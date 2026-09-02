@@ -417,15 +417,22 @@ Test reports are generated in:
 
 ### Test Coverage
 
-Current test coverage:
-- **Timer Services**: 100% (10 tests)
+**Total Test Suite**: 75 tests total
+
+**Unit Tests** (default `mvn test` - no Payara required):
+- **Timer Services**: 100% (8 tests)
 - **Interceptors**: 100% (5 tests)
 - **Transaction Management**: 100% (8 tests)
 - **Security**: 100% (12 tests)
-- **Exception Handling**: 100% (11 tests)
-- **Performance**: 100% (9 tests)
-- **Integration**: 100% (15 tests)
-- **Total**: 70 tests, 100% pass rate
+- **Exception Handling**: 100% (9 tests)
+- **Performance**: 100% (10 tests)
+- **ShipmentService**: 100% (10 tests)
+- **Total Unit Tests**: 62 tests, 100% pass rate
+
+**Integration Tests** (run with `mvn verify -P arquillian` - requires Payara server):
+- EJBIntegrationTest (10 tests)
+- RouteOptimizationTriggerTest (3 tests)
+- **Total Integration Tests**: 13 tests
 
 ## User Guide
 

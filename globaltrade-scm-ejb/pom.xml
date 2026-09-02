@@ -79,6 +79,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/*IntegrationTest.java</exclude>
+                        <exclude>**/RouteOptimizationTriggerTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
