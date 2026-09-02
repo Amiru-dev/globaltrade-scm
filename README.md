@@ -77,9 +77,9 @@ GlobalTrade Logistics Corporation manages supply chains for multinational corpor
 - **Session Management**: Secure session management with timeout and fixation prevention
 
 ### Exception Handling
-- **Custom Exception Hierarchy**: Supply chain-specific exceptions
+- **Custom Exception Hierarchy**: Supply chain-specific exceptions under SupplyChainException with @ApplicationException(rollback=false)
 - **Exception Classification**: Application exceptions (rollback=false) vs system exceptions (rollback=true)
-- **Recovery Analysis**: Identified retry/circuit-breaker patterns for transient failures (not yet implemented)
+- **Recovery Service**: LogisticsRecoveryService implements carrier outage, customs failure, and weather disruption recovery strategies
 - **Comprehensive Logging**: Exception logging with context for troubleshooting
 
 ## Technology Stack
