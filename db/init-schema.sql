@@ -329,19 +329,19 @@ VALUES ('RT-001', 'Maersk Line', 'Shanghai', 'New York', 28, 2.50, 50000.00, 0.9
        ('RT-007', 'Maersk Line', 'Hamburg', 'New York', 12, 2.20, 45000.00, 0.95);
 
 -- Users (passwords hashed using BCrypt with work factor 12)
--- Default password for all users: "admin123" (CHANGE IN PRODUCTION)
--- The hashes below are BCrypt hashes of "admin123" generated with work factor 12
+-- Individual passwords for each user (CHANGE IN PRODUCTION)
+-- The hashes below are BCrypt hashes generated with work factor 12
 -- vendor_code is assigned for vendor representatives to enforce data isolation
 INSERT INTO users (username, password_hash, email, full_name, vendor_code, active)
-VALUES ('admin', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYxW7qFGK1y', 'admin@globaltrade.com',
+VALUES ('admin', '$2a$12$g5bC58ctXfzCC6S1QH.qrOngE3uEsBHfoGPghn7PvV53nFnMybOaW', 'admin@globaltrade.com',
         'System Administrator', NULL, TRUE),
-       ('logistics', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYxW7qFGK1y', 'logistics@globaltrade.com',
+       ('logistics', '$2a$12$sbf8ZGNcirx5oSeMxbsFQegsfCSM8G6PmRcR/ebYEpozOs6jjoWGC', 'logistics@globaltrade.com',
         'Logistics Coordinator', NULL, TRUE),
-       ('warehouse', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYxW7qFGK1y', 'warehouse@globaltrade.com',
+       ('warehouse', '$2a$12$FXpmMHUXmKLrOavFPJE0Y.Sgfb3K9GiqtCZeoHgtJN4Znfu/OwSZe', 'warehouse@globaltrade.com',
         'Warehouse Manager', NULL, TRUE),
-       ('customs', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYxW7qFGK1y', 'customs@globaltrade.com',
+       ('customs', '$2a$12$QRr3.kC5LJb26/0xWE6TYeCohHolbkRgRKR1Z2hB1EmDVpPbFeTlO', 'customs@globaltrade.com',
         'Customs Agent', NULL, TRUE),
-       ('vendor', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYxW7qFGK1y', 'vendor@globaltrade.com',
+       ('vendor', '$2a$12$ebfCLqzCQuHxFTxDHt/fbO8g3.5XXgD4f1xPGYjTg67fx6BJ6pdnS', 'vendor@globaltrade.com',
         'Vendor Representative', 'VND-001', TRUE);
 
 -- User Roles (will be updated by DatabaseSeeder on startup)

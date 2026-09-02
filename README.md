@@ -56,12 +56,12 @@ GlobalTrade Logistics Corporation manages supply chains for multinational corpor
 - **RouteOptimizationTimer**: On-demand route optimization calculations
 
 ### Interceptor Framework
-- **AuditLogInterceptor**: Comprehensive audit trail for all business operations
-- **PerformanceMonitor**: Execution time monitoring and performance metrics
-- **CustomsRegulationsInterceptor**: Trade compliance validation
-- **SecurityAuditInterceptor**: Security event logging and monitoring
-- **VendorDataValidator**: Vendor data integrity validation
-- **ComplianceCheckInterceptor**: Regulatory compliance checking
+- **AuditLogInterceptor**: Comprehensive audit trail for all business operations (class-level via XML)
+- **PerformanceMonitor**: Execution time monitoring and performance metrics (default interceptor via XML)
+- **CustomsRegulationsInterceptor**: Trade compliance validation (CDI annotation binding)
+- **SecurityAuditInterceptor**: Security event logging and monitoring (class-level via XML)
+- **VendorDataValidator**: Vendor data integrity validation (method-level via @Interceptors)
+- **ComplianceCheckInterceptor**: Regulatory compliance checking (class-level via XML)
 
 ### Transaction Management
 - **Container-Managed Transactions**: Standard transactions with appropriate attributes
@@ -78,8 +78,8 @@ GlobalTrade Logistics Corporation manages supply chains for multinational corpor
 
 ### Exception Handling
 - **Custom Exception Hierarchy**: Supply chain-specific exceptions
-- **Recovery Mechanisms**: Retry logic with exponential backoff
-- **Circuit Breaker Pattern**: External system failure handling
+- **Exception Classification**: Application exceptions (rollback=false) vs system exceptions (rollback=true)
+- **Recovery Analysis**: Identified retry/circuit-breaker patterns for transient failures (not yet implemented)
 - **Comprehensive Logging**: Exception logging with context for troubleshooting
 
 ## Technology Stack
@@ -93,14 +93,14 @@ GlobalTrade Logistics Corporation manages supply chains for multinational corpor
 
 ### Development Tools
 - **Testing Framework**: JUnit 5.10.2, Mockito 5.11.0
-- **IDE Support**: IntelliJ IDEA, Eclipse, NetBeans
+- **IDE Support**: IntelliJ IDEA
 - **Version Control**: Git
 - **Documentation**: JavaDoc, Markdown
 
 ### Deployment Technologies
 - **Packaging**: Maven multi-module with EAR deployment
-- **Clustering**: Payara Hazelcast clustering
-- **Monitoring**: Payara monitoring tools, JMX
+- **Clustering**: Clustering analysis and timer persistence foundation (single-node deployment with clustering-ready architecture)
+- **Monitoring**: Payara monitoring tools, JMeter, OWASP ZAP
 - **Logging**: Java Util Logging (JUL)
 
 ## Prerequisites
@@ -124,10 +124,10 @@ GlobalTrade Logistics Corporation manages supply chains for multinational corpor
 
 ## Installation Guide
 
-### Step 1: Clone the Repository
+### Step 1: Go to the Repository
 
 ```bash
-git clone https://github.com/Amiru-dev/globaltrade-scm.git
+
 cd globaltrade-scm
 ```
 
@@ -141,6 +141,7 @@ cd globaltrade-scm
 
 **Linux**:
 ```bash
+
 sudo apt update
 sudo apt install openjdk-17-jdk
 export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
@@ -149,6 +150,7 @@ export PATH=$PATH:$JAVA_HOME/bin
 
 **macOS**:
 ```bash
+
 brew install openjdk@17
 export JAVA_HOME=/usr/local/opt/openjdk@17
 export PATH=$PATH:$JAVA_HOME/bin
@@ -164,11 +166,13 @@ export PATH=$PATH:$JAVA_HOME/bin
 
 **Linux**:
 ```bash
+
 sudo apt install maven
 ```
 
 **macOS**:
 ```bash
+
 brew install maven
 ```
 
@@ -182,12 +186,14 @@ brew install maven
 
 **Linux**:
 ```bash
+
 sudo apt install mysql-server
 sudo mysql_secure_installation
 ```
 
 **macOS**:
 ```bash
+
 brew install mysql
 brew services start mysql
 ```
@@ -207,6 +213,7 @@ set PATH=%PATH%;%PAYARA_HOME%\bin
 
 **Linux/macOS**:
 ```bash
+
 export PAYARA_HOME=/opt/payara6
 export PATH=$PATH:$PAYARA_HOME/bin
 ```
@@ -216,9 +223,9 @@ export PATH=$PATH:$PAYARA_HOME/bin
 ### Step 1: Create Database
 
 ```sql
-CREATE DATABASE globaltrade CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE globaltrade_scm CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER 'globaltrade'@'localhost' IDENTIFIED BY 'GlobalTrade@2026';
-GRANT ALL PRIVILEGES ON globaltrade.* TO 'globaltrade'@'localhost';
+GRANT ALL PRIVILEGES ON globaltrade_scm.* TO 'globaltrade'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
@@ -227,24 +234,29 @@ FLUSH PRIVILEGES;
 Run the database initialization script:
 
 ```bash
-mysql -u globaltrade -p globaltrade < db/init-schema.sql
+
+mysql -u globaltrade -p globaltrade_scm < db/init-schema.sql
 ```
 
 ### Step 3: Verify Database Setup
 
 ```sql
-USE globaltrade;
+USE globaltrade_scm;
 SHOW TABLES;
 ```
 
 Expected tables:
-- users
-- shipments
-- inventory_items
-- vendors
-- purchase_orders
-- customs_declarations
 - audit_logs
+- carrier_routes
+- customs_declarations
+- inventory_items
+- purchase_orders
+- refresh_tokens
+- shipments
+- users
+- user_roles
+- vendors
+- warehouses
 
 ## Application Server Configuration
 
@@ -258,6 +270,7 @@ asadmin start-domain
 
 **Linux/macOS**:
 ```bash
+
 cd $PAYARA_HOME/glassfish/bin
 ./asadmin start-domain
 ```
@@ -265,10 +278,11 @@ cd $PAYARA_HOME/glassfish/bin
 ### Step 2: Configure JDBC Connection Pool
 
 ```bash
+
 asadmin create-jdbc-connection-pool \
   --datasourceclassname com.mysql.cj.jdbc.MysqlDataSource \
   --restype javax.sql.ConnectionPoolDataSource \
-  --property portNumber=3306:databaseName=globaltrade:serverName=localhost:user=globaltrade:password=GlobalTrade@2026 \
+  --property portNumber=3306:databaseName=globaltrade_scm:serverName=localhost:user=globaltrade:password=GlobalTrade@2026 \
   GlobalTradePool
 
 asadmin create-jdbc-resource \
@@ -279,9 +293,10 @@ asadmin create-jdbc-resource \
 ### Step 3: Configure JAAS Realm
 
 ```bash
+
 asadmin create-auth-realm \
   --classname com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm \
-  --property jaas-context=jdbcRealm:datasource-jndi=jdbc/GlobalTradeDS:user-table=users:user-name-column=username:password-column=password:group-table=user_roles:group-name-column=role:digest-algorithm=SHA-256 \
+  --property jaas-context=jdbcRealm:datasource-jndi=jdbc/GlobalTradeDS:user-table=users:user-name-column=username:password-column=password:group-table=user_roles:group-name-column=role:digest-algorithm=bcrypt \
   globaltrade-realm
 ```
 
@@ -317,6 +332,7 @@ Edit `glassfish-web.xml` in the web module:
 ### Step 1: Build the Application
 
 ```bash
+
 cd globaltrade-scm
 mvn clean install
 ```
@@ -333,6 +349,7 @@ This will:
 **Option 1: Using asadmin command line**
 
 ```bash
+
 cd $PAYARA_HOME/glassfish/bin
 ./asadmin deploy --force /path/to/globaltrade-scm-ear/target/globaltrade-scm-ear-1.0.ear
 ```
@@ -348,6 +365,7 @@ cd $PAYARA_HOME/glassfish/bin
 ### Step 3: Verify Deployment
 
 ```bash
+
 asadmin list-applications
 ```
 
@@ -360,14 +378,14 @@ globaltrade-scm-ear-1.0 <ejb, web>
 
 - **Application URL**: http://localhost:8080/globaltrade/
 - **Admin Console**: http://localhost:4848
-- **Default Username**: admin
-- **Default Password**: admin123
+- **Note**: Default users must be created in the database via the init-schema.sql script
 
 ## Testing Guide
 
 ### Run Unit Tests
 
 ```bash
+
 cd globaltrade-scm
 mvn test
 ```
@@ -375,17 +393,19 @@ mvn test
 ### Run Specific Test Classes
 
 ```bash
-mvn test -Dtest=TimerServiceTest
-mvn test -Dtest=InterceptorTest
-mvn test -Dtest=TransactionTest
-mvn test -Dtest=SecurityTest
-mvn test -Dtest=ExceptionHandlingTest
-mvn test -Dtest=PerformanceBenchmarkTest
+
+  mvn test -Dtest=TimerServiceTest
+  mvn test -Dtest=InterceptorTest
+  mvn test -Dtest=TransactionTest
+  mvn test -Dtest=SecurityTest
+  mvn test -Dtest=ExceptionHandlingTest
+  mvn test -Dtest=PerformanceBenchmarkTest
 ```
 
 ### Run Integration Tests
 
 ```bash
+
 mvn verify
 ```
 
@@ -398,13 +418,14 @@ Test reports are generated in:
 ### Test Coverage
 
 Current test coverage:
-- **Timer Services**: 100% (17 tests)
-- **Interceptors**: 100% (22 tests)
+- **Timer Services**: 100% (10 tests)
+- **Interceptors**: 100% (5 tests)
 - **Transaction Management**: 100% (8 tests)
-- **Security**: 100% (14 tests)
+- **Security**: 100% (12 tests)
 - **Exception Handling**: 100% (11 tests)
-- **Performance**: 100% (6 tests)
-- **Total**: 62 tests, 100% pass rate
+- **Performance**: 100% (9 tests)
+- **Integration**: 100% (15 tests)
+- **Total**: 70 tests, 100% pass rate
 
 ## User Guide
 
@@ -417,6 +438,8 @@ Current test coverage:
 | warehouse | warehouse123 | WAREHOUSE_MANAGER | Inventory and warehouse operations |
 | customs | customs123 | CUSTOMS_AGENT | Customs documentation and compliance |
 | vendor | vendor123 | VENDOR_REPRESENTATIVE | Limited vendor data access |
+
+**Note**: All passwords are BCrypt hashed with work factor 12. CHANGE IN PRODUCTION.
 
 ### Accessing the Application
 
@@ -540,9 +563,8 @@ Edit `ejb-jar.xml` to adjust pool sizes for individual EJBs.
 ### Password Security
 
 **Current Configuration**:
-- Algorithm: SHA-256
-- Salt: 16-byte random salt per password
-- Iterations: 10,000
+- Algorithm: BCrypt with work factor 12
+- Adaptive work factor for GPU cracking resistance
 - Account Lockout: 5 failed attempts, 30-minute unlock
 
 **Recommended Enhancements**:
