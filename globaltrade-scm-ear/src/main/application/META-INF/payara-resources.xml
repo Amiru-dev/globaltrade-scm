@@ -8,8 +8,8 @@
                           datasource-classname="com.mysql.cj.jdbc.MysqlDataSource"
                           res-type="javax.sql.DataSource">
         <property name="Url" value="jdbc:mysql://localhost:3306/globaltrade_scm"/>
-        <property name="User" value="globaltrade_user"/>
-        <property name="Password" value="secure_password"/>
+        <property name="User" value="globaltrade"/>
+        <property name="Password" value="GlobalTrade@2026"/>
         <property name="DatabaseName" value="globaltrade_scm"/>
         <property name="ServerName" value="localhost"/>
         <property name="PortNumber" value="3306"/>
