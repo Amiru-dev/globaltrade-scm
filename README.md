@@ -406,8 +406,10 @@ mvn test
 
 ```bash
 
-mvn verify
+mvn clean verify -P arquillian
 ```
+
+Requires Payara Server and the configured MySQL datasource.
 
 ### Generate Test Reports
 
