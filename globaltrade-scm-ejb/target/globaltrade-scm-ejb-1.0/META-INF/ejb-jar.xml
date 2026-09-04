@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    EJB Deployment Descriptor for GlobalTrade SCM System.
+
+    Critical Analysis — XML vs Annotation-Based Configuration:
+    - This descriptor supplements annotation-based configuration.
+    - XML configuration takes precedence over annotations, allowing
+      deployment-time overrides without recompilation.
+    - Default interceptors are configured here (cannot be done via annotations).
+    - Security role references bridge application roles to container roles.
+-->
+<ejb-jar xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                             https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_0.xsd"
+         version="4.0">
+
+    <description>
+        Enterprise JavaBeans module for the GlobalTrade Supply Chain Management System.
+        Contains session beans, timer services, interceptors, and security components.
+    </description>
+    <display-name>GlobalTrade SCM - EJB Module</display-name>
+
+    <!-- ======================== Default Interceptors ======================== -->
+    <!-- Applied to ALL EJBs in this module — demonstrates XML-based interceptor binding -->
+    <interceptors>
+        <interceptor>
+            <interceptor-class>com.globaltrade.ejb.interceptor.PerformanceMonitor</interceptor-class>
+        </interceptor>
+        <interceptor>
+            <interceptor-class>com.globaltrade.ejb.interceptor.AuditLogInterceptor</interceptor-class>
+        </interceptor>
+        <interceptor>
+            <interceptor-class>com.globaltrade.ejb.interceptor.SecurityAuditInterceptor</interceptor-class>
+        </interceptor>
+        <interceptor>
+            <interceptor-class>com.globaltrade.ejb.interceptor.ComplianceCheckInterceptor</interceptor-class>
+        </interceptor>
+    </interceptors>
+
+    <assembly-descriptor>
+
+        <!-- Security roles used across the application -->
+        <security-role>
+            <description>Full system access — user management, configuration, emergency overrides</description>
+            <role-name>SYSTEM_ADMIN</role-name>
+        </security-role>
+        <security-role>
+            <description>Shipment management, inventory operations, route optimization</description>
+            <role-name>LOGISTICS_COORDINATOR</role-name>
+        </security-role>
+        <security-role>
+            <description>Inventory management, warehouse operations</description>
+            <role-name>WAREHOUSE_MANAGER</role-name>
+        </security-role>
+        <security-role>
+            <description>Customs declarations, compliance reports</description>
+            <role-name>CUSTOMS_AGENT</role-name>
+        </security-role>
+        <security-role>
+            <description>View own orders, update delivery status</description>
+            <role-name>VENDOR_REPRESENTATIVE</role-name>
+        </security-role>
+
+        <!-- Default interceptor chain ordering (Priority: Security → Performance → Audit) -->
+        <interceptor-binding>
+            <ejb-name>*</ejb-name>
+            <interceptor-class>com.globaltrade.ejb.interceptor.PerformanceMonitor</interceptor-class>
+        </interceptor-binding>
+
+        <!-- Audit interceptor on service beans -->
+        <interceptor-binding>
+            <ejb-name>ShipmentService</ejb-name>
+            <interceptor-class>com.globaltrade.ejb.interceptor.AuditLogInterceptor</interceptor-class>
+        </interceptor-binding>
+        <interceptor-binding>
+            <ejb-name>InventoryService</ejb-name>
+            <interceptor-class>com.globaltrade.ejb.interceptor.AuditLogInterceptor</interceptor-class>
+        </interceptor-binding>
+        <interceptor-binding>
+            <ejb-name>VendorManagementService</ejb-name>
+            <interceptor-class>com.globaltrade.ejb.interceptor.AuditLogInterceptor</interceptor-class>
+            <interceptor-class>com.globaltrade.ejb.interceptor.SecurityAuditInterceptor</interceptor-class>
+        </interceptor-binding>
+        <interceptor-binding>
+            <ejb-name>CustomsService</ejb-name>
+            <interceptor-class>com.globaltrade.ejb.interceptor.AuditLogInterceptor</interceptor-class>
+            <interceptor-class>com.globaltrade.ejb.interceptor.ComplianceCheckInterceptor</interceptor-class>
+        </interceptor-binding>
+        <interceptor-binding>
+            <ejb-name>PurchaseOrderService</ejb-name>
+            <interceptor-class>com.globaltrade.ejb.interceptor.AuditLogInterceptor</interceptor-class>
+        </interceptor-binding>
+
+    </assembly-descriptor>
+</ejb-jar>
