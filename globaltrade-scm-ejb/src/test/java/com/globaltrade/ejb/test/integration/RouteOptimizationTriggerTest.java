@@ -1,5 +1,6 @@
 package com.globaltrade.ejb.test.integration;
 
+import com.globaltrade.common.entity.CarrierRoute;
 import com.globaltrade.ejb.service.RouteOptimizationService;
 import com.globaltrade.ejb.timer.RouteOptimizationTimer;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -11,6 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import jakarta.ejb.EJB;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -19,6 +23,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * <p>This test validates that the RouteOptimizationTimer can be triggered
  * via the service layer, completing the integration gap identified in the
  * critical analysis.</p>
+ *
+ * <p><strong>Test Data Strategy:</strong> Each test creates its own carrier
+ * route data through the service layer, then asserts against the result.
+ * This ensures the timer scheduling and service query methods genuinely
+ * work end-to-end against the real database and container.</p>
  *
  * <p><strong>Prerequisites:</strong></p>
  * <ul>
@@ -48,51 +57,75 @@ public class RouteOptimizationTriggerTest {
 
     /**
      * Test validates that RouteOptimizationTimer can be scheduled programmatically.
+     * Calls scheduleOptimization() and verifies the TimerService accepted the request
+     * without throwing. A failure here means TimerService injection or timer creation
+     * is broken in the container.
      */
     @Test
     public void testTimerTriggerMechanism() {
         assertNotNull(routeTimer, "RouteOptimizationTimer should be injected");
         assertNotNull(routeService, "RouteOptimizationService should be injected");
-        
-        // Test that the timer can be scheduled
+
+        // Schedule a timer — this exercises TimerService.createSingleActionTimer()
+        // inside the real container. If TimerService is not injected or the container
+        // rejects the timer config, this call will throw.
         try {
-            routeTimer.scheduleOptimization(1000L); // Short delay for testing
-            assertTrue(true, "RouteOptimizationTimer scheduled successfully");
+            routeTimer.scheduleOptimization(60000L); // Long delay to avoid immediate firing
         } catch (Exception e) {
-            // Timer may fail due to lack of database data, but trigger mechanism works
-            assertTrue(true, "RouteOptimizationTimer trigger mechanism is functional");
+            fail("Timer scheduling failed — TimerService or container configuration "
+                    + "is broken: " + e.getMessage(), e);
         }
     }
 
     /**
      * Test validates that timer can be triggered with default delay.
+     * Exercises the no-arg overload which delegates to scheduleOptimization(5000).
      */
     @Test
     public void testTimerDefaultDelay() {
         assertNotNull(routeTimer, "RouteOptimizationTimer should be injected");
-        
+
         try {
-            routeTimer.scheduleOptimization(); // Default 5 second delay
-            assertTrue(true, "RouteOptimizationTimer scheduled with default delay");
+            routeTimer.scheduleOptimization(); // Default 5-second delay
         } catch (Exception e) {
-            assertTrue(true, "RouteOptimizationTimer default delay mechanism is functional");
+            fail("Timer scheduling with default delay failed — TimerService or container "
+                    + "configuration is broken: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Test validates that RouteOptimizationService is accessible for route management.
+     * Test validates that RouteOptimizationService is accessible and can
+     * perform actual database operations. Creates a test route, then queries
+     * all routes to verify the persist → query round-trip.
      */
     @Test
     public void testRouteServiceIntegration() {
         assertNotNull(routeService, "RouteOptimizationService should be injected");
-        
-        try {
-            // Test that service methods are accessible
-            int routeCount = routeService.findAllRoutes().size();
-            assertTrue(routeCount >= 0, "Should be able to query routes");
-        } catch (Exception e) {
-            // Database may not have data, but service is accessible
-            assertTrue(true, "RouteOptimizationService is accessible and functional");
-        }
+
+        // Create known test data
+        CarrierRoute testRoute = new CarrierRoute(
+                "IT-RT-" + System.nanoTime(), "TestCarrier",
+                "TestOrigin", "TestDestination", 5,
+                new BigDecimal("2.50"));
+        testRoute.setReliabilityScore(new BigDecimal("0.95"));
+        testRoute.setMaxWeightKg(new BigDecimal("10000.00"));
+
+        CarrierRoute persisted = routeService.addRoute(testRoute);
+        assertNotNull(persisted, "Persisted route should not be null");
+        assertNotNull(persisted.getRouteId(), "Persisted route should have a generated ID");
+
+        // Query all routes — should include our test data
+        List<CarrierRoute> allRoutes = routeService.findAllRoutes();
+        assertNotNull(allRoutes, "Should return route list from database");
+        assertFalse(allRoutes.isEmpty(),
+                "All routes should include the test route we just inserted");
+
+        // Verify the specific route can be retrieved by ID
+        CarrierRoute retrieved = routeService.findRouteById(persisted.getRouteId());
+        assertNotNull(retrieved, "Should retrieve the test route by ID");
+        assertEquals("TestCarrier", retrieved.getCarrier(),
+                "Retrieved route carrier should match the test data");
+        assertEquals(5, retrieved.getTransitDays(),
+                "Retrieved route transit days should match the test data");
     }
 }
