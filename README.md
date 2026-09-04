@@ -50,9 +50,9 @@ GlobalTrade Logistics Corporation manages supply chains for multinational corpor
 
 ### Timer Services
 - **ShipmentTrackingTimer**: Automated shipment status monitoring every 15 minutes
-- **InventoryMonitorTimer**: Daily inventory level monitoring with automated alerts
-- **VendorPerformanceTimer**: Weekly vendor performance evaluation and scoring
-- **CustomsDeadlineTimer**: Hourly customs documentation deadline tracking
+- **InventoryMonitorTimer**: Hourly inventory level monitoring with automated alerts
+- **VendorPerformanceTimer**: Daily vendor performance evaluation and scoring at 02:00
+- **CustomsDeadlineTimer**: Dynamic entity-specific calendar timers based on deadlines
 - **RouteOptimizationTimer**: On-demand route optimization calculations
 
 ### Interceptor Framework
