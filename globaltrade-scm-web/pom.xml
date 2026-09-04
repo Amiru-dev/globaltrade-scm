@@ -21,10 +21,14 @@
     </description>
 
     <dependencies>
-        <!-- Internal: Common module (entities, DTOs, exceptions) -->
+        <!-- Internal: Common module (entities, DTOs, exceptions)
+             Scope 'provided' — at runtime the WAR resolves these classes from
+             the EAR-level lib/globaltrade-scm-common.jar via the EAR classloader,
+             avoiding a duplicate copy in WEB-INF/lib/. -->
         <dependency>
             <groupId>com.globaltrade</groupId>
             <artifactId>globaltrade-scm-common</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Internal: EJB module (session beans, services) -->
