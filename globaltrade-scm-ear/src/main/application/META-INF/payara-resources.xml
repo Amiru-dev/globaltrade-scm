@@ -13,7 +13,7 @@
         <property name="DatabaseName" value="globaltrade_scm"/>
         <property name="ServerName" value="localhost"/>
         <property name="PortNumber" value="3306"/>
-        <property name="useSSL" value="false"/> <!-- FIXED: useSSL instead of SSL -->
+        <property name="useSSL" value="false"/>
     </jdbc-connection-pool>
 
     <jdbc-resource enabled="true"
