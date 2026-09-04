@@ -16,6 +16,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import com.globaltrade.ejb.service.RouteOptimizationService;
 
 import jakarta.ejb.EJB;
 
@@ -57,6 +58,8 @@ public class EJBIntegrationTest {
                 .addClass(CustomsService.class)
                 .addClass(SecurityService.class)
                 .addClass(PerformanceMonitor.class)
+                .addClass(TestSecurityFacade.class)
+                .addClass(RouteOptimizationService.class)
                 .addAsWebInfResource("META-INF/persistence.xml", "classes/META-INF/persistence.xml")
                 .addAsWebInfResource("META-INF/beans.xml", "classes/META-INF/beans.xml");
     }
@@ -73,6 +76,9 @@ public class EJBIntegrationTest {
     @EJB
     private SecurityService securityService;
 
+    @EJB
+    private TestSecurityFacade testFacade;
+
     /**
      * Test validates EJB deployment and actual inventory query execution.
      * Creates a test inventory item, then queries by warehouse to verify
@@ -85,15 +91,15 @@ public class EJBIntegrationTest {
         // Create known test data
         InventoryItem testItem = new InventoryItem(
                 "IT-SKU-" + System.nanoTime(), "Integration Test Item",
-                9999L, 100, 10);
-        InventoryItem persisted = inventoryService.addInventoryItem(testItem);
+                1L, 100, 10);
+        InventoryItem persisted = testFacade.addInventoryItem(testItem);
         assertNotNull(persisted, "Persisted item should not be null");
         assertNotNull(persisted.getItemId(), "Persisted item should have a generated ID");
 
         // Query back and verify
-        List<InventoryItem> items = inventoryService.findByWarehouse(9999L);
+        List<InventoryItem> items = inventoryService.findByWarehouse(1L);
         assertNotNull(items, "Should return inventory list from database");
-        assertFalse(items.isEmpty(), "Warehouse 9999 should contain the test item we just inserted");
+        assertFalse(items.isEmpty(), "Warehouse 1 should contain the test item we just inserted");
     }
 
     /**
@@ -112,7 +118,7 @@ public class EJBIntegrationTest {
         testShipment.setWeightKg(new BigDecimal("50.00"));
         testShipment.setDeclaredValue(new BigDecimal("1000.00"));
         testShipment.setCurrency("USD");
-        Shipment persisted = shipmentService.createShipment(testShipment);
+        Shipment persisted = testFacade.createShipment(testShipment);
         assertNotNull(persisted, "Persisted shipment should not be null");
         assertNotNull(persisted.getShipmentId(), "Persisted shipment should have a generated ID");
 
@@ -141,13 +147,13 @@ public class EJBIntegrationTest {
         testDecl.setTariffRate(new BigDecimal("5.00"));
 
         try {
-            CustomsDeclaration persisted = customsService.createDeclaration(testDecl);
+            CustomsDeclaration persisted = testFacade.createDeclaration(testDecl);
             assertNotNull(persisted, "Persisted declaration should not be null");
             assertNotNull(persisted.getDeclarationId(),
                     "Persisted declaration should have a generated ID");
             assertNotNull(persisted.getDutyAmount(),
                     "Duty amount should have been calculated by the service");
-            assertEquals(new BigDecimal("250.00"), persisted.getDutyAmount(),
+            assertEquals(0, new BigDecimal("250.00").compareTo(persisted.getDutyAmount()),
                     "Duty = 5000 * 5% = 250.00");
         } catch (Exception e) {
             fail("Integration test failed — customs declaration creation should succeed "
@@ -155,7 +161,7 @@ public class EJBIntegrationTest {
         }
 
         // Query pending declarations — should include our test data
-        List<CustomsDeclaration> pending = customsService.findPendingDeclarations();
+        List<CustomsDeclaration> pending = testFacade.findPendingDeclarations();
         assertNotNull(pending, "Should return customs declarations from database");
         assertFalse(pending.isEmpty(),
                 "Pending declarations should include the test declaration we just created");
@@ -241,12 +247,12 @@ public class EJBIntegrationTest {
         // If transaction attributes are misconfigured, this sequence will fail.
         InventoryItem item = new InventoryItem(
                 "TX-SKU-" + System.nanoTime(), "Transaction Test Item",
-                8888L, 50, 5);
-        InventoryItem persisted = inventoryService.addInventoryItem(item);
+                2L, 50, 5);
+        InventoryItem persisted = testFacade.addInventoryItem(item);
         assertNotNull(persisted.getItemId(), "Item should be persisted within a transaction");
 
         try {
-            InventoryItem updated = inventoryService.deductStock(persisted.getItemId(), 10);
+            InventoryItem updated = testFacade.deductStock(persisted.getItemId(), 10);
             assertEquals(40, updated.getQuantity(),
                     "Stock should be deducted: 50 - 10 = 40, proving REQUIRED tx committed");
         } catch (Exception e) {

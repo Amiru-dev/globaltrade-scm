@@ -20,6 +20,7 @@ com\globaltrade\ejb\test\PerformanceBenchmarkTest$TimerConfigBenchmarks.class
 com\globaltrade\ejb\test\ShipmentServiceTest.class
 com\globaltrade\ejb\test\SecurityTest$RoleCheckTests.class
 com\globaltrade\ejb\test\TransactionTest$StockDeductionTests.class
+com\globaltrade\ejb\test\integration\TestSecurityFacade.class
 com\globaltrade\ejb\test\ShipmentServiceTest$CreateShipmentTests.class
 com\globaltrade\ejb\test\TimerServiceTest$TimerConfigValidationTests.class
 com\globaltrade\ejb\test\SecurityTest$EmergencyAccessTests.class

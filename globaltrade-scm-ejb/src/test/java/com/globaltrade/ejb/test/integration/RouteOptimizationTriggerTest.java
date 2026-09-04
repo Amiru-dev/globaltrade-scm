@@ -8,7 +8,13 @@ import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.Test;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.globaltrade.ejb.service.InventoryService;
+import com.globaltrade.ejb.service.ShipmentService;
+import com.globaltrade.ejb.service.CustomsService;
 
 import jakarta.ejb.EJB;
 
@@ -43,6 +49,10 @@ public class RouteOptimizationTriggerTest {
     @Deployment(testable = true)
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class, "route-optimization-trigger-test.war")
+                .addClass(TestSecurityFacade.class)
+                .addClass(InventoryService.class)
+                .addClass(ShipmentService.class)
+                .addClass(CustomsService.class)
                 .addClass(RouteOptimizationService.class)
                 .addClass(RouteOptimizationTimer.class)
                 .addAsWebInfResource("META-INF/persistence.xml", "classes/META-INF/persistence.xml")
@@ -54,6 +64,9 @@ public class RouteOptimizationTriggerTest {
 
     @EJB
     private RouteOptimizationTimer routeTimer;
+
+    @EJB
+    private TestSecurityFacade testFacade;
 
     /**
      * Test validates that RouteOptimizationTimer can be scheduled programmatically.
@@ -110,18 +123,18 @@ public class RouteOptimizationTriggerTest {
         testRoute.setReliabilityScore(new BigDecimal("0.95"));
         testRoute.setMaxWeightKg(new BigDecimal("10000.00"));
 
-        CarrierRoute persisted = routeService.addRoute(testRoute);
+        CarrierRoute persisted = testFacade.addRoute(testRoute);
         assertNotNull(persisted, "Persisted route should not be null");
         assertNotNull(persisted.getRouteId(), "Persisted route should have a generated ID");
 
         // Query all routes — should include our test data
-        List<CarrierRoute> allRoutes = routeService.findAllRoutes();
+        List<CarrierRoute> allRoutes = testFacade.findAllRoutes();
         assertNotNull(allRoutes, "Should return route list from database");
         assertFalse(allRoutes.isEmpty(),
                 "All routes should include the test route we just inserted");
 
         // Verify the specific route can be retrieved by ID
-        CarrierRoute retrieved = routeService.findRouteById(persisted.getRouteId());
+        CarrierRoute retrieved = testFacade.findRouteById(persisted.getRouteId());
         assertNotNull(retrieved, "Should retrieve the test route by ID");
         assertEquals("TestCarrier", retrieved.getCarrier(),
                 "Retrieved route carrier should match the test data");
